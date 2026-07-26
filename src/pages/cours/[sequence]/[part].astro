@@ -1,0 +1,31 @@
+---
+import { getCollection, getEntry, render } from "astro:content";
+import type { InferGetStaticPropsType } from "astro";
+import Lesson from "@/layouts/Lesson.astro";
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
+
+export const getStaticPaths = async () => {
+	const parts = await getCollection("parts");
+
+	return parts.map((part) => {
+		return {
+			params: {
+				part: part.id,
+				sequence: part.data.sequence.id,
+			},
+			props: {
+				part: part,
+			},
+		};
+	});
+};
+
+const { part }: Props = Astro.props;
+const sequence = await getEntry(part.data.sequence);
+const { Content } = await render(part);
+---
+
+<Lesson title={part.data.title} sequenceTitle={sequence.data.title}>
+    <Content />
+</Lesson>

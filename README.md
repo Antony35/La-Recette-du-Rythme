@@ -26,16 +26,18 @@ src/
 ├── content.config.ts       schémas des collections — modèle de données du cours
 ├── content/
 │   ├── sequences/          une séquence par fichier (métadonnées uniquement)
-│   └── parties/            le contenu des cours, en Markdown
+│   └── parts/              le contenu des cours, en Markdown
 ├── layouts/
 │   ├── BaseLayout.astro    coquille HTML : <head>, styles globaux
 │   ├── Sequence.astro      présentation d'une séquence et de ses parties
 │   └── Lesson.astro        présentation d'une partie de cours
+├── lib/
+│   └── course.ts           structure ordonnée du cours (arbre, liste plate, voisins)
 ├── pages/
 │   ├── index.astro         /                    accueil, liste des séquences
 │   └── cours/[sequence]/
 │       ├── index.astro     /cours/01            sommaire d'une séquence
-│       └── [partie].astro  /cours/01/ma-partie  une page de cours
+│       └── [part].astro    /cours/01/ma-partie  une page de cours
 └── styles/
     └── global.css          point d'entrée Tailwind
 ```
@@ -50,6 +52,8 @@ Quelques règles suivies dans le projet :
   dans `content/`, et deux routes dynamiques suffisent à générer toutes les pages.
 - **Les chemins d'import utilisent l'alias `@/`** (défini dans `tsconfig.json`),
   jamais de `../..`.
+- **Les identifiants de code sont en anglais** (`parts`, `order`, `objective`),
+  les URLs et le contenu restent en français (`/cours/…`).
 
 ## Modèle de contenu
 
@@ -58,19 +62,18 @@ Un champ manquant ou mal typé fait échouer le build.
 
 ### `sequences/`
 
-Le nom du fichier (`01.md`) sert d'identifiant. Le corps du fichier peut rester
-vide : une séquence ne porte que ses métadonnées, la liste de ses parties est
-calculée.
+Le nom du fichier (`01.md`) sert d'identifiant **et de clé de tri** : c'est lui
+qui fixe l'ordre des séquences. Le corps du fichier peut rester vide — une
+séquence ne porte que ses métadonnées, la liste de ses parties est calculée.
 
 ```yaml
 ---
-numero: "01"
 title: "Le code au service du son"
-objectif: "Situer Strudel comme façade d'une vraie API navigateur"
+objective: "Situer Strudel comme façade d'une vraie API navigateur"
 ---
 ```
 
-### `parties/`
+### `parts/`
 
 Le nom du fichier sert de slug d'URL — le garder court et en kebab-case.
 Le corps du fichier contient le cours.
@@ -78,20 +81,20 @@ Le corps du fichier contient le cours.
 ```yaml
 ---
 title: "Histoire VST → Max for Live → communauté de devs"
-sequence: "01"    # identifiant d'une entrée de sequences/, vérifié au build
-order: 1          # position dans la séquence
-duree: 15         # en minutes, 15 par défaut
+sequence: "01"        # identifiant d'une entrée de sequences/, vérifié au build
+order: 1              # position dans la séquence
+durationMinutes: 15   # 15 par défaut
 ---
 ```
 
 Le champ `sequence` est une référence (`reference("sequences")`) : Astro vérifie
 au build que la séquence existe. Attention, ce champ contient un **pointeur**
 `{ collection, id }`, pas les données de la séquence — pour les obtenir, il faut
-les résoudre avec `getEntry(partie.data.sequence)`.
+les résoudre avec `getEntry(part.data.sequence)`.
 
 ## Ajouter une partie de cours
 
-1. Créer un fichier dans `src/content/parties/`, nommé d'après l'URL voulue.
+1. Créer un fichier dans `src/content/parts/`, nommé d'après l'URL voulue.
 2. Renseigner le frontmatter ci-dessus.
 3. Rédiger le cours en Markdown.
 
