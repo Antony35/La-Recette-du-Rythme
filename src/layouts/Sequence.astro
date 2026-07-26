@@ -1,0 +1,16 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+interface Props {
+	title: string;
+}
+
+const { title }: Props = Astro.props;
+---
+<BaseLayout title={title}>
+    <h1>{title}</h1>
+    <ul>
+    <!--  TODO : FAIRE UNE BOUCLE POUR AFFICHER TOUTE LES PARTIES -->
+    </ul>
+    <slot />
+</BaseLayout>

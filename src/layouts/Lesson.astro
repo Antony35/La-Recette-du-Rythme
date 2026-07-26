@@ -1,0 +1,17 @@
+---
+import BaseLayout from "@/layouts/BaseLayout.astro";
+
+interface Props {
+	title: string;
+	sequenceTitle: string;
+}
+const { title, sequenceTitle }: Props = Astro.props;
+---
+
+<BaseLayout title={title}>
+    <!-- TODO : HEADER -->
+    <h1>{sequenceTitle}</h1>
+    <h2>{title}</h2>
+    <slot />
+    <!-- TODO : FOOTER -->
+</BaseLayout>

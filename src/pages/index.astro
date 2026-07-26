@@ -1,18 +1,8 @@
 ---
-import HelloComponents from "@/components/HelloComponents.vue";
-import "../styles/global.css";
+import BaseLayout from "@/layouts/BaseLayout.astro";
 ---
 
-<html lang="fr">
-	<head>
-		<meta charset="utf-8" />
-		<link rel="icon" type="image/svg+xml" href="/favicon.svg" />
-		<link rel="icon" href="/favicon.ico" />
-		<meta name="viewport" content="width=device-width" />
-		<meta name="generator" content={Astro.generator} />
-		<title>La Recette du Rythme</title>
-	</head>
-	<body>
-		<HelloComponents />
-	</body>
-</html>
+<BaseLayout title="La recette du Rythme">
+    <h1>Bienvenu !</h1>
+    <!-- TODO : LANDING PAGE -->
+</BaseLayout>
