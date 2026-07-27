@@ -1,6 +1,6 @@
 ---
 title: "Histoire VST → Max for Live → communauté de devs"
-sequence: "01"
+sequence: "code-au-service-du-son"
 order: 01
 ---
 

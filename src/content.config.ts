@@ -7,6 +7,7 @@ const sequences = defineCollection({
 	schema: z.object({
 		title: z.string(),
 		objective: z.string(),
+		order: z.number(),
 	}),
 });
 

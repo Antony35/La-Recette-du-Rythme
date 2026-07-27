@@ -34,10 +34,10 @@ src/
 ├── lib/
 │   └── course.ts           structure ordonnée du cours (arbre, liste plate, voisins)
 ├── pages/
-│   ├── index.astro         /                    accueil, liste des séquences
+│   ├── index.astro         /                       accueil, liste des séquences
 │   └── cours/[sequence]/
-│       ├── index.astro     /cours/01            sommaire d'une séquence
-│       └── [part].astro    /cours/01/ma-partie  une page de cours
+│       ├── index.astro     /cours/ma-sequence      sommaire d'une séquence
+│       └── [part].astro    /cours/ma-sequence/x    une page de cours
 └── styles/
     └── global.css          point d'entrée Tailwind
 ```
@@ -62,14 +62,15 @@ Un champ manquant ou mal typé fait échouer le build.
 
 ### `sequences/`
 
-Le nom du fichier (`01.md`) sert d'identifiant **et de clé de tri** : c'est lui
-qui fixe l'ordre des séquences. Le corps du fichier peut rester vide — une
-séquence ne porte que ses métadonnées, la liste de ses parties est calculée.
+Le nom du fichier sert de slug d'URL et d'identifiant — le garder court et en
+kebab-case. Le corps du fichier peut rester vide : une séquence ne porte que ses
+métadonnées, la liste de ses parties est calculée.
 
 ```yaml
 ---
 title: "Le code au service du son"
 objective: "Situer Strudel comme façade d'une vraie API navigateur"
+order: 1              # position dans le cours
 ---
 ```
 
@@ -81,9 +82,9 @@ Le corps du fichier contient le cours.
 ```yaml
 ---
 title: "Histoire VST → Max for Live → communauté de devs"
-sequence: "01"        # identifiant d'une entrée de sequences/, vérifié au build
-order: 1              # position dans la séquence
-durationMinutes: 15   # 15 par défaut
+sequence: "ma-sequence"   # identifiant d'une entrée de sequences/, vérifié au build
+order: 1                  # position dans la séquence
+durationMinutes: 15       # 15 par défaut
 ---
 ```
 
