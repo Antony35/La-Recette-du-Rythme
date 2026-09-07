@@ -169,10 +169,14 @@ seuil AA de 4,5:1. Les filets restent volontairement à 1,8:1 : WCAG n'impose pa
 
 ## Thème sombre
 
-Il suit le réglage du système, sans interrupteur ni JavaScript. **Aucune classe
-`dark:` dans les composants** : les utilitaires Tailwind v4 s'écrivent
-`var(--color-ground)`, donc redéfinir les jetons sous
-`@media (prefers-color-scheme: dark)` retourne tout le site d'un coup.
+Par défaut il suit le réglage du système ; le bouton de l'en-tête permet de
+forcer l'un ou l'autre, et le choix est mémorisé. **Aucune classe `dark:` dans
+les composants** : les utilitaires Tailwind v4 s'écrivent `var(--color-ground)`,
+donc redéfinir les jetons retourne tout le site d'un coup.
+
+Le choix est appliqué par un `<script is:inline>` placé dans le `<head>`, donc
+avant le premier rendu — sinon un flash de thème clair apparaîtrait à chaque
+chargement.
 
 Corollaire à retenir : une couleur écrite en dur dans un composant ne suivra pas
 le thème. Tout passe par un jeton de `@theme`.

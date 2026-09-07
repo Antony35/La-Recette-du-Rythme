@@ -182,12 +182,34 @@ Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json` — sans ça, `pnpm lint` échoue sur `global.css`.
 
 **Thème sombre : aucune classe `dark:` dans les composants.** Les utilitaires
-Tailwind v4 s'écrivent `var(--color-ground)`, donc redéfinir les jetons sous
-`@media (prefers-color-scheme: dark)` retourne tout le site d'un coup. C'est le
-bénéfice concret d'avoir tout fait passer par `@theme`. Pas de sélecteur `.dark`,
-pas de JavaScript, pas de valeur stockée, pas de scintillement au premier rendu —
-on suit le réglage du système. `color-scheme: light dark` sur `:root` fait suivre
-les barres de défilement et les contrôles natifs.
+Tailwind v4 s'écrivent `var(--color-ground)`, donc redéfinir les jetons suffit à
+retourner tout le site. C'est le bénéfice concret d'avoir tout fait passer par
+`@theme`. `color-scheme: light dark` fait suivre barres de défilement et
+contrôles natifs.
+
+**Trois états, et ils doivent cohabiter :**
+
+```css
+@media (prefers-color-scheme: dark) { :root:not([data-theme]) { … } }
+:root[data-theme="dark"]  { … }
+:root[data-theme="light"] { … }   /* indispensable, voir ci-dessous */
+```
+
+- Le `:not([data-theme])` sur la règle média n'est pas décoratif : sans lui, un
+  visiteur ayant choisi « clair » sur un système sombre resterait en sombre.
+- La variante `light` doit être **réécrite explicitement**. Sans elle, choisir
+  « clair » sur un système sombre ne rétablirait rien : il n'y aurait aucune
+  règle à appliquer.
+
+Le choix est posé sur `<html>` par un `<script is:inline>` **dans le `<head>`**.
+`is:inline` est ce qui compte : Astro laisse le script tel quel au lieu d'en
+faire un module, donc il s'exécute avant le premier rendu. Un script différé
+laisserait un flash de thème clair. Les accès à `localStorage` sont sous
+`try/catch` — l'API lève en navigation privée sur certains navigateurs.
+
+Le bouton lui-même est une vingtaine de lignes sans framework : pas besoin d'un
+îlot, donc pas d'îlot. Son libellé dit **l'action** (« Sombre »), son
+`aria-label` dit **l'état** (« Thème clair actif. Passer au thème sombre »).
 
 Corollaire : **une couleur écrite en dur dans un composant ne suivra pas le
 thème.** Tout passe par un jeton.
@@ -370,8 +392,9 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 - Les **12 séquences** du plan de cours existent, mais **10 sont vides** : seules
   les séquences 1 et 2 ont des parties. Les états limites (« à venir »,
   « 0 partie ») sont donc visibles en permanence sur le site.
-- Le thème sombre suit le système et **n'a pas d'interrupteur** : impossible de
-  forcer l'un ou l'autre depuis la page.
+- Il n'y a **pas de troisième état « système »** dans l'interrupteur : une fois
+  un choix fait, il est mémorisé et le site ne resuit plus le réglage de l'OS.
+  Vider `localStorage` est le seul moyen de revenir au comportement automatique.
 - **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), tous deux
   transitifs et cantonnés au build — voir la section Sécurité ci-dessous.
 

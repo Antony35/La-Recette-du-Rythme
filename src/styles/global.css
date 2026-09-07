@@ -76,8 +76,13 @@
 
    Ratios mesurés sur le fond sombre : ink 14,3:1 · muted 7,1:1 · accent 8,3:1.
 --------------------------------------------------------------------------- */
+/* Les trois états doivent cohabiter :
+     — sans choix explicite, on suit le système ;
+     — un choix stocké pose data-theme sur <html> et doit l'emporter.
+   D'où le `:not([data-theme])` sur la règle média : sans lui, un visiteur ayant
+   choisi « clair » sur un système sombre resterait en sombre. */
 @media (prefers-color-scheme: dark) {
-	:root {
+	:root:not([data-theme]) {
 		--color-ground: #15191a;
 		--color-surface: #1d2224;
 		--color-ink: #e4e8e6;
@@ -85,6 +90,27 @@
 		--color-rule: #39413f;
 		--color-accent: #4fc3bc;
 	}
+}
+
+:root[data-theme="dark"] {
+	--color-ground: #15191a;
+	--color-surface: #1d2224;
+	--color-ink: #e4e8e6;
+	--color-muted: #9ba6a4;
+	--color-rule: #39413f;
+	--color-accent: #4fc3bc;
+}
+
+/* La variante claire doit être réécrite explicitement : sans elle, choisir
+   « clair » sur un système sombre ne rétablirait rien, faute de règle à
+   appliquer. */
+:root[data-theme="light"] {
+	--color-ground: #f4f5f3;
+	--color-surface: #ebeeec;
+	--color-ink: #222831;
+	--color-muted: #5a6668;
+	--color-rule: #b4bbb6;
+	--color-accent: #007574;
 }
 
 /* Indique au navigateur de quel côté on est : barres de défilement, champs de

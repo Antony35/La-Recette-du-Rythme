@@ -28,6 +28,23 @@ const { title }: Props = Astro.props;
         <link rel="icon" href={withBase("/favicon.ico")}/>
         <meta name="generator" content={Astro.generator}/>
         <title>{title}</title>
+
+        {/*
+          `is:inline` : Astro laisse ce script tel quel dans le <head> au lieu de
+          le regrouper avec les autres. Il s'exécute donc AVANT le premier rendu,
+          ce qui évite le flash de thème clair sur un visiteur qui a choisi
+          sombre. Un script différé arriverait toujours trop tard.
+          try/catch : localStorage lève en navigation privée sur certains
+          navigateurs, et le site doit rester affichable dans ce cas.
+        */}
+        <script is:inline>
+            try {
+                const choice = localStorage.getItem("theme");
+                if (choice === "light" || choice === "dark") {
+                    document.documentElement.dataset.theme = choice;
+                }
+            } catch {}
+        </script>
     </head>
 
     <body class="flex min-h-dvh flex-col bg-ground font-sans text-ink antialiased">
@@ -39,13 +56,27 @@ const { title }: Props = Astro.props;
         </a>
 
         <header class="border-b border-rule">
-            <div class="mx-auto w-full max-w-5xl px-6 py-4 sm:px-8">
+            <div class="mx-auto flex w-full max-w-5xl items-center justify-between gap-4 px-6 py-4 sm:px-8">
                 <a
                     href={withBase("/")}
                     class="font-mono text-sm font-bold tracking-tight transition-colors hover:text-accent"
                 >
                     La Recette du Rythme
                 </a>
+
+                <!--
+                  aria-pressed plutôt qu'un simple bouton : il annonce l'état
+                  courant, pas seulement l'action. Le libellé est mis à jour par
+                  le script ci-dessous, jamais en dur, pour qu'il reste vrai.
+                -->
+                <button
+                    id="theme-toggle"
+                    type="button"
+                    aria-pressed="false"
+                    class="rounded-xs border border-rule px-3 py-1.5 font-mono text-xs tracking-[0.1em] uppercase transition-colors hover:border-accent hover:text-accent"
+                >
+                    Thème
+                </button>
             </div>
         </header>
 
@@ -64,5 +95,52 @@ const { title }: Props = Astro.props;
                 </a>
             </div>
         </footer>
+
+        {/*
+          Une vingtaine de lignes sans framework : le bouton n'a pas besoin d'un
+          îlot, donc il n'en aura pas. `is:inline` évite qu'Astro n'en fasse un
+          module à télécharger séparément.
+        */}
+        <script is:inline>
+            (() => {
+                const root = document.documentElement;
+                const button = document.getElementById("theme-toggle");
+                if (!button) return;
+
+                const systemDark = window.matchMedia("(prefers-color-scheme: dark)");
+
+                // Le thème effectif : le choix stocké s'il existe, sinon le système.
+                const current = () =>
+                    root.dataset.theme || (systemDark.matches ? "dark" : "light");
+
+                const render = () => {
+                    const dark = current() === "dark";
+                    button.textContent = dark ? "Clair" : "Sombre";
+                    button.setAttribute("aria-pressed", String(dark));
+                    // Le libellé dit ce que le clic va faire ; aria-label dit où
+                    // l'on en est. Les deux sont nécessaires et différents.
+                    button.setAttribute(
+                        "aria-label",
+                        dark ? "Thème sombre actif. Passer au thème clair" : "Thème clair actif. Passer au thème sombre",
+                    );
+                };
+
+                button.addEventListener("click", () => {
+                    const next = current() === "dark" ? "light" : "dark";
+                    root.dataset.theme = next;
+                    try {
+                        localStorage.setItem("theme", next);
+                    } catch {}
+                    render();
+                });
+
+                // Tant qu'aucun choix n'a été fait, suivre le système en direct.
+                systemDark.addEventListener("change", () => {
+                    if (!root.dataset.theme) render();
+                });
+
+                render();
+            })();
+        </script>
     </body>
 </html>
