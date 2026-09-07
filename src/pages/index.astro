@@ -2,6 +2,7 @@
 import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { byOrder } from "@/lib/course";
+import { withBase } from "@/lib/url";
 
 // toSorted() ne mute pas le tableau reçu : pas besoin de `let` ni de réassignation.
 const sequences = (await getCollection("sequences")).toSorted(byOrder);
@@ -15,7 +16,7 @@ const sequences = (await getCollection("sequences")).toSorted(byOrder);
             <li>
                 <div>
                     <p>Séquence {sequence.data.order}</p>
-                    <a href={`/cours/${sequence.id}`}>{sequence.data.title}</a>
+                    <a href={withBase(`/cours/${sequence.id}`)}>{sequence.data.title}</a>
                     <p>{sequence.data.objective}</p>
                 </div>
             </li>

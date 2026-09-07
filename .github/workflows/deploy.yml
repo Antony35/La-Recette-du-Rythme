@@ -1,0 +1,71 @@
+# Publie le site sur GitHub Pages à chaque push sur main.
+#
+# Prérequis, à faire une fois dans le dépôt :
+#   Settings → Pages → Source : « GitHub Actions »
+# Sans ça, le job `deploy` échoue — Pages refuse un déploiement tant que la
+# source est restée sur « Deploy from a branch ».
+name: Déploiement GitHub Pages
+
+on:
+  push:
+    branches: [main]
+  # Permet de relancer une publication à la main depuis l'onglet Actions,
+  # sans avoir à produire un commit vide.
+  workflow_dispatch:
+
+# Le jeton par défaut est en lecture seule : ces trois permissions sont le
+# minimum pour publier. `id-token` sert à l'authentification OIDC exigée par
+# actions/deploy-pages, ce n'est pas un secret à créer soi-même.
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Deux pushes rapprochés ne doivent pas se déployer en parallèle : le second
+# gagnerait la course de façon imprévisible. `cancel-in-progress: false` laisse
+# le déploiement en cours se terminer proprement au lieu de l'interrompre.
+concurrency:
+  group: pages
+  cancel-in-progress: false
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      # Lit le champ `packageManager` de package.json pour installer la bonne
+      # version de pnpm — la même qu'en local.
+      - uses: pnpm/action-setup@v4
+
+      - uses: actions/setup-node@v4
+        with:
+          node-version: 22
+          cache: pnpm
+
+      # --frozen-lockfile : l'installation échoue si le lockfile ne correspond
+      # pas à package.json, au lieu de le corriger en silence. En CI, on veut
+      # exactement les versions testées en local.
+      - run: pnpm install --frozen-lockfile
+
+      # `astro build` ne vérifie pas les types : sans cette étape, une erreur de
+      # typage partirait en production sans rien casser au build.
+      - run: pnpm check
+
+      - run: pnpm vitest run
+
+      - run: pnpm build
+
+      - uses: actions/upload-pages-artifact@v3
+        with:
+          path: dist
+
+  deploy:
+    needs: build
+    runs-on: ubuntu-latest
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    steps:
+      - id: deployment
+        uses: actions/deploy-pages@v4

@@ -1,5 +1,11 @@
 ---
 import "@/styles/global.css";
+import { withBase } from "@/lib/url";
+
+// Les fichiers de public/ sont servis sous la base, eux aussi : un chemin en dur
+// vers la racine donnerait un 404 une fois le site en ligne.
+// (Ce commentaire est dans le frontmatter, donc il n'est pas envoyé au
+// navigateur — un commentaire HTML, lui, part dans chaque page.)
 
 interface Props {
 	title: string;
@@ -11,8 +17,8 @@ const { title }: Props = Astro.props;
     <head>
         <meta charset="UTF-8"/>
         <meta name="viewport" content="width=device-width, initial-scale=1"/>
-        <link rel="icon" type="image/svg+xml" href="/favicon.svg"/>
-        <link rel="icon" href="/favicon.ico"/>
+        <link rel="icon" type="image/svg+xml" href={withBase("/favicon.svg")}/>
+        <link rel="icon" href={withBase("/favicon.ico")}/>
         <meta name="generator" content={Astro.generator}/>
         <title>{title}</title>
     </head>

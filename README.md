@@ -99,6 +99,44 @@ Un `.mdx` est du **code exécuté**, pas seulement du texte : il peut importer e
 lancer n'importe quoi, au build comme dans le navigateur. Relire les fichiers de
 `content/` comme on relit du code, en particulier s'ils viennent de l'extérieur.
 
+## Déploiement
+
+Le site est publié sur GitHub Pages à chaque push sur `main`, par
+`.github/workflows/deploy.yml` (build pnpm, puis publication). L'adresse en
+ligne est <https://antony35.github.io/La-Recette-du-Rythme/>.
+
+À faire **une fois** dans le dépôt : Settings → Pages → Source : *GitHub
+Actions*. Tant que la source reste sur *Deploy from a branch*, le job de
+déploiement échoue.
+
+Pages sert le site sous le **sous-chemin du dépôt**, jamais à la racine du
+domaine. D'où, dans `astro.config.mjs` :
+
+```js
+site: "https://antony35.github.io",
+base: "/La-Recette-du-Rythme",
+```
+
+⚠️ **Aucun lien interne ne s'écrit en dur.** Astro ne réécrit pas les `href` :
+un `href="/cours/…"` marche en local et donne un 404 en ligne — la panne ne se
+voit qu'après publication. Tout chemin interne, **liens comme fichiers de
+`public/`**, passe par le helper :
+
+```astro
+import { withBase } from "@/lib/url";
+
+<a href={withBase(`/cours/${sequence.id}`)}>…</a>
+```
+
+Conséquence en local : `pnpm dev` sert désormais sur
+`http://localhost:4321/La-Recette-du-Rythme/`, plus sur `/`.
+
+Le contrôle qui tranche, après un `pnpm build` — il doit ne rien afficher :
+
+```bash
+grep -rhoE '(href|src)="/[^"]*"' dist --include='*.html' | grep -v '="/La-Recette-du-Rythme/'
+```
+
 ## Modèle de contenu
 
 Les deux collections sont déclarées et validées dans `src/content.config.ts`.

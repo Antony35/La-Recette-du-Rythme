@@ -116,6 +116,29 @@ testable sans runtime Astro. Conserver cette séparation : les pages appellent
 - Le contenu n'est jamais écrit en `.astro` : tout le cours est en Markdown dans
   `src/content/`.
 
+### Déploiement et `base`
+
+Le site est servi par GitHub Pages sous `/La-Recette-du-Rythme/`, pas à la racine
+d'un domaine. `site` et `base` sont réglés dans `astro.config.mjs`.
+
+**Astro ne réécrit pas les `href`.** Tout chemin interne — liens de navigation
+comme fichiers de `public/` — passe par `withBase()` (`src/lib/url.ts`), qui
+préfixe avec `import.meta.env.BASE_URL`. Un chemin en dur marche en local et
+donne un 404 en ligne : c'est une panne que seul le build publié révèle.
+Vérification : après `pnpm build`, aucun `href`/`src` de `dist/` ne doit
+commencer par `/` sans être suivi de `La-Recette-du-Rythme/`.
+
+`withBase` prend la base en **second paramètre à valeur par défaut** plutôt que
+de lire l'environnement dans son corps : la fonction reste pure vis-à-vis de ses
+arguments, donc testable sans simuler un build Astro. Même principe que
+`course.ts` — `lib/` ne dépend jamais du runtime Astro.
+
+### Commentaires dans un `.astro`
+
+Un `<!-- commentaire HTML -->` est **envoyé au navigateur** dans chaque page ;
+un `// commentaire` du frontmatter disparaît au build. Les explications
+destinées au code vont dans le frontmatter.
+
 ### Idiomes Astro 7 à utiliser
 
 Ces API existent dans la version installée ; ne pas les réimplémenter à la main.
@@ -185,6 +208,8 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
   et fonctionnels, mais `buildCourse`/`flattenCourse`/`getNeighbours` ne sont
   branchés sur aucune page : seul `byOrder` est utilisé. La navigation
   précédent/suivant reste à câbler dans `Lesson.astro`.
+- Le contenu des parties est du remplissage (« Contenue de la partie 1… ») : la
+  chaîne technique fonctionne, le cours reste à écrire.
 - `Lesson.astro` porte encore ses `TODO` header/footer, et `index.astro` son
   `TODO : LANDING PAGE`.
 - **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), tous deux
