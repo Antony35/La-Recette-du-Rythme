@@ -1,0 +1,178 @@
+---
+title: "Strudel, une façade — et où passe exactement la frontière"
+sequence: "code-au-service-du-son"
+order: 3
+durationMinutes: 15
+---
+
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Le navigateur sait produire du son mais ne comprend pas `"bd*4"`. Strudel comble
+cet écart. Il n'est **pas** un moteur audio : c'est une couche qui traduit des
+motifs en instants, et confie le son à la Web Audio API.
+
+Cette partie situe la frontière — précisément, fichier par fichier.
+
+## Les paquets, et ce que leurs noms disent
+
+Le `package.json` du site déclare quatre paquets `@strudel/*`. Ce n'est pas un
+découpage cosmétique : chacun a un rôle, et la séparation est le sujet.
+
+| Paquet | Rôle | Touche à l'audio ? |
+|---|---|---|
+| `@strudel/core` | motifs, temps, requêtes | **non** |
+| `@strudel/mini` | le mini-langage `"bd*4"` | non |
+| `@strudel/webaudio` | le pont vers le navigateur | oui |
+| `superdough` | le moteur de synthèse | oui |
+
+L'affirmation « core ne touche pas à l'audio » se vérifie :
+
+```bash
+grep -rlE "AudioContext|createGain" @strudel/core/*.mjs
+# pattern.mjs, controls.mjs
+```
+
+Deux fichiers ! Mais en regardant les lignes trouvées :
+
+```
+pattern.mjs:852:  // if dominantTrigger is set to true, the default output (webaudio)…
+controls.mjs:346: * Define a custom webaudio node to use as a sound source.
+```
+
+Ce sont des **commentaires**. Aucun appel réel. `@strudel/core` ne crée jamais un
+nœud audio, n'ouvre jamais d'`AudioContext`. Il ne dépend que de `fraction.js`.
+
+Ce genre de vérification vaut mieux qu'une lecture de documentation : elle porte
+sur le code installé, dans sa version installée.
+
+## Un motif est une fonction du temps
+
+Voilà l'idée centrale, et elle est plus simple qu'on ne l'imagine.
+
+Un motif Strudel ne « contient » pas de notes. C'est une **fonction pure** à qui
+l'on demande : *que se passe-t-il entre l'instant A et l'instant B ?*
+
+```js
+const haps = pattern.queryArc(0, 1); // « donne-moi le cycle 0 »
+```
+
+`queryArc` rend une liste d'**événements**. Dans le code de Strudel ils
+s'appellent des `Hap` — et le commentaire de la classe explique pourquoi :
+
+> *The word 'Event' is more or less a reserved word in javascript, hence this
+> class is named called 'Hap'.*
+
+Chaque `Hap` porte trois choses :
+
+```js
+{
+  whole: TimeSpan,  // l'événement entier
+  part:  TimeSpan,  // la portion visible dans la fenêtre demandée
+  value: {…}        // ce qu'il faut jouer : { s: "bd" }
+}
+```
+
+La distinction `whole` / `part` sert quand on interroge une fenêtre qui coupe un
+événement en deux. On y reviendra en séquence 4.
+
+**Conséquence pratique :** interroger un motif ne produit aucun son et ne modifie
+rien. Deux appels identiques rendent le même résultat. C'est une fonction pure,
+au sens strict — testable sans carte son, sans navigateur, sans horloge.
+
+C'est exactement la même discipline que `src/lib/course.ts` sur ce site : la
+logique ne dépend de rien, donc elle se teste.
+
+## Le temps est en fractions, pas en flottants
+
+Détail qui a l'air anecdotique et qui ne l'est pas. `TimeSpan` n'utilise pas de
+nombres JavaScript :
+
+```js
+import Fraction from './fraction.mjs';
+
+this.begin = Fraction(begin);
+this.end = Fraction(end);
+```
+
+Pourquoi ? Parce qu'un rythme est fait de **divisions exactes**. Un tiers de
+cycle, c'est `1/3`. En flottant :
+
+```js
+1/3 + 1/3 + 1/3 === 1        // false
+0.1 + 0.2 === 0.3            // false
+```
+
+Sur un cycle isolé, l'erreur est invisible. Sur dix minutes de boucle, elle
+s'accumule et le rythme dérive. Strudel manipule donc des fractions exactes, et
+ne convertit en secondes **qu'au tout dernier moment**, pour parler à la Web
+Audio API.
+
+Retiens le motif de conception : *garder la représentation exacte le plus
+longtemps possible, convertir au bord du système.*
+
+## La frontière, en une ligne
+
+Tout le passage du monde pur au monde sonore tient dans cette ligne du
+`Cyclist`, l'ordonnanceur de Strudel :
+
+```js
+const targetTime =
+  (hap.whole.begin - this.num_cycles_at_cps_change) / this.cps
+  + this.seconds_at_cps_change + latency;
+```
+
+À gauche du signe, des **cycles** — l'unité de `@strudel/core`. À droite, des
+**secondes** de l'horloge de l'`AudioContext`. La division par `cps` (*cycles par
+seconde*) est le point de bascule exact entre les deux mondes.
+
+Après cette ligne, il n'y a plus de motif : seulement « ce son, à cet instant ».
+
+```
+"bd*4"  ──mini──►  Pattern  ──queryArc──►  Hap[]  ──cyclist──►  secondes  ──superdough──►  AudioBufferSourceNode
+      langage         pur          pur                      frontière            Web Audio API
+```
+
+## Le vérifier soi-même
+
+Lance le motif ci-dessous, puis regarde la console du navigateur. Strudel y
+annonce ses étapes, et elles suivent exactement le schéma :
+
+```
+🌀 @strudel/core loaded 🌀
+[superdough] AudioWorklets loaded
+[superdough] ready
+[cyclist] start
+[sampler] load sound "bd:0:0"... done!
+```
+
+`core` d'abord, `superdough` ensuite, le `cyclist` en dernier — le pur avant
+l'impur, puis l'ordonnanceur qui les relie.
+
+<StrudelRepl client:visible code={'s("bd*4, ~ cp")'} label="Lis la console pendant que ça joue">
+  <p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+    Le <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">~</code>
+    est un silence : la caisse claire ne tombe que sur le deuxième temps.
+    Essaie <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">s("bd*4, ~ cp, hh*8")</code>
+    — la virgule empile des couches jouées en même temps.
+  </p>
+</StrudelRepl>
+
+## Pourquoi cette architecture est une bonne idée
+
+C'est le vrai enseignement de la partie, et il dépasse largement Strudel.
+
+- **Le cœur est testable.** Aucun `AudioContext` à simuler pour vérifier qu'un
+  motif produit les bons événements.
+- **Le cœur est remplaçable côté sortie.** Les mêmes `Hap` peuvent partir vers la
+  Web Audio API, vers du MIDI, vers un dessin à l'écran. TidalCycles fait
+  d'ailleurs exactement ça avec SuperCollider.
+- **L'impureté est concentrée.** Tout ce qui touche au navigateur tient dans deux
+  paquets. Le reste est du calcul.
+
+Séparer *décider* et *effectuer* : c'est la même leçon que « les pages chargent,
+les layouts affichent » dans ce site. Le domaine change, le principe non.
+
+---
+
+**À retenir :** `queryArc(début, fin)` rend des événements sans produire de son.
+La conversion cycles → secondes est la frontière, et elle tient en une ligne.

@@ -1,11 +1,149 @@
 ---
-title: "La Web Audio API une vraie API navigateur"
+title: "La Web Audio API, le moteur audio du navigateur"
 sequence: "code-au-service-du-son"
 order: 2
+durationMinutes: 15
 ---
 
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
-Contenue de la partie 2 de la séquence 1 ...
+Ton navigateur embarque un moteur de synthèse audio complet. Pas un lecteur de
+fichiers : un vrai moteur, avec des oscillateurs, des filtres, une horloge à la
+précision de l'échantillon. C'est la **Web Audio API**, standardisée par le W3C
+en 2021 après une dizaine d'années de brouillons.
 
-<StrudelRepl client:visible code={'s("bd*4, ~ cp")'} label="À toi" />
+C'est elle qui fait le son que tu vas entendre. Strudel ne fait que lui parler.
+
+## Un graphe de nœuds, pas une fonction à appeler
+
+La Web Audio API ne s'utilise pas en appelant `jouerUnSon()`. On **construit un
+graphe** : des nœuds reliés entre eux, du producteur jusqu'aux enceintes.
+
+```js
+const ctx = new AudioContext();
+
+const oscillateur = ctx.createOscillator(); // produit un signal
+const volume = ctx.createGain();            // le module
+
+oscillateur.connect(volume);
+volume.connect(ctx.destination);            // les enceintes
+
+oscillateur.start();
+```
+
+Tu as reconnu le schéma de la partie précédente :
+
+```
+[oscillateur] ──► [gain] ──► [destination]
+```
+
+C'est exactement le modèle de Max/MSP, arrivé dans le navigateur. Ce n'est pas
+une coïncidence : c'est la bonne façon de représenter un traitement de signal, et
+elle a survécu à trente ans de changements de plateforme.
+
+Les nœuds les plus courants :
+
+| Nœud | Rôle |
+|---|---|
+| `OscillatorNode` | produit une onde (sinus, carré, dent de scie) |
+| `AudioBufferSourceNode` | joue un échantillon chargé en mémoire |
+| `GainNode` | règle le volume — c'est aussi le nœud des fondus |
+| `BiquadFilterNode` | filtre (passe-bas, passe-haut, cloche…) |
+| `StereoPannerNode` | place le son à gauche ou à droite |
+| `ConvolverNode` | réverbération par convolution |
+
+## Ce n'est pas une supposition : Strudel appelle bien ces nœuds
+
+Le moteur audio de Strudel s'appelle **superdough**. Une recherche dans son code
+donne la liste des nœuds qu'il crée réellement :
+
+```bash
+grep -ohE 'create[A-Z][A-Za-z]+\(' node_modules/.../superdough/*.mjs | sort | uniq -c
+```
+
+```
+13 createGain(
+ 5 createOscillator(
+ 5 createBufferSource(
+ 4 createBiquadFilter(
+ 1 createStereoPanner(
+```
+
+Aucune magie. Quand tu écris `s("bd*4")`, il finit par se créer des
+`AudioBufferSourceNode` et des `GainNode` — les mêmes que ceux que tu écrirais à
+la main.
+
+<StrudelRepl client:visible code={'s("bd*4")'} label="Le son, produit par ces nœuds">
+  <p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+    Ouvre les outils de développement pendant que ça joue. Chaque frappe est un
+    <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">AudioBufferSourceNode</code>
+    créé, branché, démarré, puis jeté. On en fabrique un par note — c'est le
+    fonctionnement normal de l'API, ces nœuds sont à usage unique.
+  </p>
+</StrudelRepl>
+
+## L'horloge, et pourquoi elle est à part
+
+C'est le point le plus important de cette partie.
+
+Un `AudioContext` possède sa propre horloge, `ctx.currentTime`, exprimée en
+secondes depuis sa création. Elle n'a **rien à voir** avec `Date.now()` ni avec
+`performance.now()` :
+
+- elle avance dans le **thread audio**, pas dans le thread principal ;
+- elle n'est donc pas perturbée quand ton JavaScript bloque une milliseconde ;
+- elle est cadencée par la carte son, à la précision de l'échantillon.
+
+Et c'est elle qu'on utilise pour programmer un son **dans le futur** :
+
+```js
+// joue exactement dans une demi-seconde, quoi que fasse le thread principal
+source.start(ctx.currentTime + 0.5);
+```
+
+`start()` n'est pas « démarre maintenant ». C'est « démarre **à cet instant de
+l'horloge audio** ». Le navigateur s'arrange pour que ce soit exact.
+
+Retiens la distinction, elle porte toute la partie 4 :
+
+| | Thread principal | Thread audio |
+|---|---|---|
+| Horloge | `Date.now()`, `performance.now()` | `ctx.currentTime` |
+| Cadence | dépend de la charge, du GC, du rendu | fixée par la carte son |
+| Précision utile | ~ la dizaine de millisecondes | l'échantillon (~0,02 ms) |
+| Rôle | **décider** quoi jouer | **jouer** à l'instant dit |
+
+## Le geste utilisateur
+
+Un détail qui coûte toujours une heure la première fois : un navigateur
+**refuse** de démarrer l'audio sans action de l'utilisateur. Un `AudioContext`
+créé au chargement de la page naît dans l'état `suspended`, et reste muet.
+
+```js
+const ctx = new AudioContext();
+console.log(ctx.state); // "suspended" — aucun son ne sortira
+
+// dans un gestionnaire de clic :
+await ctx.resume();
+console.log(ctx.state); // "running"
+```
+
+Aucune erreur n'est levée : le code s'exécute normalement, il ne se passe juste
+rien. C'est pour ça que le bouton de cette page dit « Play » et qu'il faut
+cliquer — pas par choix d'interface, par contrainte de la plateforme.
+
+## Où l'on en est
+
+Le navigateur sait produire du son. Il sait le programmer avec précision. Ce
+qu'il ne sait **pas** faire, c'est comprendre `"bd*4"`.
+
+Il n'a aucune notion de rythme, de cycle, de motif. Tout ce qu'il connaît, c'est
+« ce nœud démarre à la seconde 12,347 ».
+
+Traduire un motif en une liste d'instants, c'est exactement le travail de
+Strudel — et le sujet de la partie suivante.
+
+---
+
+**À retenir :** la Web Audio API est un graphe de nœuds plus une horloge à part.
+`ctx.currentTime` n'est pas `Date.now()`, et c'est la clé de tout ce qui suit.

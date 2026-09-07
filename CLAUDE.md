@@ -401,11 +401,12 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 ## Écarts connus (état au 2026-09-07)
 
-- Le contenu des parties est du remplissage (« Contenue de la partie 1… ») : la
-  chaîne technique fonctionne, le cours reste à écrire.
-- Les **12 séquences** du plan de cours existent, mais **10 sont vides** : seules
-  les séquences 1 et 2 ont des parties. Les états limites (« à venir »,
-  « 0 partie ») sont donc visibles en permanence sur le site.
+- **Seule la séquence 1 est rédigée** (4 parties, 60 min). Les 11 autres
+  séquences existent avec titre et objectif, mais sans aucune partie : les états
+  limites (« à venir », « 0 partie ») sont donc visibles en permanence.
+- Le cours cite du code de `node_modules/@strudel/*` (cyclist, zyklus, hap).
+  Ces extraits sont **datés de la version installée** : à revérifier après une
+  montée de version, sinon le cours enseignera quelque chose de faux.
 - Il n'y a **pas de troisième état « système »** dans l'interrupteur : une fois
   un choix fait, il est mémorisé et le site ne resuit plus le réglage de l'OS.
   Vider `localStorage` est le seul moyen de revenir au comportement automatique.

@@ -1,0 +1,177 @@
+---
+title: "Le temps réel en JavaScript, ou pourquoi setTimeout ne suffit pas"
+sequence: "code-au-service-du-son"
+order: 4
+durationMinutes: 15
+---
+
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Dernière partie de la séquence, et la plus utile hors du son. Le problème que
+Strudel résout ici se pose dans toute application qui doit faire quelque chose
+**à un instant précis** : animation, jeu, synchronisation.
+
+## La mauvaise idée qui vient en premier
+
+Pour jouer quatre frappes par seconde, le réflexe est immédiat :
+
+```js
+setInterval(() => jouerUnSon(), 250);
+```
+
+Ça marche. Mal. Et l'écouter suffit à s'en convaincre : le rythme *flotte*.
+
+Trois raisons, toutes structurelles :
+
+1. **`setInterval` n'est pas ponctuel.** Il garantit *au moins* 250 ms, jamais
+   exactement. Un rendu, un ramasse-miettes, un autre `setTimeout` en attente, et
+   le rappel arrive en retard.
+2. **Les retards s'accumulent.** Chaque décalage repousse le suivant. Au bout de
+   quelques minutes, le décalage se compte en secondes.
+3. **Le thread principal est partagé.** Ton code de rythme est en concurrence
+   avec tout le reste de la page.
+
+L'oreille est impitoyable là-dessus. On perçoit un décalage rythmique dès
+**~10 ms**, bien avant de percevoir une saccade visuelle.
+
+## La bonne idée : deux horloges
+
+La solution est un motif classique de l'audio web, popularisé par Chris Wilson
+sous le titre *A Tale of Two Clocks*. Elle consiste à **arrêter d'essayer d'être
+ponctuel** et à séparer les rôles :
+
+- une horloge **grossière** en JavaScript (`setInterval`) se réveille de temps en
+  temps ;
+- à chaque réveil, elle regarde un peu **dans le futur** et programme tout ce qui
+  doit arriver dans cette fenêtre, à l'horloge **précise** de l'`AudioContext`.
+
+Le JavaScript n'a plus besoin d'être à l'heure : il doit seulement se réveiller
+**avant** l'échéance. C'est infiniment plus facile à garantir.
+
+```
+JS  ──►│          │          │          │      réveils imprécis, toutes les ~100 ms
+       └──fenêtre─┘
+audio  ♪   ♪   ♪   ♪   ♪   ♪   ♪   ♪            déclenchements exacts
+```
+
+## Le code de Strudel, ligne à ligne
+
+Ce n'est pas de la théorie : c'est `zyklus.mjs`, l'horloge de `@strudel/core`.
+
+```js
+const onTick = () => {
+  const t = getTime();                        // ctx.currentTime
+  const lookahead = t + interval + overlap;   // 0.1 + 0.1 = 200 ms devant
+
+  while (phase < lookahead) {
+    callback(phase, duration, tick, t);       // programme ce qui tombe ici
+    phase += duration;
+    tick++;
+  }
+};
+
+intervalID = setInterval(onTick, interval * 1000);  // réveil toutes les 100 ms
+```
+
+Trois valeurs à retenir :
+
+| Valeur | Rôle |
+|---|---|
+| `interval = 0.1` | on se réveille toutes les 100 ms |
+| `overlap = 0.1` | on programme 100 ms de plus que nécessaire |
+| `lookahead = 200 ms` | la fenêtre totale d'anticipation |
+
+Le `overlap` est la marge de sécurité : même si un réveil est en retard de 100 ms
+— une éternité pour du JavaScript — les sons de cette fenêtre ont **déjà** été
+programmés au tour précédent. On ne les entend pas trembler.
+
+C'est le cœur du procédé : **on achète de la robustesse avec de la latence.**
+
+## Ce que fait le `Cyclist` à chaque réveil
+
+`zyklus` fournit le battement ; `cyclist.mjs` s'en sert pour interroger le motif :
+
+```js
+const haps = this.pattern.queryArc(begin, end, { _cps: this.cps });
+
+haps.forEach((hap) => {
+  if (hap.hasOnset()) {
+    const targetTime =
+      (hap.whole.begin - this.num_cycles_at_cps_change) / this.cps
+      + this.seconds_at_cps_change + latency;
+    onTrigger?.(hap, deadline, duration, this.cps, targetTime);
+  }
+});
+```
+
+On retrouve tout ce qu'on a vu :
+
+- `queryArc(begin, end)` — la fonction pure de la partie 3, interrogée sur la
+  fenêtre à venir ;
+- `hasOnset()` — on ne déclenche que les événements qui **commencent** ici. Un
+  son long, déjà démarré au tour précédent, ne se redéclenche pas ;
+- la division par `cps` — la frontière cycles → secondes ;
+- `latency` — 100 ms de retard **délibéré**, ajoutés à chaque déclenchement.
+
+## Pourquoi ajouter du retard exprès
+
+Ça surprend toujours. `latency = 0.1` signifie que Strudel joue tout avec un
+dixième de seconde de décalage sur le calcul.
+
+C'est le prix de la stabilité : ce coussin absorbe les irrégularités du thread
+principal. Sans lui, la moindre hésitation du JavaScript s'entendrait
+immédiatement.
+
+C'est un arbitrage qu'on retrouve partout en temps réel — jeux en réseau,
+streaming, synchronisation vidéo. **Un peu de retard constant est toujours
+préférable à un timing variable.** L'oreille, comme l'œil, pardonne le décalage
+mais pas l'irrégularité.
+
+## Le cycle, l'unité de Strudel
+
+Dernière pièce. Strudel ne compte pas en BPM mais en **cycles par seconde**
+(`cps`), et la valeur par défaut est dans le constructeur du `Cyclist` :
+
+```js
+this.cps = 0.5;
+```
+
+Un cycle dure donc **2 secondes** par défaut. Ce qui se vérifie à l'oreille et au
+calcul : `s("bd*4")` place quatre frappes par cycle, soit **2 frappes par
+seconde**.
+
+<StrudelRepl client:visible code={'setcps(0.5)\ns("bd*4, hh*8")'} label="Change le tempo, écoute la structure">
+  <p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+    Remplace <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">0.5</code>
+    par <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">1</code>,
+    puis <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">Ctrl</code> +
+    <code class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">Entrée</code>.
+    Tout accélère — mais les rapports entre les couches restent intacts : le
+    motif est décrit en fractions de cycle, pas en secondes. C'est la partie 3
+    qui s'entend.
+  </p>
+</StrudelRepl>
+
+## Ce que tu emportes de cette séquence
+
+Rien de ce qui précède n'est propre à la musique :
+
+- un **graphe de traitement** avec des nœuds branchés bout à bout ;
+- une **horloge séparée** du thread principal, parce que celui-ci n'est pas
+  fiable ;
+- de l'**anticipation** plutôt que de la ponctualité ;
+- un **cœur pur** qu'on interroge, une **frontière** étroite vers le monde
+  extérieur ;
+- des **fractions exactes** conservées jusqu'au dernier moment.
+
+Ce sont des solutions d'ingénierie logicielle. Le son n'est ici que le retour
+d'expérience le plus rapide qui soit : quand le raisonnement est faux, ça
+s'entend tout de suite.
+
+La séquence 2 s'attaque au vocabulaire musical minimal — juste assez pour lire ce
+qu'on écrit.
+
+---
+
+**À retenir :** `setInterval` grossier + fenêtre d'anticipation + horloge audio
+précise. Trois lignes de principe qui servent bien au-delà de l'audio.
