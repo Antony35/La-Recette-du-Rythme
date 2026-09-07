@@ -1,6 +1,7 @@
 # La Recette du Rythme
 
-> Introduction au live coding et à son histoire.
+> Progresser en JavaScript avec Strudel : Web Audio API, programmation
+> fonctionnelle et compilation d'un mini-langage.
 
 Site de cours statique construit avec **Astro**, **Tailwind CSS v4** et **Vue**
 (réservé aux îlots interactifs autour de Strudel).

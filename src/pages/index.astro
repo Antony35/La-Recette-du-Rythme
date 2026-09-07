@@ -1,18 +1,14 @@
 ---
 import { getCollection } from "astro:content";
 import Home from "@/layouts/Home.astro";
-import { buildCourse, flattenCourse } from "@/lib/course";
+import { buildCourse } from "@/lib/course";
 
 const [sequences, parts] = await Promise.all([
 	getCollection("sequences"),
 	getCollection("parts"),
 ]);
 
-// buildCourse rend l'arbre trié, flattenCourse l'ordre de lecture. La première
-// entrée de la liste plate est le point de départ du cours — pas forcément la
-// première partie du fichier, ni celle de la première séquence si elle est vide.
 const course = buildCourse(sequences, parts);
-const start = flattenCourse(course)[0];
 ---
 
-<Home course={course} start={start} />
+<Home course={course} />

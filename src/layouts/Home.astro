@@ -14,12 +14,9 @@ type Course = ReturnType<
 
 interface Props {
 	course: Course;
-	// Optionnel pour de bon : tant qu'aucune partie n'est rédigée, le cours n'a
-	// pas de point de départ, et le bouton « commencer » n'a rien à pointer.
-	start?: CollectionEntry<"parts">;
 }
 
-const { course, start }: Props = Astro.props;
+const { course }: Props = Astro.props;
 
 // Agrégations d'affichage, calculées à partir des props reçues : le layout ne
 // charge rien, il ne fait que résumer ce que la page lui a donné.
@@ -41,12 +38,13 @@ const summary = [
 
 <BaseLayout title="La Recette du Rythme">
     <div class="max-w-3xl">
-    <h1 class="font-mono text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-        Introduction au live coding
+    <h1 class="font-mono text-4xl font-bold tracking-tight text-balance sm:text-5xl">
+        Progresser en JavaScript avec Strudel
     </h1>
-    <p class="mt-5 max-w-xl leading-relaxed text-muted">
-        Du VST à Strudel en passant par la Web Audio API : comment le code s'est
-        mis au service du son, et comment s'en servir soi-même.
+    <p class="mt-6 max-w-xl text-lg leading-relaxed text-muted">
+        Un cours de développement web déguisé en atelier de musique : la Web
+        Audio API, la programmation fonctionnelle et la compilation d'un
+        mini-langage — en écoutant ce qu'on écrit.
     </p>
 
     <div class="mt-14">
@@ -67,27 +65,6 @@ const summary = [
             </p>
         </StrudelRepl>
     </div>
-
-    <section class="mt-16" aria-labelledby="public">
-        <h2
-            id="public"
-            class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted"
-        >
-            À qui ça s'adresse
-        </h2>
-        <ul class="mt-5 flex max-w-xl flex-col gap-3 leading-relaxed">
-            <li class="border-l-2 border-rule pl-5">
-                Tu écris du code et tu voudrais en faire de la musique.
-            </li>
-            <li class="border-l-2 border-rule pl-5">
-                Tu n'as pas besoin de savoir lire une partition : le vocabulaire
-                utile est expliqué au fur et à mesure.
-            </li>
-            <li class="border-l-2 border-rule pl-5">
-                Un navigateur suffit. Rien à installer, rien à acheter.
-            </li>
-        </ul>
-    </section>
 
     <section class="mt-16" aria-labelledby="sommaire">
         <div class="flex flex-wrap items-baseline justify-between gap-x-6 gap-y-2">
@@ -126,19 +103,5 @@ const summary = [
             ))}
         </ul>
     </section>
-
-    {start && (
-        <a
-            href={withBase(`/cours/${start.data.sequence.id}/${start.id}`)}
-            class="mt-14 flex flex-col gap-1.5 border-t border-rule pt-8 group"
-        >
-            <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
-                Commencer ici →
-            </span>
-            <span class="leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
-                {start.data.title}
-            </span>
-        </a>
-    )}
     </div>
 </BaseLayout>
