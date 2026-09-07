@@ -1,11 +1,20 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { withBase } from "@/lib/url";
 
 interface Props {
 	title: string;
 	sequenceTitle: string;
+	// Optionnels, parce qu'ils le sont vraiment : la première partie du cours
+	// n'a pas de précédente, la dernière pas de suivante.
+	previous?: CollectionEntry<"parts">;
+	next?: CollectionEntry<"parts">;
 }
-const { title, sequenceTitle }: Props = Astro.props;
+const { title, sequenceTitle, previous, next }: Props = Astro.props;
+
+const partUrl = (part: CollectionEntry<"parts">) =>
+	withBase(`/cours/${part.data.sequence.id}/${part.id}`);
 ---
 
 <BaseLayout title={title}>
@@ -26,5 +35,37 @@ const { title, sequenceTitle }: Props = Astro.props;
     <div class="prose prose-cours mt-10">
         <slot />
     </div>
+
+    {(previous || next) && (
+        <nav
+            aria-label="Navigation dans le cours"
+            class="mt-16 grid gap-8 border-t border-rule pt-8 sm:grid-cols-2"
+        >
+            <div>
+                {previous && (
+                    <a href={partUrl(previous)} class="group flex flex-col gap-1.5">
+                        <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+                            ← Précédent
+                        </span>
+                        <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
+                            {previous.data.title}
+                        </span>
+                    </a>
+                )}
+            </div>
+            <div class="sm:text-right">
+                {next && (
+                    <a href={partUrl(next)} class="group flex flex-col gap-1.5">
+                        <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+                            Suivant →
+                        </span>
+                        <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
+                            {next.data.title}
+                        </span>
+                    </a>
+                )}
+            </div>
+        </nav>
+    )}
     <!-- TODO : FOOTER -->
 </BaseLayout>

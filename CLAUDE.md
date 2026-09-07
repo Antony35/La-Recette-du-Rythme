@@ -103,6 +103,18 @@ une page, son URL et sa place dans le sommaire.
 testable sans runtime Astro. Conserver cette séparation : les pages appellent
 `getCollection()`, `lib/` ne fait que transformer des données reçues en argument.
 
+**Les trois fonctions sont génériques**, et ça n'est pas décoratif : les types
+`Sequence` et `Part` déclarent le *minimum* nécessaire au tri, pas la forme d'une
+entrée. Sans génériques, `flattenCourse` rendrait des `Part` et `part.data.title`
+ne compilerait plus dans les pages, alors que la donnée est bien là. Avec, on
+passe des `CollectionEntry<"parts">` et on récupère des `CollectionEntry<"parts">`.
+
+**`getNeighbours` rend `P | undefined`**, type écrit à la main. Aux deux
+extrémités du cours l'index sort du tableau, mais TypeScript type `parts[i - 1]`
+comme `P` (`noUncheckedIndexedAccess` n'est pas activé) : sans annotation
+explicite, `previous.data.title` compile et casse sur la première page. Et pas
+de `.at()` pour l'écrire plus court — `.at(-1)` renvoie le *dernier* élément.
+
 ### Routage et layouts
 
 - `src/pages/` **ne fait que du routage** : charger les données, choisir un layout,
@@ -230,10 +242,6 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 ## Écarts connus (état au 2026-09-07)
 
-- `lib/course.ts` expose `buildCourse`, `flattenCourse` et `getNeighbours`, testés
-  et fonctionnels, mais `buildCourse`/`flattenCourse`/`getNeighbours` ne sont
-  branchés sur aucune page : seul `byOrder` est utilisé. La navigation
-  précédent/suivant reste à câbler dans `Lesson.astro`.
 - Le contenu des parties est du remplissage (« Contenue de la partie 1… ») : la
   chaîne technique fonctionne, le cours reste à écrire.
 - `Lesson.astro` porte encore ses `TODO` header/footer, et `index.astro` son

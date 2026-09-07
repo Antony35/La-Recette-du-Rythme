@@ -2,18 +2,32 @@
 import { getCollection, getEntry, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import Lesson from "@/layouts/Lesson.astro";
+import { buildCourse, flattenCourse, getNeighbours } from "@/lib/course";
 
 export const getStaticPaths = (async () => {
-	const parts = await getCollection("parts");
+	const [sequences, parts] = await Promise.all([
+		getCollection("sequences"),
+		getCollection("parts"),
+	]);
 
-	return parts.map((part) => {
+	// L'arbre trié puis aplati donne l'ordre de lecture réel du cours, séquences
+	// comprises. Il est calculé une seule fois ici : getStaticPaths ne s'exécute
+	// qu'au démarrage du build, alors que le frontmatter d'une page tourne pour
+	// chaque page générée.
+	const flat = flattenCourse(buildCourse(sequences, parts));
+
+	return flat.map((part) => {
+		const { previous, next } = getNeighbours(flat, part.id);
+
 		return {
 			params: {
 				part: part.id,
 				sequence: part.data.sequence.id,
 			},
 			props: {
-				part: part,
+				part,
+				previous,
+				next,
 			},
 		};
 	});
@@ -21,13 +35,18 @@ export const getStaticPaths = (async () => {
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { part }: Props = Astro.props;
+const { part, previous, next }: Props = Astro.props;
 
 // part.data.sequence est un pointeur { collection, id } : getEntry() le résout.
 const sequence = await getEntry(part.data.sequence);
 const { Content } = await render(part);
 ---
 
-<Lesson title={part.data.title} sequenceTitle={sequence.data.title}>
+<Lesson
+    title={part.data.title}
+    sequenceTitle={sequence.data.title}
+    previous={previous}
+    next={next}
+>
     <Content />
 </Lesson>

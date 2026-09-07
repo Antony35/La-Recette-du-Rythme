@@ -132,6 +132,12 @@ describe("flattenCourse — liste plate ordonnée", () => {
 	});
 });
 
+/**
+ * Les accès s'écrivent `neighbours.previous?.id` et non `neighbours.previous.id` :
+ * getNeighbours rend `P | undefined` aux deux extrémités du cours. Le `?.` ne
+ * masque rien — si la valeur était `undefined` à tort, la comparaison échouerait
+ * quand même. Un `!` à la place mentirait au compilateur.
+ */
 describe("getNeighbours — navigation globale", () => {
 	test("renvoie les parties adjacentes au milieu d'une séquence", () => {
 		const sequences = [makeSequence("seq-1", 1)];
@@ -145,8 +151,8 @@ describe("getNeighbours — navigation globale", () => {
 		const flat = flattenCourse(course);
 		const neighbours = getNeighbours(flat, "part-2");
 
-		expect(neighbours.previous.id).toBe("part-1");
-		expect(neighbours.next.id).toBe("part-3");
+		expect(neighbours.previous?.id).toBe("part-1");
+		expect(neighbours.next?.id).toBe("part-3");
 	});
 
 	test("franchit la frontière entre deux séquences", () => {
@@ -161,8 +167,8 @@ describe("getNeighbours — navigation globale", () => {
 		const flat = flattenCourse(course);
 		const neighbours = getNeighbours(flat, "part-2");
 
-		expect(neighbours.next.id).toBe("part-3");
-		expect(neighbours.next.data.sequence.id).toBe("seq-2");
+		expect(neighbours.next?.id).toBe("part-3");
+		expect(neighbours.next?.data.sequence.id).toBe("seq-2");
 	});
 
 	test("renvoie previous: undefined pour la première partie du cours", () => {
@@ -177,7 +183,7 @@ describe("getNeighbours — navigation globale", () => {
 		const neighbours = getNeighbours(flat, "part-1");
 
 		expect(neighbours.previous).toBeUndefined();
-		expect(neighbours.next.id).toBe("part-2");
+		expect(neighbours.next?.id).toBe("part-2");
 	});
 
 	test("renvoie next: undefined pour la dernière partie du cours", () => {
@@ -191,7 +197,7 @@ describe("getNeighbours — navigation globale", () => {
 		const flat = flattenCourse(course);
 		const neighbours = getNeighbours(flat, "part-2");
 
-		expect(neighbours.previous.id).toBe("part-1");
+		expect(neighbours.previous?.id).toBe("part-1");
 		expect(neighbours.next).toBeUndefined();
 	});
 
@@ -210,8 +216,8 @@ describe("getNeighbours — navigation globale", () => {
 		const flat = flattenCourse(course);
 		const neighbours = getNeighbours(flat, "part-1");
 
-		expect(neighbours.next.id).toBe("part-2");
-		expect(neighbours.next.data.sequence.id).toBe("seq-3");
+		expect(neighbours.next?.id).toBe("part-2");
+		expect(neighbours.next?.data.sequence.id).toBe("seq-3");
 	});
 
 	test("lève une erreur sur un identifiant de partie inconnu", () => {
