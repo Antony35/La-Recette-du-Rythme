@@ -102,6 +102,51 @@ Un `.mdx` est du **code exécuté**, pas seulement du texte : il peut importer e
 lancer n'importe quoi, au build comme dans le navigateur. Relire les fichiers de
 `content/` comme on relit du code, en particulier s'ils viennent de l'extérieur.
 
+## Style
+
+Le système de design tient dans un seul fichier : `src/styles/global.css`.
+Direction **« Grille »** — un rythme est une grille de pulsations, d'où les
+filets verticaux qui tiennent lieu de barres de mesure. Ni ombre portée, ni
+dégradé, ni coin arrondi au-delà de 2 px.
+
+Les couleurs se déclarent dans `@theme` et deviennent des classes utilitaires ;
+Tailwind v4 n'a plus de fichier de configuration JavaScript.
+
+| Jeton | Valeur | Rôle |
+|---|---|---|
+| `--color-ground` | `#F4F5F3` | fond, gris très clair tiré vers le vert |
+| `--color-surface` | `#EBEEEC` | blocs de code, code inline |
+| `--color-ink` | `#222831` | texte |
+| `--color-muted` | `#5F6B6D` | texte secondaire |
+| `--color-rule` | `#D5D9D6` | filets |
+| `--color-accent` | `#00807F` | liens, repères, bouton |
+
+Les teintes viennent des palettes les plus populaires de
+[Color Hunt](https://colorhunt.co/palettes/popular), transposées sur fond clair :
+`#222831` y sert de fond, ici c'est l'encre. L'accent est leur `#00ADB5`
+assombri — la teinte d'origine ne passe pas le contraste AA sur fond clair.
+
+**Le Markdown rendu** se met en forme avec `class="prose prose-cours"` :
+`prose` vient de `@tailwindcss/typography`, `prose-cours` ne fait que lui passer
+les couleurs du projet via ses variables `--tw-prose-*`.
+
+**JetBrains Mono est auto-hébergée** dans `public/fonts/`, deux graisses
+(400/700) sous-ensemblées au latin étendu — 187 Ko à l'origine, 64 Ko servis.
+Aucune requête vers un CDN de polices. Le corps de texte, lui, reste en
+sans-serif système : rien à télécharger pour ce qu'on lit le plus.
+
+Refaire le sous-ensemble après une mise à jour de la police :
+
+```bash
+pyftsubset JetBrainsMono-Regular.woff2 \
+  --unicodes="U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2190-2193,U+2212" \
+  --layout-features="kern,liga,calt" --flavor=woff2 \
+  --output-file=public/fonts/jetbrains-mono-regular.woff2
+```
+
+Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
+activé dans `biome.json`.
+
 ## Déploiement
 
 Le site est publié sur GitHub Pages à chaque push sur `main`, par

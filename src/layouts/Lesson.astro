@@ -10,8 +10,21 @@ const { title, sequenceTitle }: Props = Astro.props;
 
 <BaseLayout title={title}>
     <!-- TODO : HEADER -->
-    <h1>{sequenceTitle}</h1>
-    <h2>{title}</h2>
-    <slot />
+    <!-- Pas de capitales ici, contrairement aux autres repères : un titre de
+         séquence est une phrase entière, et l'interlettrage des petites
+         capitales le rend illisible sur toute la largeur. Les capitales sont
+         réservées aux étiquettes courtes (« Séquence 1 », « 2 parties »). -->
+    <p class="font-mono text-sm text-accent">
+        {sequenceTitle}
+    </p>
+    <h1 class="mt-3 font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+        {title}
+    </h1>
+
+    <!-- prose applique la mise en forme du Markdown rendu, prose-cours lui donne
+         les couleurs du projet. La mesure de lecture vient de prose (65ch). -->
+    <div class="prose prose-cours mt-10">
+        <slot />
+    </div>
     <!-- TODO : FOOTER -->
 </BaseLayout>

@@ -23,8 +23,8 @@ const { title }: Props = Astro.props;
         <title>{title}</title>
     </head>
 
-    <body>
-        <main>
+    <body class="min-h-dvh bg-ground font-sans text-ink antialiased">
+        <main class="mx-auto w-full max-w-3xl px-6 py-16 sm:px-8 sm:py-24">
             <slot/>
         </main>
     </body>

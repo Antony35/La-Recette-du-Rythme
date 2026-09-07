@@ -161,7 +161,7 @@ onUnmounted(() => {
 	<button
 		type="button"
 		:disabled="isLoading"
-		class="rounded border px-4 py-2 disabled:opacity-50"
+		class="rounded-xs bg-accent px-5 py-2.5 font-mono text-xs font-bold tracking-[0.1em] text-ground uppercase transition-opacity not-disabled:hover:opacity-85 disabled:opacity-50"
 		@click="togglePlay"
 	>
 		<!-- {{ }} = interpolation : Vue remplace ça par la valeur de l'expression.

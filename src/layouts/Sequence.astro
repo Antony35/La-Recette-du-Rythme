@@ -9,17 +9,62 @@ interface Props {
 }
 
 const { sequence, parts }: Props = Astro.props;
+
+const totalMinutes = parts.reduce(
+	(total, part) => total + part.data.durationMinutes,
+	0,
+);
+
+// « 1 parties » se voit tout de suite. La séquence 2 n'a encore aucune partie :
+// les deux cas limites, zéro et un, doivent se lire correctement.
+const partsLabel = `${parts.length} ${parts.length > 1 ? "parties" : "partie"}`;
 ---
 
 <BaseLayout title={sequence.data.title}>
-    <h1>{sequence.data.title}</h1>
-    <p>{sequence.data.objective}</p>
-    <ul>
+    <p class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
+        Séquence {sequence.data.order}
+    </p>
+    <h1 class="mt-3 font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+        {sequence.data.title}
+    </h1>
+    <p class="mt-5 max-w-xl leading-relaxed text-muted">
+        {sequence.data.objective}
+    </p>
+
+    <div class="prose prose-cours mt-10">
+        <slot />
+    </div>
+
+    <h2 class="mt-16 font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted">
+        {partsLabel} · {totalMinutes} min
+    </h2>
+
+    {parts.length === 0 && (
+        <p class="mt-6 border-l-2 border-rule py-4 pl-6 text-sm text-muted">
+            Cette séquence n'a pas encore de partie rédigée.
+        </p>
+    )}
+
+    <!-- Une liste ordonnée, parce que l'ordre porte du sens : les parties se
+         lisent dans cet ordre-là. -->
+    <ol class="mt-6 flex flex-col">
         {parts.map((part) => (
-            <li>
-                <a href={withBase(`/cours/${sequence.id}/${part.id}`)}>{part.data.title}</a>
+            <li class="flex gap-5 border-l-2 border-rule py-4 pl-6 transition-colors hover:border-accent">
+                <span class="mt-0.5 font-mono text-xs text-muted tabular-nums">
+                    {String(part.data.order).padStart(2, "0")}
+                </span>
+                <span class="flex-1">
+                    <a
+                        href={withBase(`/cours/${sequence.id}/${part.id}`)}
+                        class="leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:decoration-accent"
+                    >
+                        {part.data.title}
+                    </a>
+                    <span class="mt-1 block font-mono text-xs text-muted tabular-nums">
+                        {part.data.durationMinutes} min
+                    </span>
+                </span>
             </li>
         ))}
-    </ul>
-    <slot />
+    </ol>
 </BaseLayout>

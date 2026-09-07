@@ -8,19 +8,35 @@ import { withBase } from "@/lib/url";
 const sequences = (await getCollection("sequences")).toSorted(byOrder);
 ---
 
+<BaseLayout title="La Recette du Rythme">
+    <h1 class="font-mono text-3xl font-bold tracking-tight text-balance sm:text-4xl">
+        La Recette du Rythme
+    </h1>
+    <p class="mt-5 max-w-xl leading-relaxed text-muted">
+        Introduction au live coding et à son histoire — du VST à Strudel, en
+        passant par la Web Audio API.
+    </p>
 
-<BaseLayout title="La recette du Rythme">
-    <h1>Bienvenu !</h1>
-    <ul>
+    <!-- Le filet vertical fait office de barre de mesure : c'est lui qui porte
+         la structure, à la place d'une carte avec bordure et ombre. -->
+    <ul class="mt-16 flex flex-col gap-10">
         {sequences.map((sequence) => (
-            <li>
-                <div>
-                    <p>Séquence {sequence.data.order}</p>
-                    <a href={withBase(`/cours/${sequence.id}`)}>{sequence.data.title}</a>
-                    <p>{sequence.data.objective}</p>
-                </div>
+            <li class="border-l-2 border-rule pl-6 transition-colors hover:border-accent">
+                <p class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
+                    Séquence {sequence.data.order}
+                </p>
+                <h2 class="mt-3 text-lg leading-snug font-semibold text-balance">
+                    <a
+                        href={withBase(`/cours/${sequence.id}`)}
+                        class="underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:decoration-accent"
+                    >
+                        {sequence.data.title}
+                    </a>
+                </h2>
+                <p class="mt-2 text-sm leading-relaxed text-muted">
+                    {sequence.data.objective}
+                </p>
             </li>
         ))}
     </ul>
-    <!-- TODO : LANDING PAGE -->
 </BaseLayout>

@@ -135,6 +135,32 @@ de lire l'environnement dans son corps : la fonction reste pure vis-à-vis de se
 arguments, donc testable sans simuler un build Astro. Même principe que
 `course.ts` — `lib/` ne dépend jamais du runtime Astro.
 
+### Style : la direction « Grille »
+
+Tout le système de design tient dans `src/styles/global.css`. Un rythme est une
+grille de pulsations : filets verticaux comme des barres de mesure, alignements
+stricts, aucune décoration. **Ni ombre portée, ni dégradé, ni coin arrondi**
+au-delà de 2 px.
+
+- **Les couleurs se déclarent dans `@theme`**, jamais en dur dans un composant.
+  `--color-accent` engendre `text-accent`, `bg-accent`, `border-accent`. C'est le
+  remplaçant du `tailwind.config.js` de la v3 ; il n'y a plus de config JS.
+- **`--color-accent` est `#00807F`**, le teal `#00ADB5` de Color Hunt assombri :
+  la teinte d'origine ne passe pas le contraste AA sur fond clair.
+- **Le Markdown rendu** porte `class="prose prose-cours"`. `prose` vient du
+  plugin typography, `prose-cours` ne fait que lui passer les couleurs du projet
+  par ses variables `--tw-prose-*`. Ne pas réécrire les règles du plugin.
+- **Capitales réservées aux étiquettes courtes** (« Séquence 1 », « 2 parties »).
+  Un titre complet en petites capitales espacées devient illisible.
+- **JetBrains Mono est auto-hébergée** dans `public/fonts/`, en deux graisses
+  (400/700) sous-ensemblées au latin étendu : 187 Ko → 64 Ko. Le sous-ensemble se
+  refait avec `pyftsubset` (fonttools). Pas de CDN de polices.
+- Le corps de texte reste en **sans-serif système** : zéro téléchargement pour ce
+  qu'on lit le plus.
+
+Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
+activé dans `biome.json` — sans ça, `pnpm lint` échoue sur `global.css`.
+
 ### Commentaires dans un `.astro`
 
 Un `<!-- commentaire HTML -->` est **envoyé au navigateur** dans chaque page ;
@@ -204,8 +230,6 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 ## Écarts connus (état au 2026-09-07)
 
-- **Le Markdown rendu n'est pas stylé** : ni `@tailwindcss/typography`, ni `@theme`
-  dans `global.css`. Les pages de cours sortent sans mise en forme.
 - `lib/course.ts` expose `buildCourse`, `flattenCourse` et `getNeighbours`, testés
   et fonctionnels, mais `buildCourse`/`flattenCourse`/`getNeighbours` ne sont
   branchés sur aucune page : seul `byOrder` est utilisé. La navigation
