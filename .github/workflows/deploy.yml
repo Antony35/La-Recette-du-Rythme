@@ -38,9 +38,12 @@ jobs:
       # version de pnpm — la même qu'en local.
       - uses: pnpm/action-setup@v6
 
+      # node-version-file plutôt qu'un numéro écrit ici : la version se déclare
+      # dans .nvmrc, que `nvm use` lit aussi en local. Une seule source de
+      # vérité — sinon la CI et la machine dérivent sans que rien ne le signale.
       - uses: actions/setup-node@v7
         with:
-          node-version: 22
+          node-version-file: .nvmrc
           cache: pnpm
 
       # --frozen-lockfile : l'installation échoue si le lockfile ne correspond

@@ -10,6 +10,9 @@ Une partie correspond à une page de cours.
 
 ## Démarrage
 
+**Node >= 24** (`nvm use` lit le `.nvmrc`) et **pnpm** — la version est fixée par
+le champ `packageManager` de `package.json`, corepack l'installe tout seul.
+
 ```bash
 pnpm install   # installer les dépendances
 pnpm dev       # serveur de développement (http://localhost:4321)

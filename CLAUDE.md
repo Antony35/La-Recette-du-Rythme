@@ -53,7 +53,9 @@ Toute décision d'architecture non triviale, tout piège rencontré et tout refa
 
 ## Commandes
 
-Gestionnaire de paquets : **pnpm** (Node >= 22.12).
+Gestionnaire de paquets : **pnpm** (Node >= 24, déclaré dans `.nvmrc` et
+`engines`). La CI lit `.nvmrc` via `node-version-file` : une seule source de
+vérité pour la version de Node.
 
 ```bash
 pnpm dev                       # serveur de dev (http://localhost:4321)
