@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import PartQuiz from "@/components/PartQuiz.vue";
 import Steps from "@/components/Steps.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { withBase } from "@/lib/url";
@@ -14,8 +15,10 @@ interface Props {
 	// n'a pas de précédente, la dernière pas de suivante.
 	previous?: CollectionEntry<"parts">;
 	next?: CollectionEntry<"parts">;
+	/** Absentes tant que la partie n'a pas de quiz rédigé. */
+	questions?: CollectionEntry<"quizzes">["data"]["questions"];
 }
-const { part, sequence, parts, previous, next }: Props = Astro.props;
+const { part, sequence, parts, previous, next, questions }: Props = Astro.props;
 
 const partUrl = (entry: CollectionEntry<"parts">) =>
 	withBase(`/cours/${entry.data.sequence.id}/${entry.id}`);
@@ -136,6 +139,8 @@ const trail = [
             <div class="prose prose-cours mt-10">
                 <slot />
             </div>
+
+            {questions && <PartQuiz client:visible questions={questions} />}
 
             {(previous || next) && (
                 <nav

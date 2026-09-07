@@ -444,6 +444,35 @@ order: 1
 ---
 ```
 
+Quiz — `src/content/quizzes/<slug>.md`, **frontmatter seul**, rattaché à une
+partie par `reference("parts")` :
+
+```yaml
+---
+part: "la-web-audio-api"      # id d'une entrée de parts/
+questions:
+  - question: "Pourquoi… ?"
+    options: ["…", "…", "…"]
+    answer: 1                 # index dans options, à partir de 0
+    explanation: >-
+      Ce qu'il fallait comprendre.
+---
+```
+
+Le schéma comporte un **`.refine()` qui vérifie que `answer` désigne une option
+existante**. C'est le contrôle qui compte : un index décalé est indétectable à la
+relecture et donnerait un quiz qui corrige faux, sans jamais planter. Vérifié en
+cassant volontairement un fichier — le build s'arrête sur
+`questions.0.answer: \`answer\` doit désigner une option existante`.
+
+Une partie sans quiz est normale : la prop est optionnelle côté layout, plutôt
+que d'imposer un fichier vide partout.
+
+Le texte des quiz est **brut, pas du Markdown rendu**. `PartQuiz.vue` découpe sur
+les accents graves pour produire des `<code>` — en construisant des nœuds de
+texte, jamais avec `v-html`, donc sans risque d'injection depuis un fichier de
+contenu.
+
 Partie — `src/content/parts/<slug>.md` (ou `.mdx` si elle contient un composant),
 le corps contient le cours :
 

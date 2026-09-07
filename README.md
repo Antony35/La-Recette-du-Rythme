@@ -33,10 +33,13 @@ src/
 ├── content.config.ts       schémas des collections — modèle de données du cours
 ├── components/
 │   ├── Breadcrumb.astro    fil d'ariane
+│   ├── PartQuiz.vue        îlot interactif : l'auto-évaluation de fin de partie
+│   ├── Steps.astro         rangée de pas — une case par partie réelle
 │   └── StrudelRepl.vue     îlot interactif : le REPL Strudel, code éditable
 ├── content/
 │   ├── sequences/          une séquence par fichier (métadonnées uniquement)
-│   └── parts/              le contenu des cours, en Markdown (.mdx si interactif)
+│   ├── parts/              le contenu des cours, en Markdown (.mdx si interactif)
+│   └── quizzes/            l'auto-évaluation d'une partie (frontmatter seul)
 ├── layouts/
 │   ├── BaseLayout.astro    coquille HTML : <head>, en-tête, pied de page
 │   ├── Home.astro          page d'accueil

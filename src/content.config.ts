@@ -23,4 +23,32 @@ const parts = defineCollection({
 	}),
 });
 
-export const collections = { sequences, parts };
+const quizzes = defineCollection({
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/quizzes" }),
+	schema: z.object({
+		part: reference("parts"),
+		questions: z
+			.array(
+				z
+					.object({
+						question: z.string().min(1),
+						options: z.array(z.string().min(1)).min(2),
+						/** Index de la bonne réponse dans `options`, à partir de 0. */
+						answer: z.number().int().nonnegative(),
+						explanation: z.string().min(1),
+					})
+					// Le contrôle qui compte : `answer` doit désigner une option qui
+					// existe. Une erreur de décalage est indétectable à la relecture
+					// et donnerait un quiz qui corrige faux, sans jamais planter.
+					// Ici, le build s'arrête.
+					.refine((question) => question.answer < question.options.length, {
+						message:
+							"`answer` doit désigner une option existante (index à partir de 0).",
+						path: ["answer"],
+					}),
+			)
+			.min(1),
+	}),
+});
+
+export const collections = { sequences, parts, quizzes };
