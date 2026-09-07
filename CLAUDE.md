@@ -173,11 +173,41 @@ au-delà de 2 px.
 Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json` — sans ça, `pnpm lint` échoue sur `global.css`.
 
+### En-tête, pied de page et fil d'ariane
+
+`BaseLayout.astro` porte la coquille commune : `<header>` avec le nom du site
+cliquable, `<main>`, `<footer>`. Le corps est en `flex-col` et `<main>` en
+`grow` — le pied de page reste en bas sur une page courte, sans hauteur fixe ni
+positionnement absolu.
+
+`components/Breadcrumb.astro` reçoit `items: { label, href? }[]`. **Le maillon
+sans `href` est la page courante** : pas de booléen `isCurrent` à tenir à jour
+en double, et c'est lui qui porte `aria-current="page"`.
+
+Le fil d'ariane dit *où l'on est*, pas ce qu'on lit : « Accueil / Séquence 1 /
+Partie 2 ». Les titres en toutes lettres sont déjà juste en dessous ; les
+répéter allongerait l'ariane sur trois lignes sans rien apprendre.
+
+`Lesson.astro` reçoit les **entrées** `part` et `sequence`, pas une liste de
+chaînes. Une liste de props qui s'allonge (`title`, `sequenceTitle`,
+`sequenceId`, `sequenceOrder`…) est le signe qu'il fallait passer l'objet.
+La règle « les layouts ne chargent pas de données » tient toujours : c'est la
+page qui appelle `getEntry()`.
+
 ### Commentaires dans un `.astro`
 
 Un `<!-- commentaire HTML -->` est **envoyé au navigateur** dans chaque page ;
 un `// commentaire` du frontmatter disparaît au build. Les explications
 destinées au code vont dans le frontmatter.
+
+Contrôle après un `pnpm build` — il ne doit rien renvoyer :
+
+```bash
+find dist -name '*.html' -exec grep -ohE '<!--.{0,60}' {} \; | grep -v 'astro:'
+```
+
+(Les commentaires d'un `<template>` Vue, eux, sont retirés en production par le
+compilateur. Vérifié sur le build, pas supposé.)
 
 ### Idiomes Astro 7 à utiliser
 
@@ -244,8 +274,8 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 - Le contenu des parties est du remplissage (« Contenue de la partie 1… ») : la
   chaîne technique fonctionne, le cours reste à écrire.
-- `Lesson.astro` porte encore ses `TODO` header/footer, et `index.astro` son
-  `TODO : LANDING PAGE`.
+- La page d'accueil liste les séquences mais n'est pas encore une vraie page
+  d'entrée : ni durée totale, ni point de départ mis en avant.
 - **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), tous deux
   transitifs et cantonnés au build — voir la section Sécurité ci-dessous.
 

@@ -7,6 +7,13 @@ import { withBase } from "@/lib/url";
 // (Ce commentaire est dans le frontmatter, donc il n'est pas envoyé au
 // navigateur — un commentaire HTML, lui, part dans chaque page.)
 
+// Le dépôt est une URL externe : surtout pas de withBase() dessus, qui la
+// préfixerait comme un chemin interne.
+const repository = "https://github.com/Antony35/La-Recette-du-Rythme";
+
+// Sur <body>, flex-col combiné à `grow` sur <main> garde le pied de page en bas
+// même sur une page courte, sans hauteur fixe ni positionnement absolu.
+
 interface Props {
 	title: string;
 }
@@ -23,9 +30,32 @@ const { title }: Props = Astro.props;
         <title>{title}</title>
     </head>
 
-    <body class="min-h-dvh bg-ground font-sans text-ink antialiased">
-        <main class="mx-auto w-full max-w-3xl px-6 py-16 sm:px-8 sm:py-24">
+    <body class="flex min-h-dvh flex-col bg-ground font-sans text-ink antialiased">
+        <header class="border-b border-rule">
+            <div class="mx-auto w-full max-w-3xl px-6 py-4 sm:px-8">
+                <a
+                    href={withBase("/")}
+                    class="font-mono text-sm font-bold tracking-tight transition-colors hover:text-accent"
+                >
+                    La Recette du Rythme
+                </a>
+            </div>
+        </header>
+
+        <main class="mx-auto w-full max-w-3xl grow px-6 py-14 sm:px-8 sm:py-20">
             <slot/>
         </main>
+
+        <footer class="border-t border-rule">
+            <div class="mx-auto flex w-full max-w-3xl flex-col gap-2 px-6 py-8 font-mono text-xs text-muted sm:flex-row sm:items-center sm:justify-between sm:px-8">
+                <p>Cours en construction.</p>
+                <a
+                    href={repository}
+                    class="underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent"
+                >
+                    Code source
+                </a>
+            </div>
+        </footer>
     </body>
 </html>

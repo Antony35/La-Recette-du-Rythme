@@ -6,19 +6,21 @@ import { withBase } from "@/lib/url";
 
 // toSorted() ne mute pas le tableau reçu : pas besoin de `let` ni de réassignation.
 const sequences = (await getCollection("sequences")).toSorted(byOrder);
+
+// Le nom du site est déjà dans l'en-tête : le <h1> de l'accueil dit ce qu'on y
+// apprend, pas comment le site s'appelle. Le filet vertical de chaque séquence
+// fait office de barre de mesure — c'est lui qui porte la structure.
 ---
 
 <BaseLayout title="La Recette du Rythme">
     <h1 class="font-mono text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-        La Recette du Rythme
+        Introduction au live coding
     </h1>
     <p class="mt-5 max-w-xl leading-relaxed text-muted">
-        Introduction au live coding et à son histoire — du VST à Strudel, en
-        passant par la Web Audio API.
+        Du VST à Strudel en passant par la Web Audio API : comment le code s'est
+        mis au service du son, et comment s'en servir soi-même.
     </p>
 
-    <!-- Le filet vertical fait office de barre de mesure : c'est lui qui porte
-         la structure, à la place d'une carte avec bordure et ombre. -->
     <ul class="mt-16 flex flex-col gap-10">
         {sequences.map((sequence) => (
             <li class="border-l-2 border-rule pl-6 transition-colors hover:border-accent">

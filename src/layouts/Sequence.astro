@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import Breadcrumb from "@/components/Breadcrumb.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { withBase } from "@/lib/url";
 
@@ -18,10 +19,21 @@ const totalMinutes = parts.reduce(
 // « 1 parties » se voit tout de suite. La séquence 2 n'a encore aucune partie :
 // les deux cas limites, zéro et un, doivent se lire correctement.
 const partsLabel = `${parts.length} ${parts.length > 1 ? "parties" : "partie"}`;
+
+const trail = [
+	{ label: "Accueil", href: withBase("/") },
+	{ label: `Séquence ${sequence.data.order}` },
+];
+
+// Les parties sont dans un <ol> et non un <ul> : l'ordre porte du sens, elles se
+// lisent dans cette suite-là. Le filet vertical de chaque entrée tient lieu de
+// barre de mesure, à la place d'une carte avec bordure et ombre.
 ---
 
 <BaseLayout title={sequence.data.title}>
-    <p class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
+    <Breadcrumb items={trail} />
+
+    <p class="mt-10 font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
         Séquence {sequence.data.order}
     </p>
     <h1 class="mt-3 font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
@@ -45,8 +57,6 @@ const partsLabel = `${parts.length} ${parts.length > 1 ? "parties" : "partie"}`;
         </p>
     )}
 
-    <!-- Une liste ordonnée, parce que l'ordre porte du sens : les parties se
-         lisent dans cet ordre-là. -->
     <ol class="mt-6 flex flex-col">
         {parts.map((part) => (
             <li class="flex gap-5 border-l-2 border-rule py-4 pl-6 transition-colors hover:border-accent">
