@@ -133,11 +133,25 @@ onUnmounted(() => {
 			<button
 				type="button"
 				:disabled="isLoading"
-				class="rounded-xs bg-accent px-5 py-2.5 font-mono text-xs font-bold tracking-[0.1em] text-ground uppercase transition-opacity not-disabled:hover:opacity-85 disabled:opacity-50"
+				class="rounded-xs border-b-2 border-ink/25 bg-accent px-6 py-3 font-mono text-xs font-bold tracking-[0.1em] text-ground uppercase transition-all not-disabled:hover:opacity-90 not-disabled:active:translate-y-px not-disabled:active:border-b-0 disabled:opacity-50"
 				@click="togglePlay"
 			>
 				{{ isLoading ? "Chargement…" : isPlaying ? "Stop" : "Play" }}
 			</button>
+
+			<!-- Le témoin n'existe que pendant la lecture : il dit un état réel,
+			     il ne fait pas joli. Voir .playhead dans global.css. -->
+			<div
+				v-if="isPlaying"
+				class="playhead flex gap-1"
+				role="status"
+				aria-label="Lecture en cours"
+			>
+				<span class="h-2.5 w-2.5"></span>
+				<span class="h-2.5 w-2.5"></span>
+				<span class="h-2.5 w-2.5"></span>
+				<span class="h-2.5 w-2.5"></span>
+			</div>
 
 			<span v-if="isReady" class="font-mono text-xs text-muted">
 				Modifie le code, puis <kbd class="bg-surface px-1 py-0.5">Ctrl</kbd> +

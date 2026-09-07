@@ -1,6 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import Breadcrumb from "@/components/Breadcrumb.astro";
+import Steps from "@/components/Steps.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { withBase } from "@/lib/url";
 
@@ -71,17 +72,19 @@ const trail = [
                 {remaining > 0 && <> · {remaining} min restantes</>}
             </p>
 
-            <!-- Une barre de progression décrite pour l'assistance technique :
-                 la largeur seule ne dit rien à un lecteur d'écran. -->
+            <!-- Les pas remplacent la barre pleine : une case par partie, celle
+                 qu'on lit en ambre. Le rôle progressbar reste porté par le
+                 conteneur, parce qu'une rangée de carrés ne dit rien à un
+                 lecteur d'écran. -->
             <div
-                class="mt-2 h-1 w-full bg-rule"
+                class="mt-3"
                 role="progressbar"
                 aria-valuenow={position}
                 aria-valuemin={1}
                 aria-valuemax={parts.length}
                 aria-label={`Partie ${position} sur ${parts.length}`}
             >
-                <div class="h-full bg-accent" style={`width:${(position / parts.length) * 100}%`}></div>
+                <Steps total={parts.length} current={position} />
             </div>
 
             <!-- La liste complète n'apparaît qu'à partir de 1024 px : sur mobile

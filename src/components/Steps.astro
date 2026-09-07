@@ -1,0 +1,40 @@
+---
+/**
+ * Une rangée de pas, comme sur une boîte à rythmes.
+ *
+ * Ce n'est pas une décoration : chaque case correspond à une partie réelle de
+ * la séquence, et `current` marque celle qu'on lit. Si le nombre de cases
+ * cessait de vouloir dire quelque chose, il faudrait retirer le composant
+ * plutôt que le garder pour l'allure.
+ */
+interface Props {
+	/** Nombre de parties écrites. Zéro affiche une rangée éteinte. */
+	total: number;
+	/** Position lue en ce moment, à partir de 1. Absente ailleurs que sur une leçon. */
+	current?: number;
+	/** Nombre de cases affichées quand la séquence est encore vide. */
+	placeholder?: number;
+}
+
+const { total, current, placeholder = 4 }: Props = Astro.props;
+
+const cells = total > 0 ? total : placeholder;
+---
+
+<!-- aria-hidden : l'information est déjà donnée en toutes lettres à côté
+     (« 2 parties », « Partie 2 sur 5 »). La répéter case par case rendrait la
+     lecture vocale insupportable. -->
+<div class="flex flex-wrap gap-1" aria-hidden="true">
+    {Array.from({ length: cells }).map((_, index) => (
+        <span
+            class:list={[
+                "h-2.5 w-2.5 shrink-0 transition-colors",
+                total === 0
+                    ? "bg-rule/60"
+                    : current === index + 1
+                      ? "bg-pulse"
+                      : "bg-accent",
+            ]}
+        ></span>
+    ))}
+</div>

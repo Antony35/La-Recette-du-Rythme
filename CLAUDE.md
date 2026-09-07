@@ -163,6 +163,20 @@ au-delà de 2 px.
   4,5:1 — et avait pourtant été documenté ici comme conforme. Une teinte « qui a
   l'air assez sombre » n'est pas une teinte conforme : **calculer le ratio, pas
   l'estimer.**
+- **Deux accents, deux rôles.** `--color-accent` (teal) marque la *structure* :
+  liens, repères, filets actifs. `--color-pulse` (ambre) ne marque que ce qui est
+  **actif** : la partie qu'on lit, le pas qui sonne. Une couleur qui sert à
+  décorer n'est plus une information — si `pulse` apparaît là où rien n'est en
+  cours, c'est un bug de sens, pas de style.
+- **`components/Steps.astro`** rend une rangée de pas, une case par partie
+  réelle. Ce n'est pas un ornement : le jour où le nombre de cases cesse de
+  vouloir dire quelque chose, il faut retirer le composant, pas le garder pour
+  l'allure. La rangée est `aria-hidden` — l'information est déjà écrite à côté
+  (« 2 parties », « Partie 2 sur 5 »).
+- **Le témoin de lecture (`.playhead`) n'existe que pendant la lecture.**
+  Une animation permanente qui imite un séquenceur à l'arrêt raconterait quelque
+  chose de faux. Sous `prefers-reduced-motion`, le premier pas reste allumé et
+  l'animation s'arrête : l'information survit sans le mouvement.
 - **`--color-rule` est à 1,79:1**, volontairement. WCAG n'impose pas 3:1 aux
   séparateurs décoratifs, et un filet à 3:1 serait une barre lourde plutôt qu'un
   trait. Le signal qui porte du sens — l'élément courant du rail — passe par
