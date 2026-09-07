@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import StrudelPlayer from "@/components/StrudelPlayer.vue";
+import StrudelRepl from "@/components/StrudelRepl.vue";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import type { buildCourse } from "@/lib/course";
 import { withBase } from "@/lib/url";
@@ -48,37 +48,24 @@ const summary = [
         mis au service du son, et comment s'en servir soi-même.
     </p>
 
-    <section class="mt-14 border-l-2 border-accent pl-6" aria-labelledby="essai">
-        <h2
-            id="essai"
-            class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent"
-        >
-            Essaie tout de suite
-        </h2>
-
-        <pre class="mt-4 max-w-md overflow-x-auto bg-surface px-4 py-3 font-mono text-sm">s("bd*4")</pre>
-
-        <div class="mt-5 flex flex-wrap items-center gap-4">
-            <StrudelPlayer client:visible />
-            <div class="flex items-center gap-2" aria-hidden="true">
-                <span class="size-2 bg-accent"></span>
-                <span class="size-2 bg-accent"></span>
-                <span class="size-2 bg-accent"></span>
-                <span class="size-2 bg-accent"></span>
-            </div>
-            <span class="font-mono text-xs text-muted">4 frappes par cycle</span>
-        </div>
-
-        <p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
-            Ce bouton ne lit pas un fichier son : il exécute ce motif dans le
-            moteur audio de ton navigateur. <code
-                class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">bd</code
-            > est une grosse caisse, <code
-                class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">*4</code
-            > la répète quatre fois par cycle. Le premier clic télécharge Strudel
-            et une banque de sons — compte quelques secondes.
-        </p>
-    </section>
+    <div class="mt-14">
+        <StrudelRepl client:visible label="Essaie tout de suite" code={'s("bd*4")'}>
+            <p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+                Ce n'est pas un fichier son : ce motif est exécuté dans le moteur
+                audio de ton navigateur, et tu peux le réécrire. <code
+                    class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">bd</code
+                > est une grosse caisse, <code
+                    class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">*4</code
+                > la répète quatre fois par cycle. Essaie <code
+                    class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">s("bd*4, hh*8")</code
+                >, ou remplace <code
+                    class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">hh</code
+                > par <code
+                    class="bg-surface px-1 py-0.5 font-mono text-xs text-ink">sd</code
+                >.
+            </p>
+        </StrudelRepl>
+    </div>
 
     <section class="mt-16" aria-labelledby="public">
         <h2

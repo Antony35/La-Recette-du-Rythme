@@ -227,11 +227,14 @@ destinées au code vont dans le frontmatter.
 Contrôle après un `pnpm build` — il ne doit rien renvoyer :
 
 ```bash
-find dist -name '*.html' -exec grep -ohE '<!--.{0,60}' {} \; | grep -v 'astro:'
+find dist -name '*.html' -exec grep -ohE '<!--.{0,60}' {} \; \
+  | grep -vE 'astro:|^<!--(\[|\])?-->'
 ```
 
-(Les commentaires d'un `<template>` Vue, eux, sont retirés en production par le
-compilateur. Vérifié sur le build, pas supposé.)
+Les deux exclusions sont des marqueurs de machine, pas du texte rédigé :
+`<!--astro:…-->` délimite les îlots, et `<!---->` / `<!--[-->` / `<!--]-->` sont
+les ancres d'hydratation des fragments Vue. Les commentaires d'un `<template>`
+Vue, eux, sont bel et bien retirés en production par le compilateur.
 
 ### Idiomes Astro 7 à utiliser
 
@@ -258,13 +261,32 @@ Ces API existent dans la version installée ; ne pas les réimplémenter à la m
 
 ### Îlots Strudel
 
-`src/components/StrudelPlayer.vue` illustre le pattern à respecter pour l'audio :
-Strudel (`@strudel/core`, `@strudel/mini`, `@strudel/webaudio`) est chargé par
-`await import()` **au premier clic**, jamais par un import en tête de fichier.
-Deux raisons cumulatives : le poids (~340 Ko) et le fait qu'un import statique
-serait exécuté par Astro dans Node au moment du build, où Strudel plante.
-`initAudio()` doit rester dans la continuité d'un geste utilisateur, sinon
-l'`AudioContext` reste `suspended`. Un `onUnmounted` coupe le scheduler.
+`src/components/StrudelRepl.vue` enveloppe **le REPL officiel de Strudel** — le
+même éditeur que sur strudel.cc : `@strudel/repl` fournit l'élément personnalisé
+`<strudel-editor>`, code modifiable, coloration, surlignage des notes jouées,
+`Ctrl+Entrée` pour réévaluer.
+
+Le paquet pèse **1,8 Mo** une fois bundlé. Il est donc chargé par `await import()`
+**au premier clic**, jamais par un import en tête de fichier. Deux raisons
+cumulatives : le poids, et le fait qu'un import statique serait exécuté par Astro
+dans Node au moment du build, où Strudel plante.
+Contrôle : `grep -oE 'rel="modulepreload"[^>]*' dist/index.html` doit rester vide.
+
+Trois pièges propres à ce composant :
+
+- **`initAudioOnFirstClick()`** est appelé à l'import du paquet et s'abonne au
+  *prochain* clic. Le nôtre est déjà passé quand l'import se termine, donc le
+  composant réveille lui-même le contexte : `await getAudioContext().resume()`.
+  Sans ça, l'`AudioContext` reste `suspended` et rien ne sort.
+- **`<strudel-editor>` insère son éditeur en frère suivant**, pas en enfant
+  (`parentElement.insertBefore(container, this.nextSibling)`). Il lui faut donc
+  un conteneur parent bien à lui.
+- **Les styles de l'éditeur ne peuvent pas être `scoped`** : CodeMirror est
+  inséré par l'élément personnalisé, pas par Vue, donc sans attribut de portée.
+  Les quelques règles d'encombrement vivent dans `global.css`.
+
+Un `onUnmounted` coupe le scheduler, sinon le son continue après la disparition
+du composant.
 
 Le composant a besoin d'une directive `client:*` **partout** où il est utilisé,
 sinon le bouton s'affiche mais reste inerte. Dans un `.astro` (`Home.astro`) il
@@ -278,7 +300,12 @@ composant doit être **importé explicitement**, rien n'est implicite comme en
 
 Côté Vue : `<script setup lang="ts">` (le projet est en TypeScript strict),
 `ref()` pour ce qui est affiché, une variable ordinaire pour ce qui ne l'est pas
-(le moteur Strudel), et `onUnmounted` pour couper le son.
+(l'élément et son éditeur), et `onUnmounted` pour couper le son.
+
+Avant l'arrivée du REPL, un `StrudelPlayer.vue` appelait `initAudio()`,
+`samples()` et `webaudioRepl()` à la main. Il jouait, mais ne permettait rien
+d'éditer. Son code, très commenté, reste consultable :
+`git show 88fef30:src/components/StrudelPlayer.vue`.
 
 ## Conventions
 

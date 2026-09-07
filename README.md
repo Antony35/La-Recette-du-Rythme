@@ -31,16 +31,19 @@ pnpm test:coverage   # couverture de src/lib/
 src/
 ├── content.config.ts       schémas des collections — modèle de données du cours
 ├── components/
-│   └── StrudelPlayer.vue   îlot interactif : lecteur de patterns Strudel
+│   ├── Breadcrumb.astro    fil d'ariane
+│   └── StrudelRepl.vue     îlot interactif : le REPL Strudel, code éditable
 ├── content/
 │   ├── sequences/          une séquence par fichier (métadonnées uniquement)
 │   └── parts/              le contenu des cours, en Markdown (.mdx si interactif)
 ├── layouts/
-│   ├── BaseLayout.astro    coquille HTML : <head>, styles globaux
+│   ├── BaseLayout.astro    coquille HTML : <head>, en-tête, pied de page
+│   ├── Home.astro          page d'accueil
 │   ├── Sequence.astro      présentation d'une séquence et de ses parties
 │   └── Lesson.astro        présentation d'une partie de cours
 ├── lib/
-│   └── course.ts           structure ordonnée du cours (arbre, liste plate, voisins)
+│   ├── course.ts           structure ordonnée du cours (arbre, liste plate, voisins)
+│   └── url.ts              withBase() : préfixe les chemins internes
 ├── pages/
 │   ├── index.astro         /                       accueil, liste des séquences
 │   └── cours/[sequence]/
@@ -85,9 +88,9 @@ produire la moindre erreur. Trois choses doivent être vraies en même temps :
    `.astro`, rien n'est implicite.
 
 ```mdx
-import StrudelPlayer from "@/components/StrudelPlayer.vue";
+import StrudelRepl from "@/components/StrudelRepl.vue";
 
-<StrudelPlayer client:visible />
+<StrudelRepl client:visible code={'s("bd*4")'} label="À toi" />
 ```
 
 La directive `client:*` n'est pas optionnelle : sans elle le composant est rendu
@@ -101,6 +104,39 @@ grep -c astro-island dist/cours/<sequence>/<partie>/index.html   # doit valoir �
 Un `.mdx` est du **code exécuté**, pas seulement du texte : il peut importer et
 lancer n'importe quoi, au build comme dans le navigateur. Relire les fichiers de
 `content/` comme on relit du code, en particulier s'ils viennent de l'extérieur.
+
+## Le REPL Strudel
+
+`src/components/StrudelRepl.vue` enveloppe **le REPL officiel de Strudel** — le
+même éditeur que sur [strudel.cc](https://strudel.cc) : code modifiable,
+coloration syntaxique, surlignage des notes au moment où elles sonnent, et
+`Ctrl+Entrée` pour réévaluer.
+
+```astro
+<StrudelRepl client:visible code={'s("bd*4")'} label="Essaie tout de suite" />
+```
+
+Il accepte un contenu par défaut, rendu sous les contrôles — l'explication qui
+accompagne l'exemple change d'une page à l'autre, pas les boutons.
+
+**Le paquet pèse 1,8 Mo une fois bundlé.** Il n'est donc chargé qu'au premier
+clic, par `await import()`. Avant ça, le code reste affiché en HTML pur : qui ne
+clique jamais ne télécharge rien. Contrôle après un build — il doit rester vide :
+
+```bash
+grep -oE 'rel="modulepreload"[^>]*' dist/index.html
+```
+
+Trois pièges, tous rencontrés :
+
+1. `initAudioOnFirstClick()` s'abonne au **prochain** clic, or le nôtre est déjà
+   passé quand l'import se termine. Le composant réveille donc le contexte
+   lui-même avec `getAudioContext().resume()`, sinon rien ne sort.
+2. `<strudel-editor>` insère son éditeur en **frère suivant**, pas en enfant : il
+   lui faut un conteneur parent dédié.
+3. Les styles de l'éditeur ne peuvent pas être `scoped` — CodeMirror est inséré
+   par l'élément personnalisé, pas par Vue, donc sans attribut de portée. Les
+   règles d'encombrement vivent dans `global.css`.
 
 ## Style
 

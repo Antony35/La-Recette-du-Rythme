@@ -20,8 +20,33 @@ declare module "@strudel/mini" {
 	export const miniAllStrings: () => void;
 }
 
+declare module "@strudel/codemirror" {
+	/**
+	 * L'éditeur CodeMirror de Strudel. On n'en déclare que les quatre méthodes
+	 * appelées ici ; le reste de l'API est vaste et ne nous concerne pas.
+	 */
+	export interface StrudelMirror {
+		/** Évalue le code de l'éditeur ; démarre la lecture par défaut. */
+		evaluate: (autostart?: boolean) => Promise<void>;
+		stop: () => Promise<void>;
+		toggle: () => Promise<void>;
+		setCode: (code: string) => void;
+	}
+}
+
+declare module "@strudel/repl" {
+	/**
+	 * Ce module n'exporte rien : l'importer enregistre l'élément personnalisé
+	 * <strudel-editor>. C'est un import pour son effet de bord, pas pour sa
+	 * valeur — d'où l'absence de déclaration d'export.
+	 */
+}
+
 declare module "@strudel/webaudio" {
 	import type { Pattern } from "@strudel/core";
+
+	/** L'AudioContext partagé par Strudel. `resume()` le sort de l'état suspendu. */
+	export const getAudioContext: () => AudioContext;
 
 	/** Crée ou réveille l'AudioContext. À appeler dans la suite d'un geste utilisateur. */
 	export const initAudio: () => Promise<void>;

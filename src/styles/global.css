@@ -118,6 +118,26 @@
 }
 
 /* ---------------------------------------------------------------------------
+   L'éditeur Strudel (CodeMirror).
+
+   Il est inséré dans le DOM par l'élément <strudel-editor>, pas par Vue : des
+   styles `scoped` ne l'atteindraient jamais, faute d'attribut de portée. D'où
+   ces règles globales, volontairement limitées à l'encombrement — le thème et
+   la coloration restent ceux de Strudel.
+--------------------------------------------------------------------------- */
+.cm-editor .cm-content {
+	/* Sans minimum, l'éditeur d'une ligne se réduit à un bandeau écrasé où l'on
+	   n'a pas envie d'écrire. Il continue de grandir avec le contenu. */
+	min-height: 4.5rem;
+	padding-block: 0.5rem;
+}
+
+.cm-editor .cm-scroller {
+	font-family: var(--font-mono);
+	line-height: 1.6;
+}
+
+/* ---------------------------------------------------------------------------
    Confort de lecture, indépendamment du thème.
 --------------------------------------------------------------------------- */
 html {
