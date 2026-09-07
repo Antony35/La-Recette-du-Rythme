@@ -48,18 +48,49 @@
 	--color-ground: #f4f5f3;
 	--color-surface: #ebeeec;
 	--color-ink: #222831;
-	--color-muted: #5f6b6d;
-	--color-rule: #d5d9d6;
+	--color-muted: #5a6668;
+	--color-rule: #b4bbb6;
 
-	/* Teal issu de la palette la plus reprise de Color Hunt (#00ADB5),
-	   assombri jusqu'à passer le contraste AA sur fond clair — la teinte
-	   d'origine, elle, ne le passe pas. */
-	--color-accent: #00807f;
+	/* Teal dérivé du #00ADB5 de Color Hunt. Contraste mesuré : 5,06:1 sur le
+	   fond clair, donc AA pour du texte normal.
+	   Le #00807F d'abord retenu ne donnait que 4,37:1 — sous le seuil. Une
+	   teinte « qui a l'air assez sombre » n'est pas une teinte conforme : il
+	   faut calculer le ratio, pas l'estimer à l'œil. */
+	--color-accent: #007574;
 
 	--font-mono:
 		"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
 	--font-sans:
 		system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* ---------------------------------------------------------------------------
+   Thème sombre.
+
+   Les utilitaires Tailwind v4 s'écrivent `var(--color-ground)` : redéfinir le
+   jeton ici suffit à retourner tout le site, sans une seule classe `dark:`
+   dans les composants. C'est l'intérêt d'avoir tout fait passer par @theme.
+
+   Aucun sélecteur `.dark` ni JavaScript : on suit le réglage du système. Rien à
+   stocker, rien à charger, et pas de scintillement au premier rendu.
+
+   Ratios mesurés sur le fond sombre : ink 14,3:1 · muted 7,1:1 · accent 8,3:1.
+--------------------------------------------------------------------------- */
+@media (prefers-color-scheme: dark) {
+	:root {
+		--color-ground: #15191a;
+		--color-surface: #1d2224;
+		--color-ink: #e4e8e6;
+		--color-muted: #9ba6a4;
+		--color-rule: #39413f;
+		--color-accent: #4fc3bc;
+	}
+}
+
+/* Indique au navigateur de quel côté on est : barres de défilement, champs de
+   formulaire et menus natifs s'adaptent d'eux-mêmes. */
+:root {
+	color-scheme: light dark;
 }
 
 /* ---------------------------------------------------------------------------
@@ -98,8 +129,11 @@
 }
 
 /* Le filet vertical d'accent, repris des barres de mesure : blocs de code et
-   citations sont marqués sur leur bord gauche plutôt qu'encadrés. */
-.prose-cours pre {
+   citations sont marqués sur leur bord gauche plutôt qu'encadrés.
+
+   `:not(.repl-code)` exclut le bloc du REPL : celui-ci vit déjà dans une section
+   bordée d'accent, et les deux filets imbriqués faisaient une double barre. */
+.prose-cours pre:not(.repl-code) {
 	border-left: 2px solid var(--color-accent);
 	border-radius: 0;
 }

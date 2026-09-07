@@ -31,6 +31,7 @@ const trail = [
 ---
 
 <BaseLayout title={sequence.data.title}>
+    <div class="max-w-3xl">
     <Breadcrumb items={trail} />
 
     <p class="mt-10 font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
@@ -77,4 +78,5 @@ const trail = [
             </li>
         ))}
     </ol>
+    </div>
 </BaseLayout>

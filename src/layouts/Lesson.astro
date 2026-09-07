@@ -7,15 +7,24 @@ import { withBase } from "@/lib/url";
 interface Props {
 	part: CollectionEntry<"parts">;
 	sequence: CollectionEntry<"sequences">;
+	/** Toutes les parties de la séquence, dans l'ordre de lecture. */
+	parts: CollectionEntry<"parts">[];
 	// Optionnels, parce qu'ils le sont vraiment : la première partie du cours
 	// n'a pas de précédente, la dernière pas de suivante.
 	previous?: CollectionEntry<"parts">;
 	next?: CollectionEntry<"parts">;
 }
-const { part, sequence, previous, next }: Props = Astro.props;
+const { part, sequence, parts, previous, next }: Props = Astro.props;
 
 const partUrl = (entry: CollectionEntry<"parts">) =>
 	withBase(`/cours/${entry.data.sequence.id}/${entry.id}`);
+
+// La position se déduit de la liste : pas de champ « index » à tenir à jour
+// dans le frontmatter, qui deviendrait faux dès qu'on insère une partie.
+const position = parts.findIndex((entry) => entry.id === part.id) + 1;
+const remaining = parts
+	.slice(position)
+	.reduce((total, entry) => total + entry.data.durationMinutes, 0);
 
 // Le fil d'ariane dit *où l'on est*, pas ce qu'on lit : des numéros courts, pas
 // les titres — qui sont déjà juste en dessous, en toutes lettres.
@@ -38,48 +47,124 @@ const trail = [
 ---
 
 <BaseLayout title={part.data.title}>
+    <!-- Le fil d'ariane est au-dessus de la grille : c'est une navigation de
+         page entière, pas une colonne. Il reste ainsi le premier élément lu,
+         sur mobile comme sur grand écran. -->
     <Breadcrumb items={trail} />
 
-    <p class="mt-10 font-mono text-sm text-accent">
-        {sequence.data.title}
-    </p>
-    <h1 class="mt-3 font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
-        {part.data.title}
-    </h1>
+    <div class="mt-10 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
+        <!-- Le rail passe au-dessus du contenu sous 1024 px : replié, il reste
+             consultable sans occuper tout l'écran. -->
+        <aside class="lg:sticky lg:top-8 lg:self-start" aria-labelledby="rail">
+            <h2 id="rail" class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted">
+                Séquence {sequence.data.order}
+            </h2>
+            <a
+                href={withBase(`/cours/${sequence.id}`)}
+                class="mt-2 block leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:decoration-accent"
+            >
+                {sequence.data.title}
+            </a>
 
-    <div class="prose prose-cours mt-10">
-        <slot />
+            <p class="mt-4 font-mono text-xs text-muted tabular-nums">
+                Partie {position} sur {parts.length}
+                {remaining > 0 && <> · {remaining} min restantes</>}
+            </p>
+
+            <!-- Une barre de progression décrite pour l'assistance technique :
+                 la largeur seule ne dit rien à un lecteur d'écran. -->
+            <div
+                class="mt-2 h-1 w-full bg-rule"
+                role="progressbar"
+                aria-valuenow={position}
+                aria-valuemin={1}
+                aria-valuemax={parts.length}
+                aria-label={`Partie ${position} sur ${parts.length}`}
+            >
+                <div class="h-full bg-accent" style={`width:${(position / parts.length) * 100}%`}></div>
+            </div>
+
+            <!-- La liste complète n'apparaît qu'à partir de 1024 px : sur mobile
+                 elle repousserait le cours sous un écran de sommaire. Le lien
+                 ci-dessous y donne accès sans dupliquer le balisage. -->
+            <ol class="mt-6 hidden flex-col gap-px lg:flex">
+                {parts.map((entry, index) => {
+                    const current = entry.id === part.id;
+                    return (
+                        <li>
+                            <a
+                                href={partUrl(entry)}
+                                aria-current={current ? "page" : undefined}
+                                class:list={[
+                                    "flex gap-3 border-l-2 py-2 pl-4 text-sm leading-snug transition-colors",
+                                    current
+                                        ? "border-accent font-medium text-ink"
+                                        : "border-rule text-muted hover:border-accent hover:text-ink",
+                                ]}
+                            >
+                                <span class="font-mono text-xs tabular-nums">
+                                    {String(index + 1).padStart(2, "0")}
+                                </span>
+                                <span>{entry.data.title}</span>
+                            </a>
+                        </li>
+                    );
+                })}
+            </ol>
+
+            <a
+                href={withBase(`/cours/${sequence.id}`)}
+                class="mt-4 inline-block font-mono text-xs text-muted underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent lg:hidden"
+            >
+                Voir les {parts.length} parties →
+            </a>
+        </aside>
+
+        <!-- Pas de rappel du titre de séquence ici : le rail le porte déjà, et
+             le répéter à trois lignes d'intervalle n'apprend rien. -->
+        <div class="mt-12 min-w-0 lg:mt-0">
+            <h1 class="font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
+                {part.data.title}
+            </h1>
+            <p class="mt-3 font-mono text-xs text-muted tabular-nums">
+                {part.data.durationMinutes} min de lecture
+            </p>
+
+            <div class="prose prose-cours mt-10">
+                <slot />
+            </div>
+
+            {(previous || next) && (
+                <nav
+                    aria-label="Navigation dans le cours"
+                    class="mt-16 grid gap-8 border-t border-rule pt-8 sm:grid-cols-2"
+                >
+                    <div>
+                        {previous && (
+                            <a href={partUrl(previous)} class="group flex flex-col gap-1.5">
+                                <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+                                    ← Précédent
+                                </span>
+                                <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
+                                    {previous.data.title}
+                                </span>
+                            </a>
+                        )}
+                    </div>
+                    <div class="sm:text-right">
+                        {next && (
+                            <a href={partUrl(next)} class="group flex flex-col gap-1.5">
+                                <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
+                                    Suivant →
+                                </span>
+                                <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
+                                    {next.data.title}
+                                </span>
+                            </a>
+                        )}
+                    </div>
+                </nav>
+            )}
+        </div>
     </div>
-
-    {(previous || next) && (
-        <nav
-            aria-label="Navigation dans le cours"
-            class="mt-16 grid gap-8 border-t border-rule pt-8 sm:grid-cols-2"
-        >
-            <div>
-                {previous && (
-                    <a href={partUrl(previous)} class="group flex flex-col gap-1.5">
-                        <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
-                            ← Précédent
-                        </span>
-                        <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
-                            {previous.data.title}
-                        </span>
-                    </a>
-                )}
-            </div>
-            <div class="sm:text-right">
-                {next && (
-                    <a href={partUrl(next)} class="group flex flex-col gap-1.5">
-                        <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
-                            Suivant →
-                        </span>
-                        <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
-                            {next.data.title}
-                        </span>
-                    </a>
-                )}
-            </div>
-        </nav>
-    )}
 </BaseLayout>

@@ -6,13 +6,22 @@
 // initAudio() / samples() / webaudioRepl(), ce qui montrait bien la mécanique
 // mais ne permettait pas d'éditer quoi que ce soit.
 import type { StrudelMirror } from "@strudel/codemirror";
-import { onUnmounted, ref } from "vue";
+import { onUnmounted, ref, useId } from "vue";
 
 const props = defineProps<{
 	code: string;
-	/** Repère affiché au-dessus du bloc, ex. « Essaie tout de suite ». */
+	/** Titre du bloc, ex. « Essaie tout de suite ». Rendu en <h2>. */
 	label?: string;
 }>();
+
+// La section est nommée par son titre via aria-labelledby : sans ça, un lecteur
+// d'écran annonce « région » sans dire laquelle. L'identifiant doit être unique,
+// puisqu'une page peut contenir plusieurs REPL.
+//
+// useId() et pas Math.random() : l'identifiant doit être *le même* au rendu
+// serveur et à l'hydratation, sinon Vue détecte une divergence et remplace le
+// DOM. Vue 3.5 génère ici une valeur stable des deux côtés.
+const headingId = useId();
 
 // L'élément personnalisé porte son éditeur sur la propriété `editor`.
 type EditorElement = HTMLElement & { editor?: StrudelMirror };
@@ -96,19 +105,25 @@ onUnmounted(() => {
 </script>
 
 <template>
-	<section class="border-l-2 border-accent pl-6">
-		<p
+	<section
+		class="border-l-2 border-accent pl-6"
+		:aria-labelledby="label ? headingId : undefined"
+	>
+		<h2
 			v-if="label"
+			:id="headingId"
 			class="font-mono text-xs font-bold tracking-[0.16em] text-accent uppercase"
 		>
 			{{ label }}
-		</p>
+		</h2>
 
 		<!-- Avant chargement, le code reste lisible en HTML pur : quelqu'un qui ne
-		     cliquera jamais voit quand même de quoi on parle. -->
+		     cliquera jamais voit quand même de quoi on parle.
+		     `repl-code` empêche le filet d'accent de .prose-cours pre de s'ajouter
+		     à celui de la section quand le REPL est dans une page de cours. -->
 		<pre
 			v-if="!isReady"
-			class="mt-4 max-w-md overflow-x-auto bg-surface px-4 py-3 font-mono text-sm"
+			class="repl-code mt-4 max-w-md overflow-x-auto bg-surface px-4 py-3 font-mono text-sm"
 		>{{ code }}</pre>
 
 		<!-- L'éditeur s'insère ici, et se place lui-même après <strudel-editor>. -->

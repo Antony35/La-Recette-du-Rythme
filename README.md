@@ -148,19 +148,33 @@ dégradé, ni coin arrondi au-delà de 2 px.
 Les couleurs se déclarent dans `@theme` et deviennent des classes utilitaires ;
 Tailwind v4 n'a plus de fichier de configuration JavaScript.
 
-| Jeton | Valeur | Rôle |
-|---|---|---|
-| `--color-ground` | `#F4F5F3` | fond, gris très clair tiré vers le vert |
-| `--color-surface` | `#EBEEEC` | blocs de code, code inline |
-| `--color-ink` | `#222831` | texte |
-| `--color-muted` | `#5F6B6D` | texte secondaire |
-| `--color-rule` | `#D5D9D6` | filets |
-| `--color-accent` | `#00807F` | liens, repères, bouton |
+| Jeton | Clair | Sombre | Rôle |
+|---|---|---|---|
+| `--color-ground` | `#F4F5F3` | `#15191A` | fond |
+| `--color-surface` | `#EBEEEC` | `#1D2224` | blocs de code |
+| `--color-ink` | `#222831` | `#E4E8E6` | texte |
+| `--color-muted` | `#5A6668` | `#9BA6A4` | texte secondaire |
+| `--color-rule` | `#B4BBB6` | `#39413F` | filets |
+| `--color-accent` | `#007574` | `#4FC3BC` | liens, repères, bouton |
 
 Les teintes viennent des palettes les plus populaires de
-[Color Hunt](https://colorhunt.co/palettes/popular), transposées sur fond clair :
-`#222831` y sert de fond, ici c'est l'encre. L'accent est leur `#00ADB5`
-assombri — la teinte d'origine ne passe pas le contraste AA sur fond clair.
+[Color Hunt](https://colorhunt.co/palettes/popular), transposées : `#222831` y
+sert de fond, ici c'est l'encre en thème clair.
+
+Contrastes **mesurés**, pas estimés — accent 5,06:1 en clair et 8,32:1 en
+sombre, texte 13,6:1 et 14,3:1, secondaire 5,4:1 et 7,1:1. Tous au-dessus du
+seuil AA de 4,5:1. Les filets restent volontairement à 1,8:1 : WCAG n'impose pas
+3:1 aux séparateurs décoratifs, et un filet plus contrasté deviendrait une barre.
+
+## Thème sombre
+
+Il suit le réglage du système, sans interrupteur ni JavaScript. **Aucune classe
+`dark:` dans les composants** : les utilitaires Tailwind v4 s'écrivent
+`var(--color-ground)`, donc redéfinir les jetons sous
+`@media (prefers-color-scheme: dark)` retourne tout le site d'un coup.
+
+Corollaire à retenir : une couleur écrite en dur dans un composant ne suivra pas
+le thème. Tout passe par un jeton de `@theme`.
 
 **Le Markdown rendu** se met en forme avec `class="prose prose-cours"` :
 `prose` vient de `@tailwindcss/typography`, `prose-cours` ne fait que lui passer

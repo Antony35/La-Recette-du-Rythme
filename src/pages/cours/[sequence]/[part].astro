@@ -1,5 +1,5 @@
 ---
-import { getCollection, getEntry, render } from "astro:content";
+import { getCollection, render } from "astro:content";
 import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import Lesson from "@/layouts/Lesson.astro";
 import { buildCourse, flattenCourse, getNeighbours } from "@/lib/course";
@@ -14,37 +14,44 @@ export const getStaticPaths = (async () => {
 	// comprises. Il est calculé une seule fois ici : getStaticPaths ne s'exécute
 	// qu'au démarrage du build, alors que le frontmatter d'une page tourne pour
 	// chaque page générée.
-	const flat = flattenCourse(buildCourse(sequences, parts));
+	const course = buildCourse(sequences, parts);
+	const flat = flattenCourse(course);
 
-	return flat.map((part) => {
-		const { previous, next } = getNeighbours(flat, part.id);
+	// On parcourt l'arbre plutôt que la collection brute : chaque partie arrive
+	// avec sa séquence et ses sœurs déjà triées, donc plus besoin de getEntry()
+	// dans la page ni d'un second filtrage pour le rail de navigation.
+	return course.flatMap((sequence) =>
+		sequence.parts.map((part) => {
+			const { previous, next } = getNeighbours(flat, part.id);
 
-		return {
-			params: {
-				part: part.id,
-				sequence: part.data.sequence.id,
-			},
-			props: {
-				part,
-				previous,
-				next,
-			},
-		};
-	});
+			return {
+				params: {
+					part: part.id,
+					sequence: sequence.id,
+				},
+				props: {
+					part,
+					sequence,
+					parts: sequence.parts,
+					previous,
+					next,
+				},
+			};
+		}),
+	);
 }) satisfies GetStaticPaths;
 
 type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
-const { part, previous, next }: Props = Astro.props;
+const { part, sequence, parts, previous, next }: Props = Astro.props;
 
-// part.data.sequence est un pointeur { collection, id } : getEntry() le résout.
-const sequence = await getEntry(part.data.sequence);
 const { Content } = await render(part);
 ---
 
 <Lesson
     part={part}
     sequence={sequence}
+    parts={parts}
     previous={previous}
     next={next}
 >

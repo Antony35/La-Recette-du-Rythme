@@ -157,8 +157,16 @@ au-delà de 2 px.
 - **Les couleurs se déclarent dans `@theme`**, jamais en dur dans un composant.
   `--color-accent` engendre `text-accent`, `bg-accent`, `border-accent`. C'est le
   remplaçant du `tailwind.config.js` de la v3 ; il n'y a plus de config JS.
-- **`--color-accent` est `#00807F`**, le teal `#00ADB5` de Color Hunt assombri :
-  la teinte d'origine ne passe pas le contraste AA sur fond clair.
+- **`--color-accent` est `#007574`**, dérivé du `#00ADB5` de Color Hunt.
+  Contraste **mesuré** : 5,06:1 sur le fond clair, 8,32:1 sur le fond sombre.
+  Le `#00807F` d'abord retenu ne donnait que **4,37:1**, sous le seuil AA de
+  4,5:1 — et avait pourtant été documenté ici comme conforme. Une teinte « qui a
+  l'air assez sombre » n'est pas une teinte conforme : **calculer le ratio, pas
+  l'estimer.**
+- **`--color-rule` est à 1,79:1**, volontairement. WCAG n'impose pas 3:1 aux
+  séparateurs décoratifs, et un filet à 3:1 serait une barre lourde plutôt qu'un
+  trait. Le signal qui porte du sens — l'élément courant du rail — passe par
+  l'accent, lui conforme.
 - **Le Markdown rendu** porte `class="prose prose-cours"`. `prose` vient du
   plugin typography, `prose-cours` ne fait que lui passer les couleurs du projet
   par ses variables `--tw-prose-*`. Ne pas réécrire les règles du plugin.
@@ -172,6 +180,17 @@ au-delà de 2 px.
 
 Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json` — sans ça, `pnpm lint` échoue sur `global.css`.
+
+**Thème sombre : aucune classe `dark:` dans les composants.** Les utilitaires
+Tailwind v4 s'écrivent `var(--color-ground)`, donc redéfinir les jetons sous
+`@media (prefers-color-scheme: dark)` retourne tout le site d'un coup. C'est le
+bénéfice concret d'avoir tout fait passer par `@theme`. Pas de sélecteur `.dark`,
+pas de JavaScript, pas de valeur stockée, pas de scintillement au premier rendu —
+on suit le réglage du système. `color-scheme: light dark` sur `:root` fait suivre
+les barres de défilement et les contrôles natifs.
+
+Corollaire : **une couleur écrite en dur dans un composant ne suivra pas le
+thème.** Tout passe par un jeton.
 
 ### La page d'accueil
 
@@ -212,11 +231,32 @@ Le fil d'ariane dit *où l'on est*, pas ce qu'on lit : « Accueil / Séquence 1 
 Partie 2 ». Les titres en toutes lettres sont déjà juste en dessous ; les
 répéter allongerait l'ariane sur trois lignes sans rien apprendre.
 
-`Lesson.astro` reçoit les **entrées** `part` et `sequence`, pas une liste de
-chaînes. Une liste de props qui s'allonge (`title`, `sequenceTitle`,
+`Lesson.astro` reçoit les **entrées** `part`, `sequence` et `parts`, pas une
+liste de chaînes. Une liste de props qui s'allonge (`title`, `sequenceTitle`,
 `sequenceId`, `sequenceOrder`…) est le signe qu'il fallait passer l'objet.
-La règle « les layouts ne chargent pas de données » tient toujours : c'est la
-page qui appelle `getEntry()`.
+La règle « les layouts ne chargent pas de données » tient toujours : c'est
+`getStaticPaths` qui prépare tout, une seule fois par build.
+
+Un lien d'évitement (« Aller au contenu ») ouvre `<body>` : visible seulement au
+focus clavier, il évite de retraverser l'en-tête à chaque page.
+
+### Le rail de la page de cours
+
+`Lesson.astro` affiche à gauche, à partir de 1024 px, la séquence courante et
+ses parties. Trois principes :
+
+- **La position se déduit, elle ne se stocke pas** :
+  `parts.findIndex((entry) => entry.id === part.id) + 1`. Un champ `index` dans
+  le frontmatter deviendrait faux dès l'insertion d'une partie.
+- **La barre de progression porte `role="progressbar"`** avec
+  `aria-valuenow/min/max` : une largeur en CSS ne dit rien à un lecteur d'écran.
+- **La liste complète est `hidden lg:flex`.** Sur mobile elle repousserait le
+  cours sous un écran de sommaire ; un lien « Voir les N parties » la remplace,
+  sans dupliquer le balisage.
+
+Le titre de séquence n'est **pas** répété au-dessus du titre de partie : le rail
+le porte déjà, et le fil d'ariane donne la position. Trois rappels du même texte
+à quelques lignes d'intervalle n'apprennent rien.
 
 ### Commentaires dans un `.astro`
 
@@ -327,8 +367,11 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 - Le contenu des parties est du remplissage (« Contenue de la partie 1… ») : la
   chaîne technique fonctionne, le cours reste à écrire.
-- Le cours n'a que deux séquences dont une vide, et deux parties : les états
-  limites (« à venir », « 0 partie ») sont visibles en permanence sur le site.
+- Les **12 séquences** du plan de cours existent, mais **10 sont vides** : seules
+  les séquences 1 et 2 ont des parties. Les états limites (« à venir »,
+  « 0 partie ») sont donc visibles en permanence sur le site.
+- Le thème sombre suit le système et **n'a pas d'interrupteur** : impossible de
+  forcer l'un ou l'autre depuis la page.
 - **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), tous deux
   transitifs et cantonnés au build — voir la section Sécurité ci-dessous.
 
