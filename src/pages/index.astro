@@ -1,44 +1,18 @@
 ---
 import { getCollection } from "astro:content";
-import BaseLayout from "@/layouts/BaseLayout.astro";
-import { byOrder } from "@/lib/course";
-import { withBase } from "@/lib/url";
+import Home from "@/layouts/Home.astro";
+import { buildCourse, flattenCourse } from "@/lib/course";
 
-// toSorted() ne mute pas le tableau reçu : pas besoin de `let` ni de réassignation.
-const sequences = (await getCollection("sequences")).toSorted(byOrder);
+const [sequences, parts] = await Promise.all([
+	getCollection("sequences"),
+	getCollection("parts"),
+]);
 
-// Le nom du site est déjà dans l'en-tête : le <h1> de l'accueil dit ce qu'on y
-// apprend, pas comment le site s'appelle. Le filet vertical de chaque séquence
-// fait office de barre de mesure — c'est lui qui porte la structure.
+// buildCourse rend l'arbre trié, flattenCourse l'ordre de lecture. La première
+// entrée de la liste plate est le point de départ du cours — pas forcément la
+// première partie du fichier, ni celle de la première séquence si elle est vide.
+const course = buildCourse(sequences, parts);
+const start = flattenCourse(course)[0];
 ---
 
-<BaseLayout title="La Recette du Rythme">
-    <h1 class="font-mono text-3xl font-bold tracking-tight text-balance sm:text-4xl">
-        Introduction au live coding
-    </h1>
-    <p class="mt-5 max-w-xl leading-relaxed text-muted">
-        Du VST à Strudel en passant par la Web Audio API : comment le code s'est
-        mis au service du son, et comment s'en servir soi-même.
-    </p>
-
-    <ul class="mt-16 flex flex-col gap-10">
-        {sequences.map((sequence) => (
-            <li class="border-l-2 border-rule pl-6 transition-colors hover:border-accent">
-                <p class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
-                    Séquence {sequence.data.order}
-                </p>
-                <h2 class="mt-3 text-lg leading-snug font-semibold text-balance">
-                    <a
-                        href={withBase(`/cours/${sequence.id}`)}
-                        class="underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:decoration-accent"
-                    >
-                        {sequence.data.title}
-                    </a>
-                </h2>
-                <p class="mt-2 text-sm leading-relaxed text-muted">
-                    {sequence.data.objective}
-                </p>
-            </li>
-        ))}
-    </ul>
-</BaseLayout>
+<Home course={course} start={start} />

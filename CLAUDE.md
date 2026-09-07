@@ -173,6 +173,30 @@ au-delà de 2 px.
 Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json` — sans ça, `pnpm lint` échoue sur `global.css`.
 
+### La page d'accueil
+
+`pages/index.astro` charge et passe, `layouts/Home.astro` met en forme — même
+séparation que pour les séquences et les leçons. C'est `Home.astro` qui héberge
+l'îlot Strudel : le geste (« appuie sur Play ») est l'argument le plus direct du
+cours, et il coûte 0 octet tant qu'on ne clique pas.
+
+`buildCourse` et `flattenCourse` sont enfin utilisés : l'arbre alimente le
+sommaire, et `flattenCourse(course)[0]` donne le point de départ réel du cours —
+pas la première partie du dossier, ni celle de la première séquence si elle est
+vide.
+
+Le type des props dérive de la fonction plutôt que d'être réécrit :
+
+```ts
+type Course = ReturnType<
+	typeof buildCourse<CollectionEntry<"sequences">, CollectionEntry<"parts">>
+>;
+```
+
+`typeof buildCourse<…>` instancie la fonction générique avec les types réels.
+Sans les paramètres, `ReturnType` retomberait sur les contraintes `Sequence` /
+`Part` et perdrait titres et durées.
+
 ### En-tête, pied de page et fil d'ariane
 
 `BaseLayout.astro` porte la coquille commune : `<header>` avec le nom du site
@@ -242,9 +266,11 @@ serait exécuté par Astro dans Node au moment du build, où Strudel plante.
 `initAudio()` doit rester dans la continuité d'un geste utilisateur, sinon
 l'`AudioContext` reste `suspended`. Un `onUnmounted` coupe le scheduler.
 
-Le composant a besoin d'une directive `client:*` dans la page qui l'utilise, sinon
-le bouton s'affiche mais reste inerte. Un composant framework inséré dans un `.md`
-n'est pas rendu : il faut du `.mdx`. `mdx()` est branché dans `astro.config.mjs`
+Le composant a besoin d'une directive `client:*` **partout** où il est utilisé,
+sinon le bouton s'affiche mais reste inerte. Dans un `.astro` (`Home.astro`) il
+s'importe et s'utilise directement : MDX n'a jamais été nécessaire pour ça, il
+l'était uniquement parce que le contenu du cours est du Markdown. Un composant
+framework inséré dans un `.md` n'est pas rendu : il faut du `.mdx`. `mdx()` est branché dans `astro.config.mjs`
 et le `pattern` des deux loaders accepte `**/*.{md,mdx}` ; dans un `.mdx` le
 composant doit être **importé explicitement**, rien n'est implicite comme en
 `.astro`. Vérification qui tranche, sur le build et pas dans le navigateur :
@@ -274,8 +300,8 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 - Le contenu des parties est du remplissage (« Contenue de la partie 1… ») : la
   chaîne technique fonctionne, le cours reste à écrire.
-- La page d'accueil liste les séquences mais n'est pas encore une vraie page
-  d'entrée : ni durée totale, ni point de départ mis en avant.
+- Le cours n'a que deux séquences dont une vide, et deux parties : les états
+  limites (« à venir », « 0 partie ») sont visibles en permanence sur le site.
 - **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), tous deux
   transitifs et cantonnés au build — voir la section Sécurité ci-dessous.
 
