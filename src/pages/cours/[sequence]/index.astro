@@ -1,11 +1,10 @@
 ---
 import { getCollection, render } from "astro:content";
-import type { InferGetStaticPropsType } from "astro";
+import type { GetStaticPaths, InferGetStaticPropsType } from "astro";
 import Sequence from "@/layouts/Sequence.astro";
+import { byOrder } from "@/lib/course";
 
-type Props = InferGetStaticPropsType<typeof getStaticPaths>;
-
-export const getStaticPaths = async () => {
+export const getStaticPaths = (async () => {
 	const sequences = await getCollection("sequences");
 
 	return sequences.map((sequence) => {
@@ -18,12 +17,20 @@ export const getStaticPaths = async () => {
 			},
 		};
 	});
-};
+}) satisfies GetStaticPaths;
+
+type Props = InferGetStaticPropsType<typeof getStaticPaths>;
 
 const { sequence }: Props = Astro.props;
+
+// Le second argument de getCollection() est un prédicat : Astro filtre pour nous.
+const parts = (
+	await getCollection("parts", (part) => part.data.sequence.id === sequence.id)
+).toSorted(byOrder);
+
 const { Content } = await render(sequence);
 ---
 
-<Sequence title={sequence.data.title}>
+<Sequence sequence={sequence} parts={parts}>
     <Content />
 </Sequence>

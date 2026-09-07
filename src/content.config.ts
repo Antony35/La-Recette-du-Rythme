@@ -3,21 +3,23 @@ import { glob } from "astro/loaders";
 import { z } from "astro/zod";
 
 const sequences = defineCollection({
-	loader: glob({ pattern: "**/*.md", base: "src/content/sequences" }),
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/sequences" }),
 	schema: z.object({
-		title: z.string(),
-		objective: z.string(),
-		order: z.number(),
+		title: z.string().min(1),
+		objective: z.string().min(1),
+		order: z.number().int().positive(),
 	}),
 });
 
 const parts = defineCollection({
-	loader: glob({ pattern: "**/*.md", base: "src/content/parts" }),
+	// Le pattern doit accepter .mdx, sinon le glob ne ramasse pas les parties
+	// interactives : elles disparaissent du site sans la moindre erreur au build.
+	loader: glob({ pattern: "**/*.{md,mdx}", base: "src/content/parts" }),
 	schema: z.object({
-		title: z.string(),
+		title: z.string().min(1),
 		sequence: reference("sequences"),
-		order: z.number(),
-		durationMinutes: z.number().default(15),
+		order: z.number().int().positive(),
+		durationMinutes: z.number().int().positive().default(15),
 	}),
 });
 

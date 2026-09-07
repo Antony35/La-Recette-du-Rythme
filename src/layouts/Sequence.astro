@@ -1,16 +1,24 @@
 ---
+import type { CollectionEntry } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 
 interface Props {
-	title: string;
+	sequence: CollectionEntry<"sequences">;
+	parts: CollectionEntry<"parts">[];
 }
 
-const { title }: Props = Astro.props;
+const { sequence, parts }: Props = Astro.props;
 ---
-<BaseLayout title={title}>
-    <h1>{title}</h1>
+
+<BaseLayout title={sequence.data.title}>
+    <h1>{sequence.data.title}</h1>
+    <p>{sequence.data.objective}</p>
     <ul>
-    <!--  TODO : FAIRE UNE BOUCLE POUR AFFICHER TOUTE LES PARTIES -->
+        {parts.map((part) => (
+            <li>
+                <a href={`/cours/${sequence.id}/${part.id}`}>{part.data.title}</a>
+            </li>
+        ))}
     </ul>
     <slot />
 </BaseLayout>

@@ -25,3 +25,6 @@ pnpm-debug.log*
 
 # coverage
 coverage
+
+# notes de cours personnelles (non destinées au dépôt)
+BUILD_AN_ASTRO_WEBSITE.md

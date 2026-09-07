@@ -17,7 +17,7 @@ type Ordered = {
 	};
 };
 
-const byOrder = (a: Ordered, b: Ordered) => a.data.order - b.data.order;
+export const byOrder = (a: Ordered, b: Ordered) => a.data.order - b.data.order;
 
 export const buildCourse = (sequences: Sequence[], parts: Part[]) => {
 	return sequences.toSorted(byOrder).map((sequence) => ({

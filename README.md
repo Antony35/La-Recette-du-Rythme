@@ -3,7 +3,7 @@
 > Introduction au live coding et à son histoire.
 
 Site de cours statique construit avec **Astro**, **Tailwind CSS v4** et **Vue**
-(réservé aux futures parties interactives autour de Strudel).
+(réservé aux îlots interactifs autour de Strudel).
 
 Le cours est découpé en **séquences**, elles-mêmes découpées en **parties**.
 Une partie correspond à une page de cours.
@@ -17,6 +17,9 @@ pnpm build     # générer le site statique dans dist/
 pnpm preview   # prévisualiser le build
 pnpm lint      # vérifier le formatage et le lint (Biome)
 pnpm lint:fix  # corriger automatiquement ce qui peut l'être (Biome)
+pnpm check     # vérifier les types des .astro et du contenu (astro check)
+pnpm test      # tests unitaires en mode watch (Vitest)
+pnpm test:coverage   # couverture de src/lib/
 ```
 
 ## Architecture des fichiers
@@ -24,9 +27,11 @@ pnpm lint:fix  # corriger automatiquement ce qui peut l'être (Biome)
 ```
 src/
 ├── content.config.ts       schémas des collections — modèle de données du cours
+├── components/
+│   └── StrudelPlayer.vue   îlot interactif : lecteur de patterns Strudel
 ├── content/
 │   ├── sequences/          une séquence par fichier (métadonnées uniquement)
-│   └── parts/              le contenu des cours, en Markdown
+│   └── parts/              le contenu des cours, en Markdown (.mdx si interactif)
 ├── layouts/
 │   ├── BaseLayout.astro    coquille HTML : <head>, styles globaux
 │   ├── Sequence.astro      présentation d'une séquence et de ses parties
@@ -38,8 +43,10 @@ src/
 │   └── cours/[sequence]/
 │       ├── index.astro     /cours/ma-sequence      sommaire d'une séquence
 │       └── [part].astro    /cours/ma-sequence/x    une page de cours
-└── styles/
-    └── global.css          point d'entrée Tailwind
+├── styles/
+│   └── global.css          point d'entrée Tailwind
+└── types/
+    └── strudel.d.ts        types des paquets @strudel/* (qui n'en fournissent pas)
 ```
 
 Quelques règles suivies dans le projet :
@@ -48,12 +55,49 @@ Quelques règles suivies dans le projet :
   s'imbriquent dedans, et aucune page ne contient de balise de document.
 - **`pages/` ne fait que du routage.** Les pages chargent des données, choisissent
   un layout et lui passent des props ; la mise en forme vit dans `layouts/`.
+- **Les layouts ne chargent rien.** Aucun `getCollection()` dans `layouts/` : un
+  layout reçoit tout par props. Sinon une même page tire ses données de deux
+  endroits différents, et plus rien n'est vérifiable d'un seul coup d'œil.
+- **Les types d'entrées sont générés, pas écrits.** `CollectionEntry<"parts">` et
+  `CollectionEntry<"sequences">` dérivent du schéma Zod ; redécrire à la main la
+  forme d'une entrée, c'est se condamner à la maintenir en double.
 - **Le contenu n'est jamais écrit en `.astro`.** Tout le cours est en Markdown
   dans `content/`, et deux routes dynamiques suffisent à générer toutes les pages.
 - **Les chemins d'import utilisent l'alias `@/`** (défini dans `tsconfig.json`),
   jamais de `../..`.
 - **Les identifiants de code sont en anglais** (`parts`, `order`, `objective`),
   les URLs et le contenu restent en français (`/cours/…`).
+
+## Parties interactives (`.mdx`)
+
+Une partie de cours qui contient un composant doit être un fichier **`.mdx`** :
+un `.md` recopie les balises telles quelles sans jamais les rendre, et sans
+produire la moindre erreur. Trois choses doivent être vraies en même temps :
+
+1. `mdx()` figure dans les `integrations` d'`astro.config.mjs` — l'installer ne
+   suffit pas ;
+2. le `pattern` du loader accepte les deux extensions (`**/*.{md,mdx}`), sinon
+   le fichier renommé n'est plus ramassé et la partie disparaît du site ;
+3. le composant est **importé** dans le `.mdx` — contrairement à une page
+   `.astro`, rien n'est implicite.
+
+```mdx
+import StrudelPlayer from "@/components/StrudelPlayer.vue";
+
+<StrudelPlayer client:visible />
+```
+
+La directive `client:*` n'est pas optionnelle : sans elle le composant est rendu
+en HTML une fois pour toutes au build, et le bouton reste inerte. La vérification
+qui tranche se fait sur le build, pas dans le navigateur :
+
+```bash
+grep -c astro-island dist/cours/<sequence>/<partie>/index.html   # doit valoir ≥ 1
+```
+
+Un `.mdx` est du **code exécuté**, pas seulement du texte : il peut importer et
+lancer n'importe quoi, au build comme dans le navigateur. Relire les fichiers de
+`content/` comme on relit du code, en particulier s'ils viennent de l'extérieur.
 
 ## Modèle de contenu
 
@@ -91,7 +135,23 @@ durationMinutes: 15       # 15 par défaut
 Le champ `sequence` est une référence (`reference("sequences")`) : Astro vérifie
 au build que la séquence existe. Attention, ce champ contient un **pointeur**
 `{ collection, id }`, pas les données de la séquence — pour les obtenir, il faut
-les résoudre avec `getEntry(part.data.sequence)`.
+les résoudre avec `getEntry(part.data.sequence)` (ou `getEntries()` pour un
+tableau de références).
+
+Le `z` importé depuis `astro/zod` est **Zod v4** dans Astro 7 ; c'est le chemin
+d'import à utiliser (`import { z } from "astro:content"` est déprécié).
+
+⚠️ **Écrire `order: 1`, jamais `order: 01`.** YAML lit un entier préfixé d'un
+zéro comme de l'**octal** : `01` et `02` passent (ils valent 1 et 2), mais `08`
+et `09` ne sont pas de l'octal valide — la valeur devient la chaîne `"08"`, Zod
+la refuse et le build casse à la neuvième partie d'une séquence.
+
+Pour récupérer un sous-ensemble d'une collection, passer un prédicat en second
+argument plutôt que de filtrer soi-même après coup :
+
+```ts
+const parts = await getCollection("parts", (part) => part.data.sequence.id === id);
+```
 
 ## Ajouter une partie de cours
 

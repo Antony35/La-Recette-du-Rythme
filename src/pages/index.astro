@@ -1,8 +1,25 @@
 ---
+import { getCollection } from "astro:content";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { byOrder } from "@/lib/course";
+
+// toSorted() ne mute pas le tableau reçu : pas besoin de `let` ni de réassignation.
+const sequences = (await getCollection("sequences")).toSorted(byOrder);
 ---
+
 
 <BaseLayout title="La recette du Rythme">
     <h1>Bienvenu !</h1>
+    <ul>
+        {sequences.map((sequence) => (
+            <li>
+                <div>
+                    <p>Séquence {sequence.data.order}</p>
+                    <a href={`/cours/${sequence.id}`}>{sequence.data.title}</a>
+                    <p>{sequence.data.objective}</p>
+                </div>
+            </li>
+        ))}
+    </ul>
     <!-- TODO : LANDING PAGE -->
 </BaseLayout>

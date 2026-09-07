@@ -1,3 +1,11 @@
 allowBuilds:
   esbuild: true
   sharp: true
+
+# Remontées de version forcées sur des dépendances transitives vulnérables.
+# À retirer dès que les paquets parents auront bougé d'eux-mêmes.
+overrides:
+  # 5 avis GHSA (confusion d'hôte, SSRF) corrigés en 3.1.6. Chaîne concernée :
+  # @astrojs/check > @astrojs/language-server > … > ajv > fast-uri.
+  # Dépendance de développement uniquement, jamais dans le bundle du site.
+  fast-uri: ^3.1.7
