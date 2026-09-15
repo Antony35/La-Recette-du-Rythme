@@ -1,0 +1,8 @@
+---
+import { getCollection } from "astro:content";
+import Sources from "@/layouts/Sources.astro";
+
+const sources = await getCollection("sources");
+---
+
+<Sources sources={sources} />

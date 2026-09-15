@@ -1,7 +1,7 @@
 # La Recette du Rythme
 
-> Progresser en JavaScript avec Strudel : Web Audio API, programmation
-> fonctionnelle et compilation d'un mini-langage.
+> Créer de la musique sur le web avec Strudel — un cours de live coding en
+> JavaScript, en huit séquences et quinze heures.
 
 Site de cours statique construit avec **Astro**, **Tailwind CSS v4** et **Vue**
 (réservé aux îlots interactifs autour de Strudel).
@@ -34,22 +34,31 @@ src/
 ├── components/
 │   ├── Breadcrumb.astro    fil d'ariane
 │   ├── PartQuiz.vue        îlot interactif : l'auto-évaluation de fin de partie
-│   ├── Steps.astro         rangée de pas — une case par partie réelle
-│   └── StrudelRepl.vue     îlot interactif : le REPL Strudel, code éditable
+│   ├── PlacementTest.vue   îlot interactif : test de positionnement en trois axes
+│   ├── Steps.astro         rangée de pas — une pastille par partie réelle
+│   ├── StrudelRepl.vue     îlot interactif : le REPL Strudel, code éditable
+│   └── VideoPlaceholder.astro  emplacement « Ici vidéo » d'une vidéo à tourner
 ├── content/
 │   ├── sequences/          une séquence par fichier (métadonnées uniquement)
 │   ├── parts/              le contenu des cours, en Markdown (.mdx si interactif)
-│   └── quizzes/            l'auto-évaluation d'une partie (frontmatter seul)
+│   ├── placement/          le test de positionnement (frontmatter seul)
+│   ├── quizzes/            l'auto-évaluation d'une partie (frontmatter seul)
+│   └── sources.yaml        les sources du cours, URL vérifiées
 ├── layouts/
 │   ├── BaseLayout.astro    coquille HTML : <head>, en-tête, pied de page
 │   ├── Home.astro          page d'accueil
 │   ├── Sequence.astro      présentation d'une séquence et de ses parties
-│   └── Lesson.astro        présentation d'une partie de cours
+│   ├── Lesson.astro        présentation d'une partie de cours
+│   └── Sources.astro       page des sources, groupées par rubrique
 ├── lib/
 │   ├── course.ts           structure ordonnée du cours (arbre, liste plate, voisins)
+│   ├── format.ts           durées, pluriels, titres « Titre — précision »
+│   ├── levels.ts           les trois niveaux du cours et leur couleur
+│   ├── placement.ts        score par axe et recommandation de parcours
 │   └── url.ts              withBase() : préfixe les chemins internes
 ├── pages/
-│   ├── index.astro         /                       accueil, liste des séquences
+│   ├── index.astro         /                       accueil, sommaire par niveau
+│   ├── sources.astro       /sources                sources du cours
 │   └── cours/[sequence]/
 │       ├── index.astro     /cours/ma-sequence      sommaire d'une séquence
 │       └── [part].astro    /cours/ma-sequence/x    une page de cours
@@ -145,30 +154,34 @@ Trois pièges, tous rencontrés :
 ## Style
 
 Le système de design tient dans un seul fichier : `src/styles/global.css`.
-Direction **« Grille »** — un rythme est une grille de pulsations, d'où les
-filets verticaux qui tiennent lieu de barres de mesure. Ni ombre portée, ni
-dégradé, ni coin arrondi au-delà de 2 px.
+Direction **« SKOLAE »**, inspirée de la charte de [skolae.fr](https://skolae.fr/)
+et relevée dans sa feuille de styles : noir `#171717`, jaune `#FFF388`, aplats
+pastel, titres en capitales condensées, coins arrondis, boutons en pilule.
 
 Les couleurs se déclarent dans `@theme` et deviennent des classes utilitaires ;
 Tailwind v4 n'a plus de fichier de configuration JavaScript.
 
 | Jeton | Clair | Sombre | Rôle |
 |---|---|---|---|
-| `--color-ground` | `#F4F5F3` | `#15191A` | fond |
-| `--color-surface` | `#EBEEEC` | `#1D2224` | blocs de code |
-| `--color-ink` | `#222831` | `#E4E8E6` | texte |
-| `--color-muted` | `#5A6668` | `#9BA6A4` | texte secondaire |
-| `--color-rule` | `#B4BBB6` | `#39413F` | filets |
-| `--color-accent` | `#007574` | `#4FC3BC` | liens, repères, bouton |
+| `--color-ground` | `#FFFFFF` | `#171717` | fond |
+| `--color-surface` | `#F4F4F4` | `#272727` | cartes, blocs de code |
+| `--color-ink` | `#171717` | `#FFFFFF` | texte |
+| `--color-muted` | `#666666` | `#AAAAAA` | texte secondaire |
+| `--color-rule` | `#E6E6E6` | `#393939` | séparateurs (décoratifs) |
+| `--color-accent` | `#171717` | `#FFF388` | bouton principal, liens |
+| `--color-pulse` | `#C2410C` | `#FB923C` | état actif, erreur, focus |
 
-Les teintes viennent des palettes les plus populaires de
-[Color Hunt](https://colorhunt.co/palettes/popular), transposées : `#222831` y
-sert de fond, ici c'est l'encre en thème clair.
+Jetons **fixes**, identiques dans les deux thèmes : `lemon` `#FFF388`, `mint`
+`#9BDEBD`, `sky` `#ABDAEE`, `lilac` `#E8C9FF`, `peach` `#EBC5B0`, `night`
+`#171717`, `night-soft` `#3D3D3D`, `snow` `#FFFFFF`. Sur un aplat de marque, le
+texte est toujours `night` ou `night-soft`.
 
-Contrastes **mesurés**, pas estimés — accent 5,06:1 en clair et 8,32:1 en
-sombre, texte 13,6:1 et 14,3:1, secondaire 5,4:1 et 7,1:1. Tous au-dessus du
-seuil AA de 4,5:1. Les filets restent volontairement à 1,8:1 : WCAG n'impose pas
-3:1 aux séparateurs décoratifs, et un filet plus contrasté deviendrait une barre.
+Contrastes **mesurés** : texte 17,9:1 des deux côtés, secondaire 5,74:1 et
+7,7:1, accent 17,9:1 et 15,7:1, pulse 5,18:1 et 7,9:1, `night` ≥ 11:1 et
+`night-soft` ≥ 7:1 sur tous les pastels.
+
+Utilitaire maison **`display-title`** pour les titres : Archivo condensée,
+graisse 900, italique, capitales.
 
 ## Thème sombre
 
@@ -188,19 +201,11 @@ le thème. Tout passe par un jeton de `@theme`.
 `prose` vient de `@tailwindcss/typography`, `prose-cours` ne fait que lui passer
 les couleurs du projet via ses variables `--tw-prose-*`.
 
-**JetBrains Mono est auto-hébergée** dans `public/fonts/`, deux graisses
-(400/700) sous-ensemblées au latin étendu — 187 Ko à l'origine, 64 Ko servis.
-Aucune requête vers un CDN de polices. Le corps de texte, lui, reste en
-sans-serif système : rien à télécharger pour ce qu'on lit le plus.
-
-Refaire le sous-ensemble après une mise à jour de la police :
-
-```bash
-pyftsubset JetBrainsMono-Regular.woff2 \
-  --unicodes="U+0000-00FF,U+0131,U+0152-0153,U+2000-206F,U+20AC,U+2122,U+2190-2193,U+2212" \
-  --layout-features="kern,liga,calt" --flavor=woff2 \
-  --output-file=public/fonts/jetbrains-mono-regular.woff2
-```
+**Polices auto-hébergées** dans `public/fonts/`, licences OFL à côté, sans CDN :
+Manrope (texte, 23 Ko), Archivo condensée noire italique (titres, 12 Ko — figée
+depuis le fichier variable, voir CLAUDE.md), JetBrains Mono (code, 64 Ko).
+SKOLAE utilise Basier Circle et GT Walsheim, commerciales : on prend les
+équivalents libres qu'elle déclare elle-même en repli.
 
 Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json`.
@@ -245,7 +250,7 @@ grep -rhoE '(href|src)="/[^"]*"' dist --include='*.html' | grep -v '="/La-Recett
 
 ## Modèle de contenu
 
-Les deux collections sont déclarées et validées dans `src/content.config.ts`.
+Les collections sont déclarées et validées dans `src/content.config.ts`.
 Un champ manquant ou mal typé fait échouer le build.
 
 ### `sequences/`
@@ -256,9 +261,12 @@ métadonnées, la liste de ses parties est calculée.
 
 ```yaml
 ---
-title: "Le code au service du son"
-objective: "Situer Strudel comme façade d'une vraie API navigateur"
-order: 1              # position dans le cours
+title: "Rythme"
+objective: "Reproduire des parties rythmiques imposées avec les sons natifs"
+order: 2                        # position dans le cours
+level: 1                        # niveau 1, 2 ou 3
+durationMinutes: 90             # durée prévue
+equipment: ["Éditeur Strudel"]  # facultatif
 ---
 ```
 
@@ -269,8 +277,8 @@ Le corps du fichier contient le cours.
 
 ```yaml
 ---
-title: "Histoire VST → Max for Live → communauté de devs"
-sequence: "ma-sequence"   # identifiant d'une entrée de sequences/, vérifié au build
+title: "Le REPL — écrire, évaluer, entendre, recommencer"
+sequence: "prerequis-et-decouverte"   # identifiant d'une entrée de sequences/, vérifié au build
 order: 1                  # position dans la séquence
 durationMinutes: 15       # 15 par défaut
 ---
@@ -304,3 +312,39 @@ const parts = await getCollection("parts", (part) => part.data.sequence.id === i
 3. Rédiger le cours en Markdown.
 
 La page, son URL et sa place dans le sommaire en découlent automatiquement.
+Une partie laissée avec son seul frontmatter affiche « Contenu en cours de
+rédaction » : on peut poser tout le découpage avant d'écrire.
+
+## Vidéos
+
+Les vidéos ne sont pas encore tournées. `VideoPlaceholder.astro` en réserve la
+place exacte (16/9) avec titre, durée et format de tournage :
+
+```astro
+<VideoPlaceholder title="Les pré-requis" duration="2 min 30" format="…" />
+```
+
+Emplacements : présentation du cours sur l'accueil, pré-requis sur la page de
+la séquence 1.
+
+## Sources
+
+Page `/sources`, alimentée par `src/content/sources.yaml`. **N'ajouter une source
+qu'après avoir vérifié son URL**, et renseigner `checkedAt` :
+
+```yaml
+- id: strudel-first-sounds
+  title: "Workshop — First Sounds"
+  url: "https://strudel.cc/workshop/first-sounds/"
+  category: documentation      # documentation | switch-angel | articles | tutoriels
+  author: "…"                  # facultatif
+  note: "…"                    # facultatif
+  checkedAt: 2026-09-15
+```
+
+Pour une vidéo YouTube, l'API oEmbed confirme qu'elle existe et donne son titre
+exact :
+
+```bash
+curl -s "https://www.youtube.com/oembed?format=json&url=https://www.youtube.com/watch?v=<id>"
+```

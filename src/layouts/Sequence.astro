@@ -3,6 +3,8 @@ import type { CollectionEntry } from "astro:content";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import Steps from "@/components/Steps.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatDuration, plural, splitTitle } from "@/lib/format";
+import { levelOf } from "@/lib/levels";
 import { withBase } from "@/lib/url";
 
 interface Props {
@@ -12,14 +14,8 @@ interface Props {
 
 const { sequence, parts }: Props = Astro.props;
 
-const totalMinutes = parts.reduce(
-	(total, part) => total + part.data.durationMinutes,
-	0,
-);
-
-// « 1 parties » se voit tout de suite. La séquence 2 n'a encore aucune partie :
-// les deux cas limites, zéro et un, doivent se lire correctement.
-const partsLabel = `${parts.length} ${parts.length > 1 ? "parties" : "partie"}`;
+const level = levelOf(sequence.data.level);
+const title = splitTitle(sequence.data.title);
 
 const trail = [
 	{ label: "Accueil", href: withBase("/") },
@@ -27,60 +23,92 @@ const trail = [
 ];
 
 // Les parties sont dans un <ol> et non un <ul> : l'ordre porte du sens, elles se
-// lisent dans cette suite-là. Le filet vertical de chaque entrée tient lieu de
-// barre de mesure, à la place d'une carte avec bordure et ombre.
+// lisent dans cette suite-là. Leur numéro « 1.2 » se déduit de la séquence et de
+// `order`, il n'est stocké nulle part.
 ---
 
 <BaseLayout title={sequence.data.title}>
-    <div class="max-w-3xl">
-    <Breadcrumb items={trail} />
+    <div class="max-w-4xl">
+        <Breadcrumb items={trail} />
 
-    <p class="mt-10 font-mono text-xs font-bold uppercase tracking-[0.16em] text-accent">
-        Séquence {sequence.data.order}
-    </p>
-    <h1 class="mt-3 font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
-        {sequence.data.title}
-    </h1>
-    <p class="mt-5 max-w-xl leading-relaxed text-muted">
-        {sequence.data.objective}
-    </p>
+        <div class="mt-10 flex flex-wrap items-center gap-2">
+            <span class:list={["rounded-full px-4 py-1.5 text-sm font-bold text-night", level.fill]}>
+                Niveau {sequence.data.level} · {level.label}
+            </span>
+            <span class="rounded-full bg-surface px-4 py-1.5 text-sm font-bold">
+                Séquence {sequence.data.order}
+            </span>
+        </div>
 
-    <div class="prose prose-cours mt-10">
-        <slot />
-    </div>
-
-    <div class="mt-16 flex flex-wrap items-center gap-4">
-        <h2 class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted">
-            {partsLabel} · {totalMinutes} min
-        </h2>
-        <Steps total={parts.length} />
-    </div>
-
-    {parts.length === 0 && (
-        <p class="mt-6 border-l-2 border-rule py-4 pl-6 text-sm text-muted">
-            Cette séquence n'a pas encore de partie rédigée.
+        <h1 class="mt-6 text-balance">
+            <span class="display-title block text-5xl sm:text-7xl">{title.main}</span>
+            {title.subtitle && (
+                <span class="mt-4 block text-2xl font-extrabold tracking-tight sm:text-3xl">
+                    {title.subtitle}
+                </span>
+            )}
+        </h1>
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
+            {sequence.data.objective}
         </p>
-    )}
 
-    <ol class="mt-6 flex flex-col">
-        {parts.map((part) => (
-            <li class="flex gap-5 border-l-2 border-rule py-4 pl-6 transition-colors hover:border-accent">
-                <span class="mt-0.5 font-mono text-xs text-muted tabular-nums">
-                    {String(part.data.order).padStart(2, "0")}
-                </span>
-                <span class="flex-1">
-                    <a
-                        href={withBase(`/cours/${sequence.id}/${part.id}`)}
-                        class="leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:decoration-accent"
-                    >
-                        {part.data.title}
-                    </a>
-                    <span class="mt-1 block font-mono text-xs text-muted tabular-nums">
-                        {part.data.durationMinutes} min
-                    </span>
-                </span>
-            </li>
-        ))}
-    </ol>
+        <dl class="mt-8 flex flex-wrap gap-x-10 gap-y-4 text-sm">
+            <div>
+                <dt class="font-semibold text-muted">Durée prévue</dt>
+                <dd class="mt-1 font-extrabold">{formatDuration(sequence.data.durationMinutes)}</dd>
+            </div>
+            {sequence.data.equipment.length > 0 && (
+                <div>
+                    <dt class="font-semibold text-muted">Équipement</dt>
+                    <dd class="mt-1 font-extrabold">{sequence.data.equipment.join(" · ")}</dd>
+                </div>
+            )}
+        </dl>
+
+        <div class="prose prose-cours mt-10 max-w-none">
+            <slot />
+        </div>
+
+        <div class="mt-14 flex flex-wrap items-center gap-4">
+            <h2 class="display-title text-3xl sm:text-4xl">
+                {parts.length === 0 ? "Sous-séquences" : plural(parts.length, "sous-séquence", "sous-séquences")}
+            </h2>
+            <Steps total={parts.length} />
+        </div>
+
+        {parts.length === 0 && (
+            <p class="mt-6 rounded-xl bg-surface px-6 py-5 text-muted">
+                Cette séquence n'a pas encore de sous-séquence rédigée.
+            </p>
+        )}
+
+        <ol class="mt-6 flex flex-col gap-2">
+            {parts.map((part) => {
+                const partTitle = splitTitle(part.data.title);
+                return (
+                    <li>
+                        <a
+                            href={withBase(`/cours/${sequence.id}/${part.id}`)}
+                            class="group flex items-start gap-5 rounded-xl bg-surface px-6 py-5 transition-colors hover:bg-rule"
+                        >
+                            <span class="display-title w-12 shrink-0 text-2xl tabular-nums">
+                                {sequence.data.order}.{part.data.order}
+                            </span>
+                            <span class="flex-1">
+                                <span class="block leading-snug font-extrabold underline decoration-transparent decoration-2 underline-offset-4 transition-colors group-hover:decoration-accent">
+                                    {partTitle.main}
+                                </span>
+                                {partTitle.subtitle && (
+                                    <span class="mt-1 block text-sm text-muted">{partTitle.subtitle}</span>
+                                )}
+                            </span>
+                            <span class="shrink-0 text-sm font-bold text-muted tabular-nums">
+                                {formatDuration(part.data.durationMinutes)}
+                            </span>
+                        </a>
+                    </li>
+                );
+            })}
+        </ol>
     </div>
 </BaseLayout>

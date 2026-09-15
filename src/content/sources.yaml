@@ -1,0 +1,190 @@
+# Sources du cours. Chaque URL a été contrôlée à la date `checkedAt` :
+#   - pages web : réponse HTTP 200 (curl -L) ;
+#   - vidéos et playlist YouTube : titre et auteur relus via l'API oEmbed, qui
+#     renvoie une erreur pour une vidéo supprimée ou privée ;
+#   - Medium bloque les robots (403) : l'URL a été confirmée par un index de
+#     recherche, voir la note de l'entrée.
+# Les titres sont ceux publiés par l'auteur, pas une traduction.
+
+# --- Documentation officielle Strudel ------------------------------------------
+- id: strudel
+  title: "Strudel — l'éditeur en ligne"
+  url: "https://strudel.cc"
+  category: documentation
+  checkedAt: 2026-09-15
+
+- id: strudel-first-sounds
+  title: "Workshop — First Sounds"
+  url: "https://strudel.cc/workshop/first-sounds/"
+  category: documentation
+  checkedAt: 2026-09-15
+
+- id: strudel-first-notes
+  title: "Workshop — First Notes"
+  url: "https://strudel.cc/workshop/first-notes/"
+  category: documentation
+  checkedAt: 2026-09-15
+
+- id: strudel-effects
+  title: "Audio effects"
+  url: "https://strudel.cc/learn/effects/"
+  category: documentation
+  checkedAt: 2026-09-15
+
+- id: strudel-time-modifiers
+  title: "Time modifiers"
+  url: "https://strudel.cc/learn/time-modifiers/"
+  category: documentation
+  checkedAt: 2026-09-15
+
+- id: strudel-visual-feedback
+  title: "Visual feedback"
+  url: "https://strudel.cc/learn/visual-feedback/"
+  category: documentation
+  checkedAt: 2026-09-15
+
+- id: tidalcycles
+  title: "Live code with Tidal Cycles"
+  url: "https://tidalcycles.org"
+  category: documentation
+  note: "Le langage dont Strudel est le portage en JavaScript."
+  checkedAt: 2026-09-15
+
+- id: toplap
+  title: "TOPLAP — The home of live coding"
+  url: "https://toplap.org"
+  category: documentation
+  note: "Communauté et manifeste du live coding."
+  checkedAt: 2026-09-15
+
+- id: mdn-guide-javascript
+  title: "Guide JavaScript"
+  url: "https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide"
+  category: documentation
+  author: "MDN Web Docs"
+  note: "Référence conseillée par le test de positionnement pour revoir les bases."
+  checkedAt: 2026-09-15
+
+# --- Switch Angel ---------------------------------------------------------------
+- id: switch-angel-chaine
+  title: "Chaîne YouTube de Switch Angel"
+  url: "https://www.youtube.com/@Switch-Angel"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-streams
+  title: "Streams en direct"
+  url: "https://www.youtube.com/@Switch-Angel/streams"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-deep-acid
+  title: "2 Minute Deep Acid in Strudel (from scratch)"
+  url: "https://www.youtube.com/watch?v=HkgV_-nJOuE"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-livecoding-in
+  title: "Switch Angel Livecoding Music In Strudel"
+  url: "https://www.youtube.com/watch?v=UqbObh9oS4o"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-livecoding-with
+  title: "Switch Angel Livecoding Music with Strudel"
+  url: "https://www.youtube.com/watch?v=Hy7rpQT0o2U"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-coding-trance-iv
+  title: "Coding Trance IV"
+  url: "https://www.youtube.com/watch?v=3fpx7Scysw4"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-beats-rhythms
+  title: "Creating Beats & Rhythms in STRUDEL"
+  url: "https://www.youtube.com/watch?v=sefJz9biLCY"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-playlist
+  title: "Strudel Tutorials (playlist)"
+  url: "https://www.youtube.com/playlist?list=PLY9reO_9KeE9fJIsgeYN_QkEO46QxDPPP"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+- id: switch-angel-strudel-scripts
+  title: "strudel-scripts — fonctions personnalisées"
+  url: "https://github.com/switchangel/strudel-scripts"
+  category: switch-angel
+  author: "Switch Angel"
+  checkedAt: 2026-09-15
+
+# --- Articles -------------------------------------------------------------------
+- id: hackaday-live-coding-techno
+  title: "Live Coding Techno With Strudel"
+  url: "https://hackaday.com/2025/10/16/live-coding-techno-with-strudel/"
+  category: articles
+  author: "Dave Rowntree, Hackaday (16 octobre 2025)"
+  checkedAt: 2026-09-15
+
+- id: hacker-news-switch-angel
+  title: "Switch Angel live-code using Strudel (discussion)"
+  url: "https://news.ycombinator.com/item?id=46353493"
+  category: articles
+  author: "Hacker News"
+  checkedAt: 2026-09-15
+
+- id: grimoire-switch-angel
+  title: "Switch Angel Tutorials — notes de tutoriels"
+  url: "https://grimoire.jamesfraze.com/programming/strudel/switch-angel-tutorials/"
+  category: articles
+  author: "Information Technology Grimoire"
+  checkedAt: 2026-09-15
+
+# --- Tutoriels ------------------------------------------------------------------
+- id: strudel-for-beginners
+  title: "STRUDEL FOR BEGINNERS"
+  url: "https://www.youtube.com/watch?v=m7Rp46AU8dw"
+  category: tutoriels
+  author: "Glossing"
+  note: "Un morceau house construit de zéro."
+  checkedAt: 2026-09-15
+
+- id: shovon-saha-tutorial
+  title: "Strudel Full Tutorial: Setup + Music Theory + Code Part 1"
+  url: "https://theshovonsaha.medium.com/strudel-full-tutorial-setup-music-theory-code-part-1-46a0713d72ed"
+  category: tutoriels
+  author: "Shovon Saha, Medium"
+  note: "Medium refuse les requêtes automatisées : URL confirmée par un index de recherche, pas par une réponse HTTP."
+  checkedAt: 2026-09-15
+
+- id: shovon-saha-repo
+  title: "Strudel-Tutorials — code des tutoriels"
+  url: "https://github.com/theshovonsaha/Strudel-Tutorials"
+  category: tutoriels
+  author: "Shovon Saha"
+  checkedAt: 2026-09-15
+
+- id: todepond-from-scratch
+  title: "FROM SCRATCH STRUDEL TUTORIAL"
+  url: "https://www.youtube.com/watch?v=SsUbCq7yoxo"
+  category: tutoriels
+  author: "TodePond"
+  checkedAt: 2026-09-15
+
+- id: install-and-run-strudel
+  title: "How to install and run strudel (Live Coding Music Tutorial)"
+  url: "https://www.youtube.com/watch?v=pMyFG8P5XJ4"
+  category: tutoriels
+  author: "GoSuraj Official"
+  checkedAt: 2026-09-15

@@ -2,8 +2,10 @@
 import type { CollectionEntry } from "astro:content";
 import Breadcrumb from "@/components/Breadcrumb.astro";
 import PartQuiz from "@/components/PartQuiz.vue";
+import PlacementTest from "@/components/PlacementTest.vue";
 import Steps from "@/components/Steps.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
+import { formatDuration, splitTitle } from "@/lib/format";
 import { withBase } from "@/lib/url";
 
 interface Props {
@@ -15,13 +17,32 @@ interface Props {
 	// n'a pas de précédente, la dernière pas de suivante.
 	previous?: CollectionEntry<"parts">;
 	next?: CollectionEntry<"parts">;
+	/** La séquence d'après, cible du « passer à la suite » du test. */
+	nextSequence?: CollectionEntry<"sequences">;
 	/** Absentes tant que la partie n'a pas de quiz rédigé. */
 	questions?: CollectionEntry<"quizzes">["data"]["questions"];
+	/** Présent uniquement sur la partie qui porte le test de positionnement. */
+	placement?: CollectionEntry<"placementTests">["data"];
 }
-const { part, sequence, parts, previous, next, questions }: Props = Astro.props;
+const {
+	part,
+	sequence,
+	parts,
+	previous,
+	next,
+	nextSequence,
+	questions,
+	placement,
+}: Props = Astro.props;
 
 const partUrl = (entry: CollectionEntry<"parts">) =>
 	withBase(`/cours/${entry.data.sequence.id}/${entry.id}`);
+const sequenceUrl = (entry: CollectionEntry<"sequences">) =>
+	withBase(`/cours/${entry.id}`);
+
+// Le numéro « 1.2 » se déduit, il n'est stocké nulle part.
+const number = (entry: CollectionEntry<"parts">) =>
+	`${sequence.data.order}.${entry.data.order}`;
 
 // La position se déduit de la liste : pas de champ « index » à tenir à jour
 // dans le frontmatter, qui deviendrait faux dès qu'on insère une partie.
@@ -30,71 +51,89 @@ const remaining = parts
 	.slice(position)
 	.reduce((total, entry) => total + entry.data.durationMinutes, 0);
 
+const title = splitTitle(part.data.title);
+
+// Une partie créée avec son seul frontmatter a un corps vide : on l'annonce
+// plutôt que d'afficher une page blanche sous le titre.
+const isEmpty = !part.body?.trim();
+
 // Le fil d'ariane dit *où l'on est*, pas ce qu'on lit : des numéros courts, pas
 // les titres — qui sont déjà juste en dessous, en toutes lettres.
-//
-// Deux notes sur le rendu ci-dessous :
-//   - le titre de séquence n'est pas en capitales, contrairement aux autres
-//     repères : c'est une phrase entière, et l'interlettrage des petites
-//     capitales la rend illisible sur toute la largeur. Les capitales restent
-//     réservées aux étiquettes courtes (« Séquence 1 », « ← Précédent ») ;
-//   - `prose` met en forme le Markdown rendu, `prose-cours` lui passe les
-//     couleurs du projet. La mesure de lecture (65ch) vient de `prose`.
 const trail = [
 	{ label: "Accueil", href: withBase("/") },
-	{
-		label: `Séquence ${sequence.data.order}`,
-		href: withBase(`/cours/${sequence.id}`),
-	},
-	{ label: `Partie ${part.data.order}` },
+	{ label: `Séquence ${sequence.data.order}`, href: sequenceUrl(sequence) },
+	{ label: number(part) },
 ];
+
+// Les deux issues du test de positionnement : continuer la séquence, ou passer
+// à la suivante. `next` peut appartenir à la séquence d'après (dernière partie),
+// auquel cas « continuer » et « sauter » se confondent et le test n'a rien à
+// recommander : on ne l'affiche pas. Même chose sans séquence suivante.
+const nextInSequence =
+	next?.data.sequence.id === sequence.id ? next : undefined;
+
+const placementRoutes =
+	placement && nextInSequence && nextSequence
+		? {
+				follow: {
+					href: partUrl(nextInSequence),
+					label: `Continuer avec la ${number(nextInSequence)}`,
+				},
+				skip: {
+					href: sequenceUrl(nextSequence),
+					label: `Aller à la séquence ${nextSequence.data.order}`,
+				},
+			}
+		: undefined;
 ---
 
 <BaseLayout title={part.data.title}>
-    <!-- Le fil d'ariane est au-dessus de la grille : c'est une navigation de
-         page entière, pas une colonne. Il reste ainsi le premier élément lu,
-         sur mobile comme sur grand écran. -->
+    {/*
+      Le fil d'ariane est au-dessus de la grille : c'est une navigation de page
+      entière, pas une colonne. Il reste le premier élément lu, sur mobile comme
+      sur grand écran.
+    */}
     <Breadcrumb items={trail} />
 
-    <div class="mt-10 lg:grid lg:grid-cols-[15rem_minmax(0,1fr)] lg:gap-12">
-        <!-- Le rail passe au-dessus du contenu sous 1024 px : replié, il reste
-             consultable sans occuper tout l'écran. -->
-        <aside class="lg:sticky lg:top-8 lg:self-start" aria-labelledby="rail">
-            <h2 id="rail" class="font-mono text-xs font-bold uppercase tracking-[0.16em] text-muted">
+    <div class="mt-10 lg:grid lg:grid-cols-[16rem_minmax(0,1fr)] lg:gap-14">
+        {/* Le rail passe au-dessus du contenu sous 1024 px. */}
+        <aside class="rounded-3xl bg-surface p-6 lg:sticky lg:top-8 lg:self-start" aria-labelledby="rail">
+            <h2 id="rail" class="text-sm font-bold text-muted">
                 Séquence {sequence.data.order}
             </h2>
             <a
-                href={withBase(`/cours/${sequence.id}`)}
-                class="mt-2 block leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:decoration-accent"
+                href={sequenceUrl(sequence)}
+                class="mt-1 block leading-snug font-extrabold underline decoration-transparent decoration-2 underline-offset-4 transition-colors hover:decoration-accent"
             >
                 {sequence.data.title}
             </a>
 
-            <p class="mt-4 font-mono text-xs text-muted tabular-nums">
-                Partie {position} sur {parts.length}
-                {remaining > 0 && <> · {remaining} min restantes</>}
+            <p class="mt-4 text-sm font-semibold text-muted tabular-nums">
+                {position} sur {parts.length}
+                {remaining > 0 && <> · {formatDuration(remaining)} restantes</>}
             </p>
 
-            <!-- Les pas remplacent la barre pleine : une case par partie, celle
-                 qu'on lit en ambre. Le rôle progressbar reste porté par le
-                 conteneur, parce qu'une rangée de carrés ne dit rien à un
-                 lecteur d'écran. -->
+            {/*
+              Le rôle progressbar est porté par le conteneur : une rangée de
+              pastilles ne dit rien à un lecteur d'écran.
+            */}
             <div
                 class="mt-3"
                 role="progressbar"
                 aria-valuenow={position}
                 aria-valuemin={1}
                 aria-valuemax={parts.length}
-                aria-label={`Partie ${position} sur ${parts.length}`}
+                aria-label={`Sous-séquence ${position} sur ${parts.length}`}
             >
                 <Steps total={parts.length} current={position} />
             </div>
 
-            <!-- La liste complète n'apparaît qu'à partir de 1024 px : sur mobile
-                 elle repousserait le cours sous un écran de sommaire. Le lien
-                 ci-dessous y donne accès sans dupliquer le balisage. -->
-            <ol class="mt-6 hidden flex-col gap-px lg:flex">
-                {parts.map((entry, index) => {
+            {/*
+              La liste complète n'apparaît qu'à partir de 1024 px : sur mobile
+              elle repousserait le cours sous un écran de sommaire.
+            */}
+            <ol class="mt-6 hidden flex-col gap-1 lg:flex">
+                {parts.map((entry) => {
                     const current = entry.id === part.id;
                     return (
                         <li>
@@ -102,16 +141,16 @@ const trail = [
                                 href={partUrl(entry)}
                                 aria-current={current ? "page" : undefined}
                                 class:list={[
-                                    "flex gap-3 border-l-2 py-2 pl-4 text-sm leading-snug transition-colors",
+                                    "flex gap-3 rounded-xl px-3 py-2 text-sm leading-snug transition-colors",
                                     current
-                                        ? "border-accent font-medium text-ink"
-                                        : "border-rule text-muted hover:border-accent hover:text-ink",
+                                        ? "bg-ground font-bold text-ink"
+                                        : "text-muted hover:bg-ground hover:text-ink",
                                 ]}
                             >
-                                <span class="font-mono text-xs tabular-nums">
-                                    {String(index + 1).padStart(2, "0")}
+                                <span class:list={["font-bold tabular-nums", current && "text-pulse"]}>
+                                    {number(entry)}
                                 </span>
-                                <span>{entry.data.title}</span>
+                                <span>{splitTitle(entry.data.title).main}</span>
                             </a>
                         </li>
                     );
@@ -119,54 +158,70 @@ const trail = [
             </ol>
 
             <a
-                href={withBase(`/cours/${sequence.id}`)}
-                class="mt-4 inline-block font-mono text-xs text-muted underline decoration-rule decoration-1 underline-offset-4 transition-colors hover:text-accent hover:decoration-accent lg:hidden"
+                href={sequenceUrl(sequence)}
+                class="mt-4 inline-block text-sm font-bold text-muted underline decoration-rule decoration-2 underline-offset-4 transition-colors hover:text-ink hover:decoration-accent lg:hidden"
             >
-                Voir les {parts.length} parties →
+                Voir les {parts.length} sous-séquences →
             </a>
         </aside>
 
-        <!-- Pas de rappel du titre de séquence ici : le rail le porte déjà, et
-             le répéter à trois lignes d'intervalle n'apprend rien. -->
         <div class="mt-12 min-w-0 lg:mt-0">
-            <h1 class="font-mono text-2xl font-bold tracking-tight text-balance sm:text-3xl">
-                {part.data.title}
-            </h1>
-            <p class="mt-3 font-mono text-xs text-muted tabular-nums">
-                {part.data.durationMinutes} min de lecture
+            <p class="text-sm font-bold text-muted tabular-nums">
+                {number(part)} · {formatDuration(part.data.durationMinutes)}
             </p>
+            <h1 class="mt-3 text-balance">
+                <span class="display-title block text-4xl sm:text-6xl">{title.main}</span>
+                {title.subtitle && (
+                    <span class="mt-3 block text-xl font-extrabold tracking-tight sm:text-2xl">
+                        {title.subtitle}
+                    </span>
+                )}
+            </h1>
 
-            <div class="prose prose-cours mt-10">
-                <slot />
-            </div>
+            {isEmpty ? (
+                <p class="mt-10 rounded-xl bg-surface px-6 py-5 text-muted">
+                    Contenu en cours de rédaction.
+                </p>
+            ) : (
+                <div class="prose prose-cours mt-10">
+                    <slot />
+                </div>
+            )}
+
+            {placement && placementRoutes && (
+                <PlacementTest
+                    client:visible
+                    axes={placement.axes}
+                    questions={placement.questions}
+                    follow={placementRoutes.follow}
+                    skip={placementRoutes.skip}
+                    sequenceLabel={`séquence ${sequence.data.order}`}
+                />
+            )}
 
             {questions && <PartQuiz client:visible questions={questions} />}
 
             {(previous || next) && (
                 <nav
                     aria-label="Navigation dans le cours"
-                    class="mt-16 grid gap-8 border-t border-rule pt-8 sm:grid-cols-2"
+                    class="mt-16 grid gap-3 sm:grid-cols-2"
                 >
                     <div>
                         {previous && (
-                            <a href={partUrl(previous)} class="group flex flex-col gap-1.5">
-                                <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
-                                    ← Précédent
-                                </span>
-                                <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
-                                    {previous.data.title}
+                            <a href={partUrl(previous)} class="group flex h-full flex-col gap-1.5 rounded-xl bg-surface p-5 transition-colors hover:bg-rule">
+                                <span class="text-sm font-bold text-muted">← Précédent</span>
+                                <span class="leading-snug font-extrabold">
+                                    {splitTitle(previous.data.title).main}
                                 </span>
                             </a>
                         )}
                     </div>
-                    <div class="sm:text-right">
+                    <div>
                         {next && (
-                            <a href={partUrl(next)} class="group flex flex-col gap-1.5">
-                                <span class="font-mono text-xs uppercase tracking-[0.16em] text-muted">
-                                    Suivant →
-                                </span>
-                                <span class="text-sm leading-snug font-medium underline decoration-rule decoration-1 underline-offset-4 transition-colors group-hover:decoration-accent">
-                                    {next.data.title}
+                            <a href={partUrl(next)} class="group flex h-full flex-col gap-1.5 rounded-xl bg-surface p-5 transition-colors hover:bg-rule sm:text-right">
+                                <span class="text-sm font-bold text-muted">Suivant →</span>
+                                <span class="leading-snug font-extrabold">
+                                    {splitTitle(next.data.title).main}
                                 </span>
                             </a>
                         )}

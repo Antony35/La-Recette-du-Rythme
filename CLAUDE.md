@@ -99,6 +99,10 @@ une page, son URL et sa place dans le sommaire.
    (liste plate dans l'ordre de lecture) et `getNeighbours(flat, id)`
    (précédent/suivant, y compris à cheval sur deux séquences).
 
+Autres collections : `quizzes` (quiz de fin de partie), `placementTests` (test
+de positionnement, voir plus bas) et `sources` — un **seul fichier YAML**
+chargé par `file()`, qui prend le champ `id` de chaque élément.
+
 `course.ts` n'importe jamais `astro:content` — c'est ce qui rend `course.test.ts`
 testable sans runtime Astro. Conserver cette séparation : les pages appellent
 `getCollection()`, `lib/` ne fait que transformer des données reçues en argument.
@@ -147,50 +151,72 @@ de lire l'environnement dans son corps : la fonction reste pure vis-à-vis de se
 arguments, donc testable sans simuler un build Astro. Même principe que
 `course.ts` — `lib/` ne dépend jamais du runtime Astro.
 
-### Style : la direction « Grille »
+### Style : la direction « SKOLAE »
 
-Tout le système de design tient dans `src/styles/global.css`. Un rythme est une
-grille de pulsations : filets verticaux comme des barres de mesure, alignements
-stricts, aucune décoration. **Ni ombre portée, ni dégradé, ni coin arrondi**
-au-delà de 2 px.
+Tout le système de design tient dans `src/styles/global.css`. Il s'inspire de la
+charte de [skolae.fr](https://skolae.fr/), relevée **dans sa feuille de styles**
+(pas à l'œil) : noir `#171717`, surfaces `#F4F4F4`, jaune `#FFF388`, pastels
+pour les grands aplats, titres en capitales condensées très grasses, coins
+arrondis (`rounded-xl` 0,75 rem, `rounded-3xl` 1,5 rem), boutons en pilule.
 
-- **Les couleurs se déclarent dans `@theme`**, jamais en dur dans un composant.
-  `--color-accent` engendre `text-accent`, `bg-accent`, `border-accent`. C'est le
-  remplaçant du `tailwind.config.js` de la v3 ; il n'y a plus de config JS.
-- **`--color-accent` est `#007574`**, dérivé du `#00ADB5` de Color Hunt.
-  Contraste **mesuré** : 5,06:1 sur le fond clair, 8,32:1 sur le fond sombre.
-  Le `#00807F` d'abord retenu ne donnait que **4,37:1**, sous le seuil AA de
-  4,5:1 — et avait pourtant été documenté ici comme conforme. Une teinte « qui a
-  l'air assez sombre » n'est pas une teinte conforme : **calculer le ratio, pas
-  l'estimer.**
-- **Deux accents, deux rôles.** `--color-accent` (teal) marque la *structure* :
-  liens, repères, filets actifs. `--color-pulse` (ambre) ne marque que ce qui est
-  **actif** : la partie qu'on lit, le pas qui sonne. Une couleur qui sert à
-  décorer n'est plus une information — si `pulse` apparaît là où rien n'est en
-  cours, c'est un bug de sens, pas de style.
-- **`components/Steps.astro`** rend une rangée de pas, une case par partie
-  réelle. Ce n'est pas un ornement : le jour où le nombre de cases cesse de
-  vouloir dire quelque chose, il faut retirer le composant, pas le garder pour
-  l'allure. La rangée est `aria-hidden` — l'information est déjà écrite à côté
-  (« 2 parties », « Partie 2 sur 5 »).
-- **Le témoin de lecture (`.playhead`) n'existe que pendant la lecture.**
-  Une animation permanente qui imite un séquenceur à l'arrêt raconterait quelque
-  chose de faux. Sous `prefers-reduced-motion`, le premier pas reste allumé et
-  l'animation s'arrête : l'information survit sans le mouvement.
-- **`--color-rule` est à 1,79:1**, volontairement. WCAG n'impose pas 3:1 aux
-  séparateurs décoratifs, et un filet à 3:1 serait une barre lourde plutôt qu'un
-  trait. Le signal qui porte du sens — l'élément courant du rail — passe par
-  l'accent, lui conforme.
-- **Le Markdown rendu** porte `class="prose prose-cours"`. `prose` vient du
-  plugin typography, `prose-cours` ne fait que lui passer les couleurs du projet
-  par ses variables `--tw-prose-*`. Ne pas réécrire les règles du plugin.
-- **Capitales réservées aux étiquettes courtes** (« Séquence 1 », « 2 parties »).
-  Un titre complet en petites capitales espacées devient illisible.
-- **JetBrains Mono est auto-hébergée** dans `public/fonts/`, en deux graisses
-  (400/700) sous-ensemblées au latin étendu : 187 Ko → 64 Ko. Le sous-ensemble se
-  refait avec `pyftsubset` (fonttools). Pas de CDN de polices.
-- Le corps de texte reste en **sans-serif système** : zéro téléchargement pour ce
-  qu'on lit le plus.
+- **Les couleurs se déclarent dans `@theme`**, jamais en dur dans un composant
+  (pas de `bg-white` : c'est `bg-snow`).
+- **Trois familles de jetons, trois règles :**
+  - `ground`, `surface`, `ink`, `muted`, `rule` **changent avec le thème** ;
+  - `accent` aussi, et c'est voulu : noir en clair, jaune en sombre. Le jaune
+    ne fait que 1,1:1 sur blanc, il ne peut pas servir de couleur de texte en
+    thème clair. Bouton principal = `bg-accent text-ground`, lisible des deux
+    côtés (17,9:1 et 15,7:1) ;
+  - `lemon`, `mint`, `sky`, `lilac`, `peach`, `night`, `night-soft`, `snow`
+    sont **fixes**. Sur un aplat de marque, le texte est toujours `night`
+    (≥ 11:1) ou `night-soft` (≥ 7:1), **jamais `ink`**, qui deviendrait blanc
+    en thème sombre sur un pastel.
+- **`pulse` (orange) ne marque que ce qui est actif ou faux** : la
+  sous-séquence qu'on lit, le pas qui sonne, la mauvaise réponse, le focus.
+  `#C2410C` (5,18:1 sur blanc), `#FB923C` (7,9:1 sur `#171717`).
+- **Les pastels portent un sens** : un par niveau (`lib/levels.ts` — 1 menthe,
+  2 ciel, 3 lilas), toujours doublé du libellé « Niveau 1 ». Les classes y sont
+  écrites en toutes lettres : Tailwind lit le source comme du texte, un
+  `bg-${couleur}` assemblé n'aurait aucun style.
+- **`display-title`** (déclaré en `@utility`, donc compatible `sm:`…) : Archivo
+  condensée 900 italique, capitales. **Réservé aux titres courts et aux
+  chiffres.** Un titre « Titre — précision » est coupé par `splitTitle()` :
+  le titre en `display-title`, la précision en Manrope. Les intertitres du
+  Markdown restent en Manrope.
+- **`word-spacing: 0.12em`** sur `display-title` : l'espace d'Archivo condensée
+  est si étroite que « CRÉER DE LA » se lisait « CRÉERDELA ».
+- **Une citation Markdown (`>`) est une consigne d'exercice** : aplat jaune.
+  Un vrai extrait cité devra passer par un autre balisage.
+- **`components/Steps.astro`** rend une pastille par partie réelle, `aria-hidden`
+  (l'information est écrite à côté).
+- **Le témoin de lecture (`.playhead`) n'existe que pendant la lecture**, et
+  s'arrête sous `prefers-reduced-motion`.
+- **`--color-rule` est décoratif** (1,25:1 en clair) : WCAG n'impose rien aux
+  séparateurs. Aucune information ne doit reposer sur lui seul.
+- **Le Markdown rendu** porte `class="prose prose-cours"` ; `prose-cours` ne fait
+  que passer les couleurs par les variables `--tw-prose-*`.
+
+#### Polices
+
+Toutes auto-hébergées dans `public/fonts/`, licences OFL à côté, préchargées
+dans `BaseLayout` (`crossorigin` obligatoire, sinon double téléchargement).
+
+| Rôle | Police | Poids servi |
+|---|---|---|
+| texte | Manrope variable 200–800, latin | 23 Ko |
+| titres | Archivo figée `wdth=62 wght=900` italique, latin | 12 Ko |
+| code | JetBrains Mono 400/700 | 64 Ko |
+
+SKOLAE utilise Basier Circle et GT Walsheim Condensed, **commerciales** : on
+prend les équivalents libres qu'elle déclare elle-même en repli. Recette pour
+Archivo (fichier variable de fontsource, `latin-wdth-italic.woff2`) :
+
+```bash
+fonttools varLib.instancer archivo-wdth-italic.woff2 wdth=62 wght=900 --static -o ac900.ttf
+pyftsubset ac900.ttf --flavor=woff2 --layout-features='*' \
+  --unicodes="U+0000-00FF,U+0131,U+0152-0153,U+02C6,U+02DA,U+02DC,U+2013-2014,U+2018-201E,U+2026,U+2192,U+20AC" \
+  --output-file=archivo-condensed-black-italic.woff2
+```
 
 Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json` — sans ça, `pnpm lint` échoue sur `global.css`.
@@ -226,14 +252,19 @@ Le bouton lui-même est une vingtaine de lignes sans framework : pas besoin d'un
 `aria-label` dit **l'état** (« Thème clair actif. Passer au thème sombre »).
 
 Corollaire : **une couleur écrite en dur dans un composant ne suivra pas le
-thème.** Tout passe par un jeton.
+thème.** Tout passe par un jeton — et un jeton *fixe* (`night`, `lemon`) ne
+suit pas le thème non plus, c'est précisément son rôle.
 
 ### La page d'accueil
 
 `pages/index.astro` charge et passe, `layouts/Home.astro` met en forme — même
-séparation que pour les séquences et les leçons. C'est `Home.astro` qui héberge
-l'îlot Strudel : le geste (« appuie sur Play ») est l'argument le plus direct du
-cours, et il coûte 0 octet tant qu'on ne clique pas.
+séparation que pour les séquences et les leçons. `Home.astro` héberge l'îlot
+Strudel (0 octet tant qu'on ne clique pas), l'emplacement de la vidéo de
+présentation, les chiffres clés et le sommaire **regroupé par niveau**.
+
+La durée totale est la somme des `durationMinutes` **des séquences** (durée
+prévue par la scénarisation), pas des parties : tant que le cours n'est pas
+rédigé, la somme des parties afficherait 1 h 30 au lieu de 15 h.
 
 `buildCourse` et `flattenCourse` sont enfin utilisés : l'arbre alimente le
 sommaire, et `flattenCourse(course)[0]` donne le point de départ réel du cours —
@@ -283,7 +314,10 @@ ses parties. Trois principes :
 
 - **La position se déduit, elle ne se stocke pas** :
   `parts.findIndex((entry) => entry.id === part.id) + 1`. Un champ `index` dans
-  le frontmatter deviendrait faux dès l'insertion d'une partie.
+  le frontmatter deviendrait faux dès l'insertion d'une partie. Même chose pour
+  le numéro affiché « 1.2 » : `séquence.order` + `part.order`.
+- **Une partie au corps vide** (frontmatter seul) affiche « Contenu en cours de
+  rédaction » : `!part.body?.trim()`.
 - **La barre de progression porte `role="progressbar"`** avec
   `aria-valuenow/min/max` : une largeur en CSS ne dit rien à un lecteur d'écran.
 - **La liste complète est `hidden lg:flex`.** Sur mobile elle repousserait le
@@ -311,6 +345,62 @@ Les deux exclusions sont des marqueurs de machine, pas du texte rédigé :
 `<!--astro:…-->` délimite les îlots, et `<!---->` / `<!--[-->` / `<!--]-->` sont
 les ancres d'hydratation des fragments Vue. Les commentaires d'un `<template>`
 Vue, eux, sont bel et bien retirés en production par le compilateur.
+
+### Test de positionnement
+
+La sous-séquence 1.1 porte un test en **trois axes** (culture musicale, MAO,
+JavaScript), quatre questions chacun. Données dans
+`src/content/placement/<slug>.md` (frontmatter seul), calcul dans
+`lib/placement.ts` (pur, testé), affichage dans `components/PlacementTest.vue`.
+
+- Un axe a un `threshold` et un booléen `skippable`. **Tous les axes
+  `skippable` acquis → recommander de sauter la séquence.** JavaScript n'est
+  pas `skippable` : la séquence 1 ne l'enseigne pas, elle le suppose ; un score
+  faible donne un conseil (`advice`), pas un détour.
+- `recommend()` refuse explicitement le cas « aucun axe sautable » :
+  `[].every()` vaut `true` et recommanderait de sauter.
+- Le schéma a **trois contrôles** : `answer` existe, chaque question désigne un
+  axe déclaré, aucun seuil ne dépasse le nombre de questions de son axe. Les
+  deux premiers vérifiés en cassant volontairement le fichier.
+- `[part].astro` passe `nextSequence: course[index + 1]` ; `Lesson.astro`
+  n'affiche le test que si la partie suivante est **dans la même séquence** et
+  qu'une séquence suivante existe — sinon « continuer » et « sauter » se
+  confondent.
+- Les libellés de la recommandation viennent des données (`Intl.ListFormat`
+  sur les axes), pas du gabarit : renommer un axe ne laisse pas une phrase fausse.
+- Après validation, le focus va sur « Tes résultats » (`tabindex="-1"`) : sans
+  ça, clavier et lecteur d'écran ne sauraient pas qu'un bloc est apparu.
+
+Vérifié dans un vrai navigateur (playwright-core + chromium headless) : saut
+recommandé avec musique et MAO à 4/4 et JS à 0/4, séquence 1 recommandée avec
+musique à 0/4, focus sur le titre des résultats, aucune erreur console.
+
+### Vidéos pas encore tournées
+
+`components/VideoPlaceholder.astro` occupe exactement la place de la future
+vidéo (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
+format de tournage. Deux emplacements, d'après les scripts de la scénarisation :
+
+- **Vidéo 1 — Présentation du cours (2 min 45)** : `layouts/Home.astro` ;
+- **Vidéo 2 — Les pré-requis (2 min 30)** : corps de
+  `sequences/prerequis-et-decouverte.mdx`, d'où son extension `.mdx`.
+
+Le jour du tournage, on remplace le composant par le lecteur au même endroit.
+
+### Page Sources
+
+`/sources` : `pages/sources.astro` charge, `layouts/Sources.astro` groupe par
+rubrique. **Chaque URL est contrôlée avant d'être ajoutée** et `checkedAt`
+reçoit la date : HTTP 200 pour une page, API oEmbed de YouTube pour une vidéo
+(elle renvoie aussi le vrai titre et l'auteur). Medium répond 403 aux robots :
+URL confirmée par un index de recherche, dit dans la `note`. La page affiche la
+date du contrôle **le plus ancien**.
+
+### Pièges `astro check`
+
+Dans `BaseLayout.astro`, `interface Props` placée *après* du code utilisant
+`Astro.url` a donné « Property 'title' is missing in type
+'Record<string, any>' ». La remonter juste sous les imports a suffi.
 
 ### Idiomes Astro 7 à utiliser
 
@@ -399,19 +489,24 @@ Les trois paquets `@strudel/*` sont du JavaScript sans types. `src/types/strudel
 déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 (`setCps`, `pause`…) suppose de compléter ce fichier, pas de basculer en `any`.
 
-## Écarts connus (état au 2026-09-07)
+## Écarts connus (état au 2026-09-15)
 
-- **Seule la séquence 1 est rédigée** (4 parties, 60 min). Les 11 autres
-  séquences existent avec titre et objectif, mais sans aucune partie : les états
-  limites (« à venir », « 0 partie ») sont donc visibles en permanence.
-- Le cours cite du code de `node_modules/@strudel/*` (cyclist, zyklus, hap).
-  Ces extraits sont **datés de la version installée** : à revérifier après une
-  montée de version, sinon le cours enseignera quelque chose de faux.
-- Il n'y a **pas de troisième état « système »** dans l'interrupteur : une fois
-  un choix fait, il est mémorisé et le site ne resuit plus le réglage de l'OS.
-  Vider `localStorage` est le seul moyen de revenir au comportement automatique.
-- **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), tous deux
-  transitifs et cantonnés au build — voir la section Sécurité ci-dessous.
+- **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
+  toutes créées avec titre, objectif, niveau, durée et équipement, **sans
+  corps**. Seule la séquence 1 a ses 5 sous-séquences, et seule la **1.1**
+  (test de positionnement) est rédigée. Les états « à venir » et « contenu en
+  cours de rédaction » sont donc visibles partout.
+- La collection `quizzes` est **vide** (les anciens quiz portaient sur l'ancien
+  contenu) : `astro build` affiche un avertissement du glob loader, sans effet.
+- **Les deux vidéos ne sont pas tournées** : emplacements « Ici vidéo ».
+- Les **niveaux** (1 : S1–S3, 2 : S4–S5, 3 : S6–S8) sont une lecture de la
+  vidéo de présentation, pas un découpage écrit dans la scénarisation : à valider.
+- Les références historiques de la scénarisation (Xenakis, George Lewis,
+  Collins & McLean) n'ont **pas d'URL** : absentes de `/sources` tant qu'aucune
+  source vérifiée n'est choisie.
+- Il n'y a **pas de troisième état « système »** dans l'interrupteur de thème.
+- **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), transitifs et
+  cantonnés au build — voir la section Sécurité ci-dessous.
 
 ## Sécurité
 
@@ -438,18 +533,25 @@ Séquence — `src/content/sequences/<slug>.md`, corps facultatif :
 
 ```yaml
 ---
-title: "Le code au service du son"
-objective: "Situer Strudel comme façade d'une vraie API navigateur"
-order: 1
+title: "Rythme"
+objective: "Reproduire des parties rythmiques imposées avec les sons natifs (drum kits)"
+order: 2
+level: 1                      # 1, 2 ou 3 — voir lib/levels.ts
+durationMinutes: 90           # durée prévue par la scénarisation
+equipment: ["Éditeur Strudel"]
 ---
 ```
+
+La **scénarisation** (document Google partagé par l'équipe) fait foi : titres,
+objectifs, durées et découpage viennent de là. Les titres de partie gardent la
+forme « Titre — précision ».
 
 Quiz — `src/content/quizzes/<slug>.md`, **frontmatter seul**, rattaché à une
 partie par `reference("parts")` :
 
 ```yaml
 ---
-part: "la-web-audio-api"      # id d'une entrée de parts/
+part: "le-repl"               # id d'une entrée de parts/
 questions:
   - question: "Pourquoi… ?"
     options: ["…", "…", "…"]
@@ -478,8 +580,8 @@ le corps contient le cours :
 
 ```yaml
 ---
-title: "Histoire VST → Max for Live"
-sequence: "code-au-service-du-son"   # id d'une entrée de sequences/
+title: "Le REPL — écrire, évaluer, entendre, recommencer"
+sequence: "prerequis-et-decouverte"  # id d'une entrée de sequences/
 order: 1
 durationMinutes: 15                  # 15 par défaut
 ---
