@@ -2,20 +2,37 @@
 @plugin "@tailwindcss/typography";
 
 /* ---------------------------------------------------------------------------
-   JetBrains Mono, auto-hébergée dans public/fonts/.
-   Pas de CDN : une requête vers un tiers en moins, rien à casser hors ligne, et
-   aucune donnée de visiteur envoyée ailleurs.
+   Polices auto-hébergées dans public/fonts/, sans CDN : une requête vers un
+   tiers en moins, et aucune donnée de visiteur envoyée ailleurs.
 
-   Les fichiers sont sous-ensemblés au latin étendu (fonttools/pyftsubset) :
-   187 Ko pour les deux graisses complètes, 64 Ko après. La fonte d'origine
-   embarque le cyrillique et le grec, dont ce cours n'a aucun usage.
+   La charte SKOLAE s'appuie sur Basier Circle et GT Walsheim Condensed, deux
+   polices commerciales qu'on n'a pas le droit de redistribuer. On prend leurs
+   équivalents libres (OFL), ceux-là mêmes que SKOLAE déclare en repli :
+     - Manrope pour le texte — variable, 200 à 800, sous-ensemble latin : 23 Ko ;
+     - Archivo pour les titres, figée en largeur 62 (condensée), graisse 900,
+       italique : 12 Ko au lieu des 100 Ko du fichier variable complet.
+   Recette : voir la section « Polices » de CLAUDE.md.
 
-   Deux graisses seulement, 400 et 700. Ajouter le 500 coûterait 30 Ko pour une
-   nuance à peine visible sur des capitales de 12 px.
-
-   `swap` : le texte s'affiche immédiatement dans la police de repli, puis
+   `swap` : le texte s'affiche tout de suite dans la police de repli, puis
    bascule. Un `block` laisserait la page vide le temps du téléchargement.
 --------------------------------------------------------------------------- */
+@font-face {
+	font-family: "Manrope";
+	src: url("/fonts/manrope-variable.woff2") format("woff2");
+	font-weight: 200 800;
+	font-style: normal;
+	font-display: swap;
+}
+
+@font-face {
+	font-family: "Archivo Condensed";
+	src: url("/fonts/archivo-condensed-black-italic.woff2") format("woff2");
+	font-weight: 900;
+	font-style: italic;
+	font-display: swap;
+}
+
+/* JetBrains Mono reste la police du code : c'est un cours de programmation. */
 @font-face {
 	font-family: "JetBrains Mono";
 	src: url("/fonts/jetbrains-mono-regular.woff2") format("woff2");
@@ -33,57 +50,83 @@
 }
 
 /* ---------------------------------------------------------------------------
-   Direction « Grille ».
+   Direction « SKOLAE ».
 
-   Un rythme est une grille de pulsations : filets verticaux comme des barres de
-   mesure, alignements stricts, aucune décoration.
+   Relevée dans la feuille de styles de skolae.fr : un noir #171717 plutôt
+   qu'un noir pur, un blanc cassé #F4F4F4 pour les surfaces, un jaune #FFF388
+   pour l'accent, et une famille de pastels pour les grands aplats. Titres en
+   capitales condensées très grasses, coins arrondis (0,75 rem et 1,5 rem).
 
    Les valeurs déclarées dans @theme deviennent à la fois des variables CSS et
    des classes utilitaires — `--color-accent` donne `text-accent`, `bg-accent`,
-   `border-accent`. C'est le remplaçant du tailwind.config.js de la v3.
+   `border-accent`.
 --------------------------------------------------------------------------- */
 @theme {
-	/* Le fond n'est pas un blanc pur : un gris très clair légèrement tiré vers
-	   le vert, pour s'accorder au teal de l'accent plutôt que de le contrarier. */
-	--color-ground: #f4f5f3;
-	--color-surface: #e7eae7;
-	--color-ink: #1b2024;
-	--color-muted: #56616a;
-	--color-rule: #b4bbb6;
+	--color-ground: #ffffff;
+	--color-surface: #f4f4f4;
+	--color-ink: #171717;
+	/* 5,74:1 sur le fond, 5,22:1 sur la surface. */
+	--color-muted: #666666;
+	/* 1,25:1, volontairement : séparateurs décoratifs, WCAG n'impose rien. */
+	--color-rule: #e6e6e6;
 
-	/* Teal dérivé du #00ADB5 de Color Hunt. Contraste mesuré : 5,06:1 sur le
-	   fond clair, donc AA pour du texte normal.
-	   Le #00807F d'abord retenu ne donnait que 4,37:1 — sous le seuil. Une
-	   teinte « qui a l'air assez sombre » n'est pas une teinte conforme : il
-	   faut calculer le ratio, pas l'estimer à l'œil. */
-	--color-accent: #007574;
+	/* L'accent change de valeur selon le thème, et c'est la seule façon de le
+	   garder lisible : le jaune SKOLAE ne fait que 1,1:1 sur fond blanc. En
+	   clair, l'accent de texte est donc le noir de la marque ; en sombre, le
+	   jaune (15,7:1). Le jaune en aplat, lui, existe dans les deux thèmes :
+	   c'est `lemon`, toujours accompagné de texte `night`. */
+	--color-accent: #171717;
 
 	/* Second accent, et il porte du sens : `pulse` ne marque jamais une
-	   décoration, seulement ce qui est *actif* — la partie en cours de lecture,
-	   le pas qui sonne. Teal = structure, ambre = état. Deux rôles, deux
-	   couleurs ; sans cette règle on retombe sur du coloriage.
-	   Mesuré : 5,26:1 sur fond clair, 8,97:1 sur fond sombre. */
-	--color-pulse: #9a5410;
+	   décoration, seulement ce qui est *actif* ou *faux* — la partie en cours,
+	   le pas qui sonne, la réponse erronée. 5,18:1 sur fond clair. */
+	--color-pulse: #c2410c;
 
+	/* Aplats de la marque, identiques dans les deux thèmes. Le texte posé
+	   dessus est toujours `night` (11:1 et plus) ou `night-soft` (7:1 et plus) :
+	   jamais `ink`, qui s'inverserait en thème sombre et deviendrait illisible. */
+	--color-lemon: #fff388;
+	--color-mint: #9bdebd;
+	--color-sky: #abdaee;
+	--color-lilac: #e8c9ff;
+	--color-peach: #ebc5b0;
+	--color-night: #171717;
+	--color-night-soft: #3d3d3d;
+	/* Blanc fixe, pour éclaircir un aplat (`bg-snow/60`) quel que soit le thème. */
+	--color-snow: #ffffff;
+
+	--font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", sans-serif;
+	--font-display:
+		"Archivo Condensed", "Arial Narrow", "Roboto Condensed", Impact, sans-serif;
 	--font-mono:
 		"JetBrains Mono", ui-monospace, "SF Mono", Menlo, Consolas, monospace;
-	--font-sans:
-		system-ui, -apple-system, "Segoe UI", Roboto, "Helvetica Neue", sans-serif;
+}
+
+/* Le titre SKOLAE : capitales condensées, graisse maximale, interligne serré.
+   Déclaré en @utility plutôt qu'en classe CSS : il accepte ainsi les variantes
+   Tailwind (`sm:`, `hover:`…) comme n'importe quel utilitaire.
+   Réservé aux titres et aux chiffres : un paragraphe en capitales condensées
+   ne se lit pas. */
+@utility display-title {
+	font-family: var(--font-display);
+	font-weight: 900;
+	font-style: italic;
+	text-transform: uppercase;
+	letter-spacing: -0.01em;
+	/* L'espace d'Archivo condensée est très étroite : sans ça, « CRÉER DE LA »
+	   se lit « CRÉERDELA » dès les grandes tailles. */
+	word-spacing: 0.12em;
+	line-height: 0.98;
 }
 
 /* ---------------------------------------------------------------------------
-   Thème sombre.
+   Thème sombre — le fond noir de la page d'accueil SKOLAE.
 
-   Les utilitaires Tailwind v4 s'écrivent `var(--color-ground)` : redéfinir le
-   jeton ici suffit à retourner tout le site, sans une seule classe `dark:`
-   dans les composants. C'est l'intérêt d'avoir tout fait passer par @theme.
+   Les utilitaires Tailwind v4 s'écrivent `var(--color-ground)` : redéfinir les
+   jetons suffit à retourner tout le site, sans une seule classe `dark:`.
 
-   Aucun sélecteur `.dark`, aucune classe utilitaire conditionnelle : seuls les
-   jetons changent. Par défaut on suit le système ; l'interrupteur de l'en-tête
-   pose `data-theme` sur <html> et l'emporte alors sur la préférence système.
-
-   Ratios mesurés sur le fond sombre : ink 15,2:1 · muted 6,8:1 · accent 8,5:1 ·
-   pulse 9,0:1.
+   Ratios mesurés sur #171717 : ink 17,9:1 · muted 7,7:1 · accent 15,7:1 ·
+   pulse 7,9:1.
 --------------------------------------------------------------------------- */
 /* Les trois états doivent cohabiter :
      — sans choix explicite, on suit le système ;
@@ -92,37 +135,37 @@
    choisi « clair » sur un système sombre resterait en sombre. */
 @media (prefers-color-scheme: dark) {
 	:root:not([data-theme]) {
-		--color-ground: #131619;
-		--color-surface: #1c2126;
-		--color-ink: #e8ecea;
-		--color-muted: #96a0a3;
-		--color-rule: #2e3639;
-		--color-accent: #4fc3bc;
-		--color-pulse: #f2a65a;
+		--color-ground: #171717;
+		--color-surface: #272727;
+		--color-ink: #ffffff;
+		--color-muted: #aaaaaa;
+		--color-rule: #393939;
+		--color-accent: #fff388;
+		--color-pulse: #fb923c;
 	}
 }
 
 :root[data-theme="dark"] {
-	--color-ground: #131619;
-	--color-surface: #1c2126;
-	--color-ink: #e8ecea;
-	--color-muted: #96a0a3;
-	--color-rule: #2e3639;
-	--color-accent: #4fc3bc;
-	--color-pulse: #f2a65a;
+	--color-ground: #171717;
+	--color-surface: #272727;
+	--color-ink: #ffffff;
+	--color-muted: #aaaaaa;
+	--color-rule: #393939;
+	--color-accent: #fff388;
+	--color-pulse: #fb923c;
 }
 
 /* La variante claire doit être réécrite explicitement : sans elle, choisir
    « clair » sur un système sombre ne rétablirait rien, faute de règle à
    appliquer. */
 :root[data-theme="light"] {
-	--color-ground: #f4f5f3;
-	--color-surface: #e7eae7;
-	--color-ink: #1b2024;
-	--color-muted: #56616a;
-	--color-rule: #b4bbb6;
-	--color-accent: #007574;
-	--color-pulse: #9a5410;
+	--color-ground: #ffffff;
+	--color-surface: #f4f4f4;
+	--color-ink: #171717;
+	--color-muted: #666666;
+	--color-rule: #e6e6e6;
+	--color-accent: #171717;
+	--color-pulse: #c2410c;
 }
 
 /* Indique au navigateur de quel côté on est : barres de défilement, champs de
@@ -135,20 +178,19 @@
    Le Markdown rendu par <Content />.
 
    Le plugin typography pilote tout par variables : on ne réécrit pas ses
-   règles, on lui donne les couleurs du projet. Le jour où la palette change,
-   il n'y a qu'un seul endroit à toucher.
+   règles, on lui donne les couleurs du projet.
 --------------------------------------------------------------------------- */
 .prose-cours {
 	--tw-prose-body: var(--color-ink);
 	--tw-prose-headings: var(--color-ink);
 	--tw-prose-lead: var(--color-muted);
-	--tw-prose-links: var(--color-accent);
+	--tw-prose-links: var(--color-ink);
 	--tw-prose-bold: var(--color-ink);
 	--tw-prose-counters: var(--color-muted);
-	--tw-prose-bullets: var(--color-rule);
+	--tw-prose-bullets: var(--color-muted);
 	--tw-prose-hr: var(--color-rule);
-	--tw-prose-quotes: var(--color-ink);
-	--tw-prose-quote-borders: var(--color-accent);
+	--tw-prose-quotes: var(--color-night);
+	--tw-prose-quote-borders: transparent;
 	--tw-prose-captions: var(--color-muted);
 	--tw-prose-code: var(--color-ink);
 	--tw-prose-pre-code: var(--color-ink);
@@ -157,23 +199,45 @@
 	--tw-prose-td-borders: var(--color-rule);
 }
 
-/* Les titres du cours en monospace : ce sont eux qui portent la structure,
-   comme les repères de l'interface. Le corps de texte reste en sans-serif,
-   parce qu'on en lit des pages entières. */
-.prose-cours :is(h1, h2, h3, h4) {
-	font-family: var(--font-mono);
-	letter-spacing: -0.015em;
+/* Les intertitres restent en Manrope : sur 65 caractères de large, des
+   capitales condensées écraseraient le texte qu'elles introduisent. La police
+   de titre est gardée pour le <h1> de la page. */
+.prose-cours :is(h2, h3, h4) {
+	font-weight: 800;
+	letter-spacing: -0.02em;
 	text-wrap: balance;
 }
 
-/* Le filet vertical d'accent, repris des barres de mesure : blocs de code et
-   citations sont marqués sur leur bord gauche plutôt qu'encadrés.
+.prose-cours a {
+	text-decoration-thickness: 2px;
+	text-underline-offset: 4px;
+	text-decoration-color: var(--color-accent);
+}
 
-   `:not(.repl-code)` exclut le bloc du REPL : celui-ci vit déjà dans une section
-   bordée d'accent, et les deux filets imbriqués faisaient une double barre. */
-.prose-cours pre:not(.repl-code) {
-	border-left: 2px solid var(--color-accent);
-	border-radius: 0;
+.prose-cours pre {
+	border-radius: 0.75rem;
+}
+
+/* Convention du cours : une citation Markdown (`>`) est une **consigne
+   d'exercice**. Elle prend l'aplat jaune, comme les appels à l'action SKOLAE.
+   Un vrai extrait cité devra passer par un autre balisage. */
+.prose-cours blockquote {
+	border-radius: 0.75rem;
+	background: var(--color-lemon);
+	padding: 1rem 1.5rem;
+	font-style: normal;
+	font-weight: 600;
+}
+
+.prose-cours blockquote p::before,
+.prose-cours blockquote p::after {
+	/* Le plugin ajoute des guillemets : une consigne n'est pas une citation. */
+	content: none;
+}
+
+.prose-cours blockquote code {
+	color: var(--color-night);
+	background: color-mix(in oklab, var(--color-night) 10%, transparent);
 }
 
 .prose-cours :not(pre) > code::before,
@@ -184,8 +248,9 @@
 }
 
 .prose-cours :not(pre) > code {
+	border-radius: 0.375rem;
 	background: var(--color-surface);
-	padding: 0.15em 0.35em;
+	padding: 0.15em 0.4em;
 	font-weight: 400;
 }
 
@@ -197,6 +262,11 @@
    ces règles globales, volontairement limitées à l'encombrement — le thème et
    la coloration restent ceux de Strudel.
 --------------------------------------------------------------------------- */
+.cm-editor {
+	border-radius: 0.75rem;
+	overflow: hidden;
+}
+
 .cm-editor .cm-content {
 	/* Sans minimum, l'éditeur d'une ligne se réduit à un bandeau écrasé où l'on
 	   n'a pas envie d'écrire. Il continue de grandir avec le contenu. */
@@ -214,9 +284,10 @@
 
    Il n'est rendu que pendant que le son joue réellement — jamais en décoration.
    Une animation permanente qui imite un séquenceur à l'arrêt raconterait quelque
-   chose de faux, et c'est le genre de détail qui fait « site généré ».
+   chose de faux.
 --------------------------------------------------------------------------- */
 .playhead > span {
+	border-radius: 9999px;
 	background: var(--color-rule);
 	animation: playhead-step 1.6s steps(1, end) infinite;
 }
@@ -269,8 +340,9 @@ html {
 	}
 }
 
-/* Un focus visible partout : la navigation au clavier ne doit jamais se perdre. */
+/* Un focus visible partout : la navigation au clavier ne doit jamais se perdre.
+   `pulse` et non `accent` : sur un aplat jaune, un contour jaune disparaîtrait. */
 :focus-visible {
-	outline: 2px solid var(--color-accent);
-	outline-offset: 2px;
+	outline: 2px solid var(--color-pulse);
+	outline-offset: 3px;
 }

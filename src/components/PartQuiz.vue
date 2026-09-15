@@ -1,5 +1,6 @@
 <script setup lang="ts">
 import { computed, ref, useId } from "vue";
+import { codeSegments as segments } from "@/lib/format";
 
 /**
  * Auto-évaluation de fin de partie.
@@ -35,18 +36,6 @@ const score = computed(
 const isCorrect = (index: number) =>
 	chosen.value[index] === props.questions[index].answer;
 
-/**
- * Découpe un texte sur les accents graves pour rendre `du code` en <code>.
- *
- * Le contenu des quiz est du texte brut, pas du Markdown rendu : sans ça, les
- * accents graves s'afficheraient littéralement et passeraient pour des fautes.
- *
- * On construit des nœuds de texte, jamais du HTML : pas de `v-html`, donc
- * aucune injection possible depuis un fichier de contenu.
- */
-const segments = (text: string) =>
-	text.split("`").map((value, index) => ({ value, code: index % 2 === 1 }));
-
 function check() {
 	checked.value = true;
 }
@@ -59,13 +48,10 @@ function reset() {
 
 <template>
 	<section
-		class="mt-16 border-t border-rule pt-8"
+		class="mt-16 rounded-3xl bg-surface p-6 sm:p-10"
 		:aria-labelledby="`${uid}-titre`"
 	>
-		<h2
-			:id="`${uid}-titre`"
-			class="font-mono text-xs font-bold tracking-[0.16em] text-accent uppercase"
-		>
+		<h2 :id="`${uid}-titre`" class="display-title text-3xl">
 			Vérifie ta compréhension
 		</h2>
 
@@ -75,15 +61,15 @@ function reset() {
 				     boutons radio. Un <div> avec du texte ne serait pas annoncé comme
 				     la question du groupe. -->
 				<fieldset :disabled="checked">
-					<legend class="leading-snug font-medium text-balance">
-						<span class="font-mono text-xs text-muted tabular-nums"
-							>{{ String(index + 1).padStart(2, "0") }}</span
-						>
+					<legend class="leading-snug font-bold text-balance">
+						<span class="text-sm text-muted tabular-nums">{{
+							String(index + 1).padStart(2, "0")
+						}}</span>
 						<span class="ml-3">
 							<template v-for="(seg, s) in segments(item.question)" :key="s">
 								<code
 									v-if="seg.code"
-									class="bg-surface px-1 py-0.5 font-mono text-[0.85em]"
+									class="rounded-md bg-ground px-1 py-0.5 font-mono text-[0.85em] font-normal"
 									>{{ seg.value }}</code
 								><template v-else>{{ seg.value }}</template>
 							</template>
@@ -94,13 +80,13 @@ function reset() {
 						<label
 							v-for="(option, choice) in item.options"
 							:key="choice"
-							class="flex cursor-pointer items-start gap-3 border-l-2 py-2 pl-4 transition-colors"
+							class="flex cursor-pointer items-start gap-3 rounded-xl border-2 bg-ground px-4 py-3 transition-colors"
 							:class="[
 								checked && choice === item.answer
 									? 'border-accent text-ink'
 									: checked && chosen[index] === choice
 										? 'border-pulse text-ink'
-										: 'border-rule text-muted hover:border-accent hover:text-ink',
+										: 'border-transparent text-muted hover:border-rule hover:text-ink',
 							]"
 						>
 							<input
@@ -108,20 +94,20 @@ function reset() {
 								type="radio"
 								:name="`${uid}-q${index}`"
 								:value="choice"
-								class="mt-1 accent-accent"
+								class="mt-1 accent-pulse"
 							/>
 							<span class="text-sm leading-relaxed">
 								<template v-for="(seg, s) in segments(option)" :key="s">
 									<code
 										v-if="seg.code"
-										class="bg-surface px-1 py-0.5 font-mono text-[0.9em]"
+										class="rounded-md bg-surface px-1 py-0.5 font-mono text-[0.9em]"
 										>{{ seg.value }}</code
 									><template v-else>{{ seg.value }}</template>
 								</template>
 							</span>
 							<span
 								v-if="checked && choice === item.answer"
-								class="ml-auto shrink-0 font-mono text-xs text-accent"
+								class="ml-auto shrink-0 text-xs font-bold text-ink"
 								>bonne réponse</span
 							>
 						</label>
@@ -130,13 +116,13 @@ function reset() {
 
 				<p
 					v-if="checked"
-					class="mt-4 border-l-2 py-2 pl-4 text-sm leading-relaxed text-muted"
+					class="mt-4 border-l-4 py-1 pl-4 text-sm leading-relaxed text-muted"
 					:class="isCorrect(index) ? 'border-accent' : 'border-pulse'"
 				>
 					<template v-for="(seg, s) in segments(item.explanation)" :key="s">
 						<code
 							v-if="seg.code"
-							class="bg-surface px-1 py-0.5 font-mono text-[0.9em]"
+							class="rounded-md bg-ground px-1 py-0.5 font-mono text-[0.9em]"
 							>{{ seg.value }}</code
 						><template v-else>{{ seg.value }}</template>
 					</template>
@@ -149,7 +135,7 @@ function reset() {
 				v-if="!checked"
 				type="button"
 				:disabled="answered < questions.length"
-				class="rounded-xs border-b-2 border-ink/25 bg-accent px-6 py-3 font-mono text-xs font-bold tracking-[0.1em] text-ground uppercase transition-all not-disabled:hover:opacity-90 not-disabled:active:translate-y-px not-disabled:active:border-b-0 disabled:opacity-50"
+				class="rounded-full bg-accent px-7 py-3 text-sm font-extrabold text-ground transition-opacity not-disabled:hover:opacity-85 disabled:cursor-not-allowed disabled:opacity-50"
 				@click="check"
 			>
 				Vérifier
@@ -158,7 +144,7 @@ function reset() {
 			<button
 				v-else
 				type="button"
-				class="rounded-xs border border-rule px-6 py-3 font-mono text-xs font-bold tracking-[0.1em] uppercase transition-colors hover:border-accent hover:text-accent"
+				class="rounded-full border-2 border-ink px-7 py-3 text-sm font-extrabold transition-colors hover:bg-ink hover:text-ground"
 				@click="reset"
 			>
 				Recommencer
@@ -166,7 +152,7 @@ function reset() {
 
 			<!-- role="status" : le score change après un clic, sans rechargement.
 			     Sans ça, un lecteur d'écran ne l'annoncerait jamais. -->
-			<p role="status" class="font-mono text-xs text-muted tabular-nums">
+			<p role="status" class="text-sm font-semibold text-muted tabular-nums">
 				<template v-if="checked">
 					{{ score }} / {{ questions.length }}
 					<template v-if="score === questions.length">

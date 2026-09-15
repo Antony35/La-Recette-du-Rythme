@@ -1,0 +1,86 @@
+---
+import type { CollectionEntry } from "astro:content";
+import Breadcrumb from "@/components/Breadcrumb.astro";
+import BaseLayout from "@/layouts/BaseLayout.astro";
+import { withBase } from "@/lib/url";
+
+interface Props {
+	sources: CollectionEntry<"sources">[];
+}
+
+const { sources }: Props = Astro.props;
+
+// L'ordre des rubriques est un choix éditorial : on l'écrit ici plutôt que de
+// dépendre de l'ordre d'apparition dans le fichier YAML.
+const categories = [
+	{ id: "documentation", label: "Documentation officielle" },
+	{ id: "switch-angel", label: "Switch Angel" },
+	{ id: "articles", label: "Articles" },
+	{ id: "tutoriels", label: "Tutoriels" },
+] as const;
+
+const groups = categories.map((category) => ({
+	...category,
+	entries: sources.filter((source) => source.data.category === category.id),
+}));
+
+// La date affichée est celle du contrôle le plus *ancien* : c'est elle qui dit
+// jusqu'où l'ensemble de la page est garanti.
+const oldestCheck = new Date(
+	Math.min(...sources.map((source) => source.data.checkedAt.getTime())),
+);
+const checkedOn = new Intl.DateTimeFormat("fr-FR", {
+	dateStyle: "long",
+	timeZone: "UTC",
+}).format(oldestCheck);
+
+// Le domaine, affiché sous le titre : on voit où mène un lien avant de cliquer.
+const domain = (url: string) => new URL(url).hostname.replace(/^www\./, "");
+
+const trail = [{ label: "Accueil", href: withBase("/") }, { label: "Sources" }];
+---
+
+<BaseLayout title="Sources — La Recette du Rythme">
+    <div class="max-w-4xl">
+        <Breadcrumb items={trail} />
+
+        <h1 class="display-title mt-10 text-6xl sm:text-8xl">Sources</h1>
+        <p class="mt-6 max-w-2xl text-lg leading-relaxed text-muted">
+            Les documentations, vidéos et articles sur lesquels s'appuie le cours.
+            Chaque lien a été contrôlé le <strong class="text-ink">{checkedOn}</strong>.
+        </p>
+
+        <div class="mt-14 flex flex-col gap-14">
+            {groups.map((group) => group.entries.length > 0 && (
+                <section aria-labelledby={`rubrique-${group.id}`}>
+                    <h2 id={`rubrique-${group.id}`} class="flex items-baseline gap-3">
+                        <span class="display-title text-3xl sm:text-4xl">{group.label}</span>
+                        <span class="text-sm font-bold text-muted tabular-nums">{group.entries.length}</span>
+                    </h2>
+
+                    <ul class="mt-6 flex flex-col gap-2">
+                        {group.entries.map((source) => (
+                            <li>
+                                <a
+                                    href={source.data.url}
+                                    class="group flex flex-col gap-1 rounded-xl bg-surface px-6 py-5 transition-colors hover:bg-rule"
+                                >
+                                    <span class="leading-snug font-extrabold underline decoration-transparent decoration-2 underline-offset-4 transition-colors group-hover:decoration-accent">
+                                        {source.data.title}
+                                    </span>
+                                    <span class="text-sm text-muted">
+                                        {source.data.author && <>{source.data.author} · </>}
+                                        <span class="font-mono">{domain(source.data.url)}</span>
+                                    </span>
+                                    {source.data.note && (
+                                        <span class="mt-1 text-sm leading-relaxed text-muted">{source.data.note}</span>
+                                    )}
+                                </a>
+                            </li>
+                        ))}
+                    </ul>
+                </section>
+            ))}
+        </div>
+    </div>
+</BaseLayout>

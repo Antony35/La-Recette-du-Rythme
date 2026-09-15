@@ -1,0 +1,43 @@
+---
+/**
+ * Emplacement réservé à une vidéo qui n'est pas encore tournée.
+ *
+ * Il occupe exactement la place de la future vidéo (16/9) pour qu'on juge la
+ * mise en page dès maintenant. Le jour du tournage, on remplace ce composant par
+ * le lecteur, au même endroit, sans toucher au reste de la page.
+ *
+ * Aplat `night` et texte `lemon` dans les deux thèmes : c'est un écran, pas une
+ * surface de la page. La bordure `rule` le détache du fond en thème sombre.
+ */
+interface Props {
+	title: string;
+	/** Durée prévue par le script, ex. « 2 min 45 ». */
+	duration: string;
+	/** Format de tournage prévu, pour l'équipe. */
+	format?: string;
+}
+
+const { title, duration, format }: Props = Astro.props;
+---
+
+<figure class="not-prose my-10">
+    <div
+        role="img"
+        aria-label={`Emplacement de la vidéo « ${title} » (${duration}), pas encore tournée`}
+        class="relative flex aspect-video w-full flex-col items-center justify-center gap-4 overflow-hidden rounded-3xl border border-rule bg-night p-6 text-center"
+    >
+        <svg viewBox="0 0 64 64" class="h-14 w-14 sm:h-20 sm:w-20" aria-hidden="true">
+            <circle cx="32" cy="32" r="30" fill="none" stroke="var(--color-lemon)" stroke-width="3" />
+            <path d="M26 20 L46 32 L26 44 Z" fill="var(--color-lemon)" />
+        </svg>
+        <p class="display-title text-4xl text-lemon sm:text-6xl">Ici vidéo</p>
+        <p class="max-w-md text-sm font-semibold text-lemon/80">
+            {title} · {duration}
+        </p>
+    </div>
+    {format && (
+        <figcaption class="mt-3 text-sm text-muted">
+            Tournage à venir — {format}
+        </figcaption>
+    )}
+</figure>

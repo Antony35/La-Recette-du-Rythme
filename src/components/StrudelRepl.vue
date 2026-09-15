@@ -106,24 +106,24 @@ onUnmounted(() => {
 
 <template>
 	<section
-		class="border-l-2 border-accent pl-6"
+		class="rounded-3xl bg-surface p-6 sm:p-8"
 		:aria-labelledby="label ? headingId : undefined"
 	>
 		<h2
 			v-if="label"
 			:id="headingId"
-			class="font-mono text-xs font-bold tracking-[0.16em] text-accent uppercase"
+			class="display-title text-3xl"
 		>
 			{{ label }}
 		</h2>
 
 		<!-- Avant chargement, le code reste lisible en HTML pur : quelqu'un qui ne
 		     cliquera jamais voit quand même de quoi on parle.
-		     `repl-code` empêche le filet d'accent de .prose-cours pre de s'ajouter
-		     à celui de la section quand le REPL est dans une page de cours. -->
+		     `repl-code` repère ce bloc s'il faut un jour le distinguer des blocs
+		     de code du Markdown rendu, dans une page de cours. -->
 		<pre
 			v-if="!isReady"
-			class="repl-code mt-4 max-w-md overflow-x-auto bg-surface px-4 py-3 font-mono text-sm"
+			class="repl-code mt-4 overflow-x-auto rounded-xl bg-ground px-4 py-3 font-mono text-sm"
 		>{{ code }}</pre>
 
 		<!-- L'éditeur s'insère ici, et se place lui-même après <strudel-editor>. -->
@@ -133,7 +133,7 @@ onUnmounted(() => {
 			<button
 				type="button"
 				:disabled="isLoading"
-				class="rounded-xs border-b-2 border-ink/25 bg-accent px-6 py-3 font-mono text-xs font-bold tracking-[0.1em] text-ground uppercase transition-all not-disabled:hover:opacity-90 not-disabled:active:translate-y-px not-disabled:active:border-b-0 disabled:opacity-50"
+				class="rounded-full bg-accent px-7 py-3 text-sm font-extrabold text-ground transition-opacity not-disabled:hover:opacity-85 disabled:opacity-50"
 				@click="togglePlay"
 			>
 				{{ isLoading ? "Chargement…" : isPlaying ? "Stop" : "Play" }}
@@ -153,11 +153,11 @@ onUnmounted(() => {
 				<span class="h-2.5 w-2.5"></span>
 			</div>
 
-			<span v-if="isReady" class="font-mono text-xs text-muted">
-				Modifie le code, puis <kbd class="bg-surface px-1 py-0.5">Ctrl</kbd> +
-				<kbd class="bg-surface px-1 py-0.5">Entrée</kbd> pour réévaluer
+			<span v-if="isReady" class="text-sm text-muted">
+				Modifie le code, puis <kbd class="rounded-md bg-ground px-1.5 py-0.5 font-mono text-xs">Ctrl</kbd> +
+				<kbd class="rounded-md bg-ground px-1.5 py-0.5 font-mono text-xs">Entrée</kbd> pour réévaluer
 			</span>
-			<span v-else class="font-mono text-xs text-muted">
+			<span v-else class="text-sm text-muted">
 				Le premier clic télécharge l'éditeur et les sons
 			</span>
 		</div>
