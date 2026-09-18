@@ -16,15 +16,16 @@ axes:
     threshold: 3
     skippable: true
     advice: >-
-      La sous-séquence 1.4 présente le drum kit (`bd`, `sd`, `hh`) et la 1.3 la
-      boucle du REPL. Les filtres reviendront en détail en séquence 4.
+      La sous-séquence 1.4 présente le drum kit (`bd` : bass drum, grosse caisse ; `sd` : snare drum, caisse claire ;
+      `hh` : hi-hat, charleston) et la 1.3 la
+      boucle du REPL (Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer). Les filtres reviendront en détail en séquence 4.
   - id: javascript
     label: "JavaScript"
     threshold: 3
     skippable: false
     advice: >-
       Le cours suppose des bases : variables, fonctions, appel de méthode.
-      Revois-les avant la séquence 6 — le guide JavaScript de MDN, cité dans la
+      Revois-les avant la séquence 6 — le guide JavaScript de MDN (Mozilla Developer Network), cité dans la
       page Sources, couvre exactement ce qu'il faut.
 
 questions:
@@ -56,7 +57,7 @@ questions:
       - "Un morceau de 120 secondes"
     answer: 0
     explanation: >-
-      BPM veut dire « beats per minute ». À 120 BPM, un battement tombe toutes
+      BPM (Beats Per Minute) signifie « battements par minute ». À 120 BPM, un battement tombe toutes
       les demi-secondes. Strudel raisonne plutôt en cycles, qu'on verra en
       séquence 2, mais le BPM reste la référence de tous les musiciens.
 
@@ -75,23 +76,23 @@ questions:
 
   # --- MAO ----------------------------------------------------------------------
   - axis: mao
-    question: "Dans une boîte à rythmes, que désigne l'abréviation `bd` ?"
+    question: "À quoi sert un séquenceur en MAO ?"
     options:
-      - "Le « bass drum », la grosse caisse"
-      - "La basse synthétique"
-      - "Le « beat duration », la durée d'un temps"
-      - "La caisse claire"
+      - "À organiser le déclenchement de notes ou de sons dans le temps"
+      - "À accorder automatiquement un instrument"
+      - "À supprimer les bruits de fond d'un enregistrement"
+      - "À régler le volume d'écoute du casque"
     answer: 0
     explanation: >-
-      `bd` = bass drum, la grosse caisse. Avec `sd` (snare drum, la caisse
-      claire) et `hh` (hi-hat, la charleston), c'est le trio de base de toute
-      rythmique — et exactement ce que tu écriras dans `s("bd sd hh")`.
+      Un séquenceur organise quand les notes ou les sons sont joués. Dans une
+      boîte à rythmes, on peut par exemple placer des coups de batterie sur
+      une grille de pas, puis faire tourner cette séquence en boucle.
 
   - axis: mao
     question: "Qu'est-ce qu'un sample ?"
     options:
       - "Un synthétiseur qui calcule le son en temps réel"
-      - "Une partition au format MIDI"
+      - "Une partition au format MIDI (Musical Instrument Digital Interface)"
       - "Un court enregistrement audio, rejoué à la demande"
       - "Un réglage de volume appliqué à une piste"
     answer: 2
@@ -110,7 +111,7 @@ questions:
       - "des formats de fichiers audio"
     answer: 1
     explanation: >-
-      Deux boîtes à rythmes Roland du début des années 1980, omniprésentes en
+      TR (Transistor Rhythm) désigne ici deux boîtes à rythmes Roland du début des années 1980, omniprésentes en
       hip-hop, house et techno. Strudel en embarque les sons :
       `.bank("RolandTR909")` change de kit sans toucher au rythme.
 
