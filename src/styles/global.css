@@ -214,15 +214,47 @@
 	text-decoration-color: var(--color-accent);
 }
 
+.course-fun-fact {
+	margin-block: 2rem;
+	border-radius: 1.5rem;
+	background: var(--color-peach);
+	padding: 1.3rem 1.5rem;
+	color: var(--color-night);
+	font-size: 0.9rem;
+	line-height: 1.65;
+}
+
+.course-fun-fact p {
+	margin: 0;
+}
+
+.course-fun-fact .course-fun-fact-label {
+	margin-bottom: 0.5rem;
+	font-weight: 800;
+}
+
+.course-fun-fact-label span {
+	margin-right: 0.4rem;
+}
+
+.prose-cours .course-fun-fact a {
+	display: inline-block;
+	margin-top: 0.8rem;
+	color: var(--color-night-soft);
+	font-size: 0.8rem;
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
 .prose-cours pre {
-	border-radius: 0.75rem;
+	border-radius: 0.8rem;
 }
 
 /* Convention du cours : une citation Markdown (`>`) est une **consigne
    d'exercice**. Elle prend l'aplat jaune, comme les appels à l'action SKOLAE.
    Un vrai extrait cité devra passer par un autre balisage. */
 .prose-cours blockquote {
-	border-radius: 0.75rem;
+	border-radius: 0.8rem;
 	background: var(--color-lemon);
 	padding: 1rem 1.5rem;
 	font-style: normal;
@@ -248,7 +280,7 @@
 }
 
 .prose-cours :not(pre) > code {
-	border-radius: 0.375rem;
+	border-radius: 0.4rem;
 	background: var(--color-surface);
 	padding: 0.15em 0.4em;
 	font-weight: 400;
@@ -263,7 +295,7 @@
    la coloration restent ceux de Strudel.
 --------------------------------------------------------------------------- */
 .cm-editor {
-	border-radius: 0.75rem;
+	border-radius: 0.8rem;
 	overflow: hidden;
 }
 
