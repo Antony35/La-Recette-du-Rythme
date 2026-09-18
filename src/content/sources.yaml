@@ -54,7 +54,7 @@
   title: "TOPLAP — The home of live coding"
   url: "https://toplap.org"
   category: documentation
-  note: "Communauté et manifeste du live coding."
+  note: "TOPLAP (Temporary Organisation for the Promotion of Live Algorithm Programming) : communauté et manifeste du live coding."
   checkedAt: 2026-09-15
 
 - id: mdn-guide-javascript
@@ -62,7 +62,7 @@
   url: "https://developer.mozilla.org/fr/docs/Web/JavaScript/Guide"
   category: documentation
   author: "MDN Web Docs"
-  note: "Référence conseillée par le test de positionnement pour revoir les bases."
+  note: "MDN (Mozilla Developer Network) : référence conseillée par le test de positionnement pour revoir les bases."
   checkedAt: 2026-09-15
 
 # --- Switch Angel ---------------------------------------------------------------
