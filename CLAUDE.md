@@ -161,6 +161,8 @@ arrondis (`rounded-xl` 0,75 rem, `rounded-3xl` 1,5 rem), boutons en pilule.
 
 - **Les couleurs se déclarent dans `@theme`**, jamais en dur dans un composant
   (pas de `bg-white` : c'est `bg-snow`).
+- **Les valeurs écrites en `rem` ont au maximum une décimale** : `1.3rem`,
+  pas `1.25rem`.
 - **Trois familles de jetons, trois règles :**
   - `ground`, `surface`, `ink`, `muted`, `rule` **changent avec le thème** ;
   - `accent` aussi, et c'est voulu : noir en clair, jaune en sombre. Le jaune
@@ -187,6 +189,9 @@ arrondis (`rounded-xl` 0,75 rem, `rounded-3xl` 1,5 rem), boutons en pilule.
   est si étroite que « CRÉER DE LA » se lisait « CRÉERDELA ».
 - **Une citation Markdown (`>`) est une consigne d'exercice** : aplat jaune.
   Un vrai extrait cité devra passer par un autre balisage.
+- **Les anecdotes « Le saviez-vous ? »** utilisent un `<aside>` HTML dans le
+  Markdown, avec `course-fun-fact not-prose` : encadré pêche, texte `night`,
+  styles dans `global.css`. Elles restent distinctes des exercices jaunes.
 - **`components/Steps.astro`** rend une pastille par partie réelle, `aria-hidden`
   (l'information est écrite à côté).
 - **Le témoin de lecture (`.playhead`) n'existe que pendant la lecture**, et
@@ -353,6 +358,9 @@ JavaScript), quatre questions chacun. Données dans
 `src/content/placement/<slug>.md` (frontmatter seul), calcul dans
 `lib/placement.ts` (pur, testé), affichage dans `components/PlacementTest.vue`.
 
+La première question MAO porte sur le rôle d'un séquenceur, plutôt que sur
+l'abréviation `bd`, pour évaluer une notion générale avant d'apprendre Strudel.
+
 - Un axe a un `threshold` et un booléen `skippable`. **Tous les axes
   `skippable` acquis → recommander de sauter la séquence.** JavaScript n'est
   pas `skippable` : la séquence 1 ne l'enseigne pas, elle le suppose ; un score
@@ -482,6 +490,9 @@ d'éditer. Son code, très commenté, reste consultable :
   organisés automatiquement. Biome suit `.gitignore` et exclut `public/`.
 - TypeScript en `astro/tsconfigs/strict`.
 - Commentaires et messages d'erreur rédigés en français.
+- Dans les textes du cours, développer les acronymes entre parenthèses à leur
+  première apparition. Si leur sens est l'objet d'une question, placer le
+  développement dans le corrigé pour ne pas donner la réponse.
 
 ## Types des paquets sans déclarations
 
@@ -493,9 +504,10 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
   toutes créées avec titre, objectif, niveau, durée et équipement, **sans
-  corps**. Seule la séquence 1 a ses 5 sous-séquences, et seule la **1.1**
-  (test de positionnement) est rédigée. Les états « à venir » et « contenu en
-  cours de rédaction » sont donc visibles partout.
+  corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties
+  **1.1** (test de positionnement) et **1.2** (histoire du live coding) sont
+  rédigées. La 1.2 cite ses références directement dans le Markdown. Les états
+  « à venir » et « contenu en cours de rédaction » restent visibles ailleurs.
 - La collection `quizzes` est **vide** (les anciens quiz portaient sur l'ancien
   contenu) : `astro build` affiche un avertissement du glob loader, sans effet.
 - **Les deux vidéos ne sont pas tournées** : emplacements « Ici vidéo ».

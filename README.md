@@ -9,6 +9,12 @@ Site de cours statique construit avec **Astro**, **Tailwind CSS v4** et **Vue**
 Le cours est découpé en **séquences**, elles-mêmes découpées en **parties**.
 Une partie correspond à une page de cours.
 
+La partie 1.2 présente l'histoire du live coding, de la musique algorithmique
+à TidalCycles puis Strudel, avec des références historiques dans le texte.
+Une courte anecdote « Le saviez-vous ? » apparaît dans un encadré pêche.
+Le test de positionnement évalue notamment le rôle d'un séquenceur en MAO,
+sans exiger de connaître les abréviations de Strudel.
+
 ## Démarrage
 
 **Node >= 24** (`nvm use` lit le `.nvmrc`) et **pnpm** — la version est fixée par
