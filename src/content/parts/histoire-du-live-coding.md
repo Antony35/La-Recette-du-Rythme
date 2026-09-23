@@ -34,6 +34,50 @@ On a déjà du code au service de la musique, mais pas encore du live coding :
 préparer une partition par programme et modifier ce programme en concert sont
 deux pratiques différentes.
 
+## Les synthés modulaires — le son en pièces détachées
+
+En parallèle, les **synthétiseurs modulaires** ouvrent une autre piste :
+construire son son en reliant des briques, appelées **modules**. Un oscillateur
+produit un son, un filtre en change la couleur, et d'autres modules font évoluer
+les réglages. Les câbles dessinent le trajet : c'est le **patch**.
+
+Imagine une note tenue qui fait « wouaaah » : un signal de commande peut faire
+bouger le filtre à ta place. Les câbles transportent donc du son, mais aussi
+des instructions sous forme de tensions électriques.
+[Doepfer explique ce principe de commande](https://doepfer.de/a100_man/a100t_e.htm).
+
+On retrouve un plaisir proche du live coding : créer un système, l'écouter,
+puis le transformer pendant qu'il joue.
+
+## L'Eurorack — un format pour ces briques
+
+Les panneaux couverts de boutons et de câbles colorés que tu as peut-être vus
+en concert ? Ce sont parfois des systèmes **Eurorack**, un format de synthé
+modulaire. Il définit notamment les dimensions des modules et leurs connexions
+d'alimentation pour les réunir dans un boîtier adapté.
+[La documentation Doepfer présente ce format](https://doepfer.de/a100_man/a100m_e.htm).
+
+**Modulaire** décrit le principe ; **Eurorack** désigne un format matériel.
+C'est un peu la différence entre construire avec des briques et choisir une
+gamme de briques. Et pour suivre ce cours, aucun mur de câbles à acheter :
+notre terrain de jeu sera le navigateur.
+
+## La MAO — le studio dans l'ordinateur
+
+La **MAO**, c'est la **musique assistée par ordinateur**. Enregistrer une voix,
+programmer une batterie ou assembler des boucles en font partie. Un logiciel
+de studio, souvent appelé **DAW** (*Digital Audio Workstation*, ou station de
+travail audio numérique), rassemble ces outils.
+
+Exemple : tu poses une grosse caisse sur chaque temps, ajoutes une basse,
+puis retires la batterie pour créer une pause. Le **séquenceur** organise les
+événements dans le temps ; les effets transforment leur son.
+[Le manuel d'Ableton illustre ces bases](https://www.ableton.com/en/manual/live-concepts/).
+
+Le live coding fait lui aussi partie de la MAO : on y décrit et transforme
+la musique avec du code. Câbles, blocs à l'écran ou lignes de texte : ces
+approches peuvent cohabiter dans un même morceau.
+
 ## Années 2000 — programmer devient un geste de scène
 
 Au début des années 2000, des artistes explorent la programmation en direct.
@@ -82,6 +126,10 @@ l'environnement Haskell de TidalCycles. C'est l'outil que nous utiliserons dans
 ce cours.
 
 ## Ce qu'il faut retenir
+
+Les synthés **modulaires** relient des briques sonores ; l'**Eurorack** est un
+de leurs formats matériels. La **MAO** regroupe les pratiques musicales
+assistées par ordinateur, dont le live coding.
 
 La musique algorithmique pose des **règles de composition**. Le live coding
 permet de **modifier le code pendant la performance**. TidalCycles facilite

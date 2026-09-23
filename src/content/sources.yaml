@@ -65,6 +65,68 @@
   note: "MDN (Mozilla Developer Network) : référence conseillée par le test de positionnement pour revoir les bases."
   checkedAt: 2026-09-15
 
+# --- Références de la partie Histoire du live coding -----------------------------
+- id: doepfer-a100-technical
+  title: "Technical Details A-100"
+  url: "https://doepfer.de/a100_man/a100t_e.htm"
+  category: documentation
+  author: "Doepfer"
+  note: "Synthèse modulaire : signaux audio et tensions de commande."
+  checkedAt: 2026-09-23
+
+- id: doepfer-a100-construction
+  title: "Construction Details A-100"
+  url: "https://doepfer.de/a100_man/a100m_e.htm"
+  category: documentation
+  author: "Doepfer"
+  note: "Dimensions et construction du système modulaire au format Eurorack."
+  checkedAt: 2026-09-23
+
+- id: ableton-live-concepts
+  title: "Live Concepts"
+  url: "https://www.ableton.com/en/manual/live-concepts/"
+  category: documentation
+  author: "Ableton"
+  note: "Principes d'un logiciel de MAO : séquences, pistes et effets."
+  checkedAt: 2026-09-23
+
+- id: wired-algorave
+  title: "Hacking meets clubbing with the 'algorave'"
+  url: "https://www.wired.com/story/algorave/"
+  category: articles
+  author: "Tom Cheshire, WIRED"
+  note: "Récit de l'origine du mot algorave en 2011."
+  checkedAt: 2026-09-23
+
+- id: illinois-illiac-suite
+  title: "Music composed by artificial intelligence? Not a new phenomenon"
+  url: "https://blogs.illinois.edu/view/6231/464962"
+  category: articles
+  note: "Revue de presse de l'université de l'Illinois évoquant l'Illiac Suite de 1957."
+  checkedAt: 2026-09-23
+
+- id: toplap-manifesto
+  title: "TOPLAP Manifesto"
+  url: "https://tidalcycles.org/docs/around_tidal/toplap_manifesto/"
+  category: documentation
+  author: "TOPLAP"
+  note: "Manifeste reproduit dans la documentation de TidalCycles."
+  checkedAt: 2026-09-23
+
+- id: tidal-history
+  title: "History of Tidal"
+  url: "https://userbase.tidalcycles.org/History_of_Tidal/en.html"
+  category: documentation
+  author: "Alex McLean"
+  checkedAt: 2026-09-23
+
+- id: strudel-getting-started
+  title: "Getting Started"
+  url: "https://strudel.cc/learn/getting-started/"
+  category: documentation
+  note: "Présentation de Strudel et de sa filiation avec TidalCycles."
+  checkedAt: 2026-09-23
+
 # --- Switch Angel ---------------------------------------------------------------
 - id: switch-angel-chaine
   title: "Chaîne YouTube de Switch Angel"
