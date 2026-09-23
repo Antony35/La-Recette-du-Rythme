@@ -397,6 +397,15 @@ Le jour du tournage, on remplace le composant par le lecteur au même endroit.
 
 ### Page Sources
 
+**Obligatoire : toute source utilisée ou citée lors de la rédaction ou de la
+modification d'un contenu de cours doit aussi figurer dans
+`src/content/sources.yaml`, dans la même modification.** Un lien dans le
+Markdown ne suffit pas. Réutiliser l'entrée existante si l'URL est déjà présente ;
+sinon, ajouter une entrée avec un `id` unique, `title`, `url`, `category` et
+`checkedAt` (date réelle de vérification), ainsi que `author` et `note` si utiles.
+Avant de terminer, vérifier que toutes les sources du contenu ajouté ou modifié
+sont bien présentes dans ce fichier, sans doublons.
+
 `/sources` : `pages/sources.astro` charge, `layouts/Sources.astro` groupe par
 rubrique. **Chaque URL est contrôlée avant d'être ajoutée** et `checkedAt`
 reçoit la date : HTTP 200 pour une page, API oEmbed de YouTube pour une vidéo
