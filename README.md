@@ -10,12 +10,17 @@ Le cours est découpé en **séquences**, elles-mêmes découpées en **parties*
 Une partie correspond à une page de cours.
 
 La partie 1.2 présente l'histoire du live coding, de la musique algorithmique
-à TidalCycles puis Strudel, avec de courts repères sur les synthés modulaires,
-l'Eurorack et la MAO. Ses références figurent dans le texte et dans
+à TidalCycles puis Strudel, avec de courts repères sur les synthés modulaires
+et la MAO. Ses références figurent dans le texte et dans
 `src/content/sources.yaml`.
 Une courte anecdote « Le saviez-vous ? » apparaît dans un encadré pêche.
 Le test de positionnement évalue notamment le rôle d'un séquenceur en MAO,
 sans exiger de connaître les abréviations de Strudel.
+
+La partie 1.3 propose 20 minutes de prise en main du REPL avec un éditeur
+Strudel intégré : jouer `s("bd*4")`, modifier le nombre de coups et réévaluer
+pendant la lecture. Elle distingue le texte modifié du motif en cours et se
+termine par un exercice autonome et une question avec corrigé dépliable.
 
 ## Démarrage
 

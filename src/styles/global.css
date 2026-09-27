@@ -192,6 +192,12 @@
 	--tw-prose-quotes: var(--color-night);
 	--tw-prose-quote-borders: transparent;
 	--tw-prose-captions: var(--color-muted);
+	--tw-prose-kbd: var(--color-ink);
+	--tw-prose-kbd-shadows: color-mix(
+		in oklab,
+		var(--color-ink) 10%,
+		transparent
+	);
 	--tw-prose-code: var(--color-ink);
 	--tw-prose-pre-code: var(--color-ink);
 	--tw-prose-pre-bg: var(--color-surface);
@@ -267,11 +273,6 @@
 	content: none;
 }
 
-.prose-cours blockquote code {
-	color: var(--color-night);
-	background: color-mix(in oklab, var(--color-night) 10%, transparent);
-}
-
 .prose-cours :not(pre) > code::before,
 .prose-cours :not(pre) > code::after {
 	/* Le plugin ajoute des backticks autour du code inline ; ils font double
@@ -284,6 +285,13 @@
 	background: var(--color-surface);
 	padding: 0.15em 0.4em;
 	font-weight: 400;
+}
+
+/* Après le style général du code : le fond des exercices reste jaune dans
+   les deux thèmes, donc leurs fragments de code gardent un contraste fixe. */
+.prose-cours blockquote :not(pre) > code {
+	color: var(--color-night);
+	background: color-mix(in oklab, var(--color-night) 10%, transparent);
 }
 
 /* ---------------------------------------------------------------------------

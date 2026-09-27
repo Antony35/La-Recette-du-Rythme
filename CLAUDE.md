@@ -514,8 +514,11 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
   toutes créées avec titre, objectif, niveau, durée et équipement, **sans
   corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties
-  **1.1** (test de positionnement) et **1.2** (histoire du live coding) sont
-  rédigées. La 1.2 cite ses références directement dans le Markdown. Les états
+  **1.1** (test de positionnement), **1.2** (histoire du live coding) et **1.3**
+  (prise en main du REPL) sont rédigées. La 1.3 utilise `le-repl.mdx` pour
+  intégrer `StrudelRepl` avec `client:visible`, un exercice de réévaluation en
+  lecture et une question avec corrigé dépliable. Les références des parties
+  1.2 et 1.3 figurent dans le texte et le catalogue des sources. Les états
   « à venir » et « contenu en cours de rédaction » restent visibles ailleurs.
 - La collection `quizzes` est **vide** (les anciens quiz portaient sur l'ancien
   contenu) : `astro build` affiche un avertissement du glob loader, sans effet.

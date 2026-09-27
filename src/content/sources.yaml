@@ -17,7 +17,14 @@
   title: "Workshop — First Sounds"
   url: "https://strudel.cc/workshop/first-sounds/"
   category: documentation
-  checkedAt: 2026-09-15
+  checkedAt: 2026-09-27
+
+- id: strudel-repl
+  title: "REPL"
+  url: "https://strudel.cc/technical-manual/repl/"
+  category: documentation
+  note: "Boucle lire, évaluer, afficher ou jouer, recommencer ; mise à jour des motifs en cours de lecture."
+  checkedAt: 2026-09-27
 
 - id: strudel-first-notes
   title: "Workshop — First Notes"
