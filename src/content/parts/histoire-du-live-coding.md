@@ -49,19 +49,6 @@ des instructions sous forme de tensions électriques.
 On retrouve un plaisir proche du live coding : créer un système, l'écouter,
 puis le transformer pendant qu'il joue.
 
-## L'Eurorack — un format pour ces briques
-
-Les panneaux couverts de boutons et de câbles colorés que tu as peut-être vus
-en concert ? Ce sont parfois des systèmes **Eurorack**, un format de synthé
-modulaire. Il définit notamment les dimensions des modules et leurs connexions
-d'alimentation pour les réunir dans un boîtier adapté.
-[La documentation Doepfer présente ce format](https://doepfer.de/a100_man/a100m_e.htm).
-
-**Modulaire** décrit le principe ; **Eurorack** désigne un format matériel.
-C'est un peu la différence entre construire avec des briques et choisir une
-gamme de briques. Et pour suivre ce cours, aucun mur de câbles à acheter :
-notre terrain de jeu sera le navigateur.
-
 ## La MAO — le studio dans l'ordinateur
 
 La **MAO**, c'est la **musique assistée par ordinateur**. Enregistrer une voix,
@@ -127,9 +114,8 @@ ce cours.
 
 ## Ce qu'il faut retenir
 
-Les synthés **modulaires** relient des briques sonores ; l'**Eurorack** est un
-de leurs formats matériels. La **MAO** regroupe les pratiques musicales
-assistées par ordinateur, dont le live coding.
+Les synthés **modulaires** relient des briques sonores. La **MAO** regroupe
+les pratiques musicales assistées par ordinateur, dont le live coding.
 
 La musique algorithmique pose des **règles de composition**. Le live coding
 permet de **modifier le code pendant la performance**. TidalCycles facilite
