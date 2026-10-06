@@ -7,6 +7,7 @@
 // mais ne permettait pas d'éditer quoi que ce soit.
 import type { StrudelMirror } from "@strudel/codemirror";
 import { onUnmounted, ref, useId } from "vue";
+import { playback } from "@/lib/exclusive";
 
 const props = defineProps<{
 	code: string;
@@ -66,12 +67,22 @@ async function loadEditor() {
 	isReady.value = true;
 }
 
+/**
+ * Arrête ce bloc-ci. Référence stable : c'est elle que `playback` mémorise, et
+ * une fonction recréée à chaque appel ne pourrait jamais être reconnue.
+ */
+function stopHere() {
+	editorElement?.editor?.stop();
+	isPlaying.value = false;
+}
+
 async function togglePlay() {
 	error.value = null;
 
 	if (isPlaying.value) {
 		await editorElement?.editor?.stop();
 		isPlaying.value = false;
+		playback.release(stopHere);
 		return;
 	}
 
@@ -94,6 +105,10 @@ async function togglePlay() {
 		return;
 	}
 
+	// Un seul bloc sonore à la fois : lancer celui-ci arrête celui qui tournait.
+	// Deux rythmes superposés feraient croire à l'apprenant qu'il a mal écrit son
+	// code, alors que c'est la page qui joue deux choses.
+	playback.claim(stopHere);
 	await editorElement.editor.evaluate();
 	isPlaying.value = true;
 }
@@ -101,6 +116,7 @@ async function togglePlay() {
 // Sans ça, le scheduler continuerait de jouer alors que le composant a disparu.
 onUnmounted(() => {
 	editorElement?.editor?.stop();
+	playback.release(stopHere);
 });
 </script>
 

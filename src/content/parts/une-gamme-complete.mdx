@@ -1,0 +1,107 @@
+---
+title: "Une gamme complète — associer une note à un son"
+sequence: "prerequis-et-decouverte"
+order: 5
+durationMinutes: 15
+---
+
+import NoteKeyboard from "@/components/NoteKeyboard.vue";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Vous savez écrire le nom d'une note. Reste à savoir ce qu'elle *fait* — et pour
+ça, il faut l'entendre en contexte, pas isolée.
+
+À la fin de ces **15 minutes**, vous aurez joué une gamme entière, vous saurez
+lire le piano roll de Strudel, et vous aurez entendu la différence entre une
+suite de notes qui monte et une suite qui part dans tous les sens.
+
+## Pourquoi une gamme
+
+Une **gamme**, c'est une échelle : les sept notes dans l'ordre, de la plus grave
+à la plus aiguë. Jouée telle quelle, elle ne fait pas une musique très
+intéressante — c'est justement ce qui la rend utile ici.
+
+Elle sert de **mètre étalon**. En l'écoutant, on associe un nom à une hauteur :
+`c` est en bas, `g` est au milieu, `b` est en haut. Après ça, une suite de notes
+écrite dans le code cesse d'être une suite de lettres au hasard : on commence à
+deviner ce qu'elle va donner avant de l'évaluer.
+
+Commencez par la jouer à la main, de gauche à droite, sans vous presser :
+
+<NoteKeyboard client:visible />
+
+Deux choses à remarquer en montant :
+
+- **l'écart n'est pas toujours le même.** Entre `e` et `f`, puis entre `b` et le
+  `c` suivant, le saut est plus petit qu'ailleurs — c'est exactement là qu'il n'y
+  a pas de touche noire entre les deux ;
+- **après `b`, on retombe sur `c`.** Pas le même : un `c` plus aigu. Les sept
+  noms se répètent indéfiniment, de plus en plus haut.
+
+## La même chose, en code
+
+En Strudel, une suite de notes s'écrit entre guillemets, séparée par des
+espaces. Chaque note occupe une part égale du cycle.
+
+<StrudelRepl client:visible code={'note("c d e f g a b")'} label="La gamme, de c à b">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Sept notes, sept parts égales. Sans numéro d'octave, Strudel les joue toutes
+		dans la même — c'est pour ça que la gamme monte sans jamais redescendre.
+	</p>
+</StrudelRepl>
+
+Pour entendre l'octave se refermer, ajoutez un huitième élément : le `c` du
+dessus, qui porte un numéro parce qu'il n'est plus dans la même octave.
+
+```js
+note("c d e f g a b c5")
+```
+
+Vous entendez alors la gamme « finir », au lieu de s'arrêter en chemin. C'est le
+même nom de note, et pourtant ce n'est pas la même hauteur : c'est tout l'intérêt
+du numéro d'octave.
+
+## Voir ce qu'on entend
+
+Strudel sait dessiner ce qu'il joue. Ajoutez `.pianoroll()` à la fin de la ligne
+et la gamme s'affiche en arrière-plan de l'éditeur : chaque note devient un
+rectangle, **sa position dit quand**, **sa hauteur dit quelle note**.
+
+<StrudelRepl
+	client:visible
+	code={'note("c d e f g a b c5").pianoroll()'}
+	label="La gamme, en escalier"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Les rectangles montent régulièrement : c'est à ça que ressemble une gamme.
+		Une mélodie, elle, dessinera des allers-retours.
+	</p>
+</StrudelRepl>
+
+Au passage, l'éditeur **surligne la note en cours de lecture** dans le code. Deux
+repères visuels pour un même son : le texte qui s'allume, et le rectangle qui
+défile. C'est ce qui permet de retrouver *où* ça coince quand un rythme sonne
+faux — on y reviendra en séquence 2.
+
+## À vous
+
+> Reprenez le bloc ci-dessus, lancez-le, puis gardez la lecture en cours pendant
+> tout l'exercice : chaque modification s'entend sans qu'on arrête le son.
+>
+> 1. **Inversez-la** : écrivez les notes de la plus aiguë à la plus grave
+>    (`c5 b a g f e d c`) et réévaluez. Le piano roll descend en escalier.
+> 2. **Cassez l'ordre** : mélangez les sept notes comme vous voulez. Vous
+>    n'obtenez pas une gamme, vous obtenez une mélodie — pas forcément belle,
+>    mais une mélodie.
+> 3. **Retirez-en deux ou trois.** Moins de notes dans le même cycle : chacune
+>    dure plus longtemps. La durée se partage, elle ne s'additionne pas.
+> 4. **Rejouez votre suite préférée** et notez-la quelque part : elle resservira
+>    en séquence 3, quand on ajoutera une mélodie à une rythmique.
+
+Si rien ne sort, vérifiez que chaque note est bien séparée par un espace et que
+les guillemets encadrent l'ensemble. `note("cdefgab")` ne joue rien : Strudel y
+cherche une seule note nommée `cdefgab`.
+
+C'est la fin de la séquence 1. Vous avez le vocabulaire, la boucle de travail et
+les deux notations. La séquence 2 attaque le rythme pour de bon : construire une
+rythmique complète, couche par couche.

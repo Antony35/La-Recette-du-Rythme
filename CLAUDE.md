@@ -542,6 +542,20 @@ Le seul contrôle qui tranche est donc un **clic dans un vrai navigateur**, avec
 la console surveillée. Compter `astro-island` ne détecte que l'oubli de
 `client:*`.
 
+### Un seul bloc sonore à la fois
+
+Une page de cours porte plusieurs `StrudelRepl`. Sans arbitrage, lancer le
+second pendant que le premier tourne superpose deux rythmes sans rapport, et
+l'apprenant croit avoir mal écrit son code. `lib/exclusive.ts` tient le lecteur
+actif au niveau du module : `playback.claim(stop)` arrête le précédent,
+`playback.release(stop)` ne libère que si l'appelant est bien l'actif — sans
+cette garde, un composant démonté en arrière-plan effacerait le lecteur qui
+vient de prendre sa place.
+
+La fonction passée à `claim` doit être une **référence stable** (`stopHere`,
+déclarée une fois) : une fonction recréée à chaque appel ne serait jamais
+reconnue, et le bloc s'arrêterait lui-même.
+
 ### Un seul moteur audio par page
 
 `lib/strudel-sound.ts` garde son état **au niveau du module** : deux îlots qui
@@ -594,13 +608,8 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 ## Écarts connus (état au 2026-10-06)
 
-- **Séquence 1 : 1.1 à 1.4 rédigées**, 1.5 encore vide. Les sept autres
-  séquences ont titre, objectif, niveau, durée et équipement, **sans corps**.
-- **Les deux composants interactifs de 1.4 restent à écrire** (`NoteKeyboard`,
-  `DrumKitMap`) : la page est complète en texte + image, le son au clic viendra
-  par-dessus. Le déclencheur ponctuel est `superdough(value, t, durée)`,
-  disponible via `@strudel/webaudio` qui fait `export * from "superdough"` —
-  pas besoin d'une dépendance de plus, ni de `webaudioRepl()` qui bouclerait.
+- **Séquence 1 complète** (1.1 à 1.5). Les sept autres séquences ont titre,
+  objectif, niveau, durée et équipement, **sans corps**.
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
   toutes créées avec titre, objectif, niveau, durée et équipement, **sans
   corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties
