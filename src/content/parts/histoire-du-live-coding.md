@@ -41,8 +41,8 @@ construire son son en reliant des briques, appelées **modules**. Un oscillateur
 produit un son, un filtre en change la couleur, et d'autres modules font évoluer
 les réglages. Les câbles dessinent le trajet : c'est le **patch**.
 
-Imagine une note tenue qui fait « wouaaah » : un signal de commande peut faire
-bouger le filtre à ta place. Les câbles transportent donc du son, mais aussi
+Imaginez une note tenue qui fait « wouaaah » : un signal de commande peut faire
+bouger le filtre à votre place. Les câbles transportent donc du son, mais aussi
 des instructions sous forme de tensions électriques.
 [Doepfer explique ce principe de commande](https://doepfer.de/a100_man/a100t_e.htm).
 
@@ -56,8 +56,8 @@ programmer une batterie ou assembler des boucles en font partie. Un logiciel
 de studio, souvent appelé **DAW** (*Digital Audio Workstation*, ou station de
 travail audio numérique), rassemble ces outils.
 
-Exemple : tu poses une grosse caisse sur chaque temps, ajoutes une basse,
-puis retires la batterie pour créer une pause. Le **séquenceur** organise les
+Exemple : vous posez une grosse caisse sur chaque temps, ajoutez une basse,
+puis retirez la batterie pour créer une pause. Le **séquenceur** organise les
 événements dans le temps ; les effets transforment leur son.
 [Le manuel d'Ableton illustre ces bases](https://www.ableton.com/en/manual/live-concepts/).
 
@@ -107,8 +107,8 @@ même : écrire des motifs, les écouter et les transformer en direct.
 [La documentation de Strudel](https://strudel.cc/learn/getting-started/)
 explique cette filiation.
 
-Pour toi, la différence est concrète : l'éditeur fonctionne dans le navigateur.
-Tu peux commencer à explorer cette manière de faire de la musique sans installer
+Pour vous, la différence est concrète : l'éditeur fonctionne dans le navigateur.
+Vous pouvez commencer à explorer cette manière de faire de la musique sans installer
 l'environnement Haskell de TidalCycles. C'est l'outil que nous utiliserons dans
 ce cours.
 
@@ -121,9 +121,9 @@ La musique algorithmique pose des **règles de composition**. Le live coding
 permet de **modifier le code pendant la performance**. TidalCycles facilite
 la manipulation de motifs, et Strudel rend cette approche accessible sur le web.
 
-> Avec tes mots, explique la différence entre un programme qui prépare une
+> Avec vos mots, expliquez la différence entre un programme qui prépare une
 > partition et un programme que l'on modifie pendant un concert.
 
-Dans la prochaine partie, tu prendras en main le **REPL**
-(Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer) : l'espace où tu vas
+Dans la prochaine partie, vous prendrez en main le **REPL**
+(Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer) : l'espace où vous allez
 écrire, lancer, écouter et recommencer.

@@ -7,42 +7,42 @@ durationMinutes: 20
 
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
-Dans la partie précédente, tu as découvert le principe du live coding :
-transformer un programme pendant que la musique joue. Maintenant, à toi de
-le faire. Avec une seule ligne de code, tu vas lancer un rythme, le modifier
+Dans la partie précédente, vous avez découvert le principe du live coding :
+transformer un programme pendant que la musique joue. Maintenant, à vous de
+le faire. Avec une seule ligne de code, vous allez lancer un rythme, le modifier
 et entendre le résultat sans arrêter la lecture.
 
-À la fin de ces **20 minutes**, tu sauras utiliser la boucle de travail de
+À la fin de ces **20 minutes**, vous saurez utiliser la boucle de travail de
 tout le cours : **écrire → évaluer → écouter → recommencer**.
 
 ## Comprendre le REPL — 3 min
 
 **REPL** signifie **Read, Evaluate, Print, Loop**, soit « lire, évaluer,
 afficher, recommencer ». Ces mots décrivent ce que fait l'environnement
-avec ton code.
+avec votre code.
 
 | Étape | Ce qui se passe |
 | --- | --- |
-| **Read — lire** | L'environnement lit le code que tu as écrit. |
+| **Read — lire** | L'environnement lit le code que vous avez écrit. |
 | **Evaluate — évaluer** | Il exécute les instructions pour construire le motif musical. |
-| **Print / Play — afficher / jouer** | Le résultat devient perceptible : dans Strudel, tu l'entends. |
-| **Loop — recommencer** | Tu peux proposer une nouvelle version et l'évaluer à nouveau. |
+| **Print / Play — afficher / jouer** | Le résultat devient perceptible : dans Strudel, vous l'entendez. |
+| **Loop — recommencer** | Vous pouvez proposer une nouvelle version et l'évaluer à nouveau. |
 
 Le mot *Print* désigne habituellement l'affichage d'un résultat. Pour la
 musique, on parle aussi de *Play* : le résultat se joue.
 [La documentation du REPL Strudel](https://strudel.cc/technical-manual/repl/)
 présente cette adaptation au live coding.
 
-Il y a donc deux boucles : **le motif sonore se répète**, et **toi, tu répètes
+Il y a donc deux boucles : **le motif sonore se répète**, et **vous, vous répétez
 les gestes d'écriture et d'écoute** pour le faire évoluer.
 
-## Jouer ta première ligne — 4 min
+## Jouer votre première ligne — 4 min
 
-Clique sur **Play** dans le bloc ci-dessous. Au premier clic, l'éditeur et les
-sons se chargent : laisse-leur quelques instants. Le code devient ensuite
+Cliquez sur **Play** dans le bloc ci-dessous. Au premier clic, l'éditeur et les
+sons se chargent : laissez-leur quelques instants. Le code devient ensuite
 modifiable directement dans la page. **Stop** permet d'arrêter la lecture.
 
-<StrudelRepl client:visible code={'s("bd*4")'} label="Ton premier rythme" />
+<StrudelRepl client:visible code={'s("bd*4")'} label="Votre premier rythme" />
 
 Cette ligne se lit ainsi :
 
@@ -51,77 +51,77 @@ Cette ligne se lit ainsi :
 - **`*4`** répète ici ce son quatre fois dans un **cycle**, la durée de référence
   du motif. Une fois ce cycle terminé, le motif recommence.
 
-Les parenthèses et les guillemets font partie de l'écriture : conserve-les.
-Pour cette séance, tu n'auras besoin de changer que le chiffre.
+Les parenthèses et les guillemets font partie de l'écriture : conservez-les.
+Pour cette séance, vous n'aurez besoin de changer que le chiffre.
 
-> Écoute plusieurs répétitions. Compte « 1, 2, 3, 4 » avec les coups de grosse
-> caisse, puis recommence à 1. Repère la régularité du motif avant de le modifier.
+> Écoutez plusieurs répétitions. Comptez « 1, 2, 3, 4 » avec les coups de grosse
+> caisse, puis recommencez à 1. Repérez la régularité du motif avant de le modifier.
 
 ## Modifier, puis réévaluer — 7 min
 
-Garde la lecture en cours. Dans l'éditeur, remplace uniquement le `4` par `8` :
+Gardez la lecture en cours. Dans l'éditeur, remplacez uniquement le `4` par `8` :
 
 ```js
 s("bd*8")
 ```
 
-**Attends et écoute avant de faire autre chose.** Le texte a changé, mais
+**Attendez et écoutez avant de faire autre chose.** Le texte a changé, mais
 le rythme entendu reste celui de la dernière version évaluée.
 
-Clique dans le code, puis appuie sur **Ctrl + Entrée** pour **réévaluer** :
-demander à Strudel de prendre en compte la nouvelle version. Tu entends
+Cliquez dans le code, puis appuyez sur **Ctrl + Entrée** pour **réévaluer** :
+demander à Strudel de prendre en compte la nouvelle version. Vous entendez
 alors les coups se rapprocher, sans avoir eu à appuyer sur Stop.
 
-Le cycle conserve sa durée : tu y places maintenant huit coups au lieu de
+Le cycle conserve sa durée : vous y placez maintenant huit coups au lieu de
 quatre. Le rythme est plus dense ; le son de grosse caisse reste le même.
 
-> Reviens à `4`, réévalue et écoute. Essaie ensuite `2`, puis `8`, en réévaluant
-> à chaque changement. Avant chaque réévaluation, prédis si les coups seront
-> plus espacés ou plus rapprochés, puis vérifie à l'oreille.
+> Revenez à `4`, réévaluez et écoutez. Essayez ensuite `2`, puis `8`, en réévaluant
+> à chaque changement. Avant chaque réévaluation, prédisez si les coups seront
+> plus espacés ou plus rapprochés, puis vérifiez à l'oreille.
 
 Le geste essentiel est là : **modifier le texte prépare le changement ;
-réévaluer le rend audible**. Tu peux prendre le temps d'écrire pendant que
+réévaluer le rend audible**. Vous pouvez prendre le temps d'écrire pendant que
 la version précédente continue de jouer.
 
 Les commandes de l'éditeur et les premiers sons sont également présentés
 dans [l'atelier officiel First Sounds](https://strudel.cc/workshop/first-sounds/).
 
-## À toi de conduire la boucle — 4 min
+## À vous de conduire la boucle — 4 min
 
-Repars de `s("bd*4")`. Cette fois, réalise une petite transformation en
+Repartez de `s("bd*4")`. Cette fois, réalisez une petite transformation en
 continu, sans arrêter la lecture entre les étapes.
 
-> 1. Fais jouer quatre coups par cycle et laisse le motif s'installer.
-> 2. Prépare une version avec deux coups. Écoute encore la version en cours,
->    puis réévalue au moment de ton choix.
-> 3. Passe à huit coups et réévalue pour rendre le rythme plus serré.
-> 4. Retrouve les quatre coups de départ, puis termine avec Stop.
+> 1. Faites jouer quatre coups par cycle et laissez le motif s'installer.
+> 2. Préparez une version avec deux coups. Écoutez encore la version en cours,
+>    puis réévaluez au moment de votre choix.
+> 3. Passez à huit coups et réévaluez pour rendre le rythme plus serré.
+> 4. Retrouvez les quatre coups de départ, puis terminez avec Stop.
 >
-> Recommence jusqu'à pouvoir enchaîner ces gestes sans relire les consignes.
+> Recommencez jusqu'à pouvoir enchaîner ces gestes sans relire les consignes.
 
-Si tu n'entends pas le changement, clique bien **dans l'éditeur** avant de
-faire Ctrl + Entrée. Si une erreur apparaît, compare ta ligne avec
-`s("bd*4")` : vérifie les deux guillemets, les deux parenthèses et l'astérisque,
-puis réévalue. Si aucun son ne sort dès le départ, vérifie le volume,
+Si vous n'entendez pas le changement, cliquez bien **dans l'éditeur** avant de
+faire Ctrl + Entrée. Si une erreur apparaît, comparez votre ligne avec
+`s("bd*4")` : vérifiez les deux guillemets, les deux parenthèses et l'astérisque,
+puis réévaluez. Si aucun son ne sort dès le départ, vérifiez le volume,
 la sortie audio et que l'onglet n'est pas muet.
 
 ## Ce qu'il faut retenir — 2 min
 
-Le REPL permet d'essayer une idée et d'en écouter le résultat. Tu n'as pas
+Le REPL permet d'essayer une idée et d'en écouter le résultat. Vous n'avez pas
 besoin d'écrire un morceau entier avant de jouer : une ligne suffit pour
-commencer, puis tu la transformes par petites étapes.
+commencer, puis vous la transformez par petites étapes.
 
-> Le code affiche `s("bd*8")`, mais tu entends encore quatre coups par cycle.
-> Quel geste manque-t-il ? Explique ensuite avec tes mots les quatre étapes
+> Le code affiche `s("bd*8")`, mais vous entendez encore quatre coups par cycle.
+> Quel geste manque-t-il ? Expliquez ensuite avec vos mots les quatre étapes
 > du REPL.
 
 <details>
-  <summary>Vérifier ta réponse</summary>
+  <summary>Vérifier votre réponse</summary>
   <p>Il manque la réévaluation avec <strong>Ctrl + Entrée</strong> dans l'éditeur.
-  Strudel lit le code, l'évalue et en joue le résultat ; tu peux ensuite modifier
+  Strudel lit le code, l'évalue et en joue le résultat ; vous pouvez ensuite modifier
   ce code et recommencer. Le texte affiché peut donc être différent de la version
-  qui joue tant que tu ne l'as pas réévalué.</p>
+  qui joue tant que vous ne l'avez pas réévalué.</p>
 </details>
 
-Dans la prochaine partie, tu découvriras les **notes anglaises** et les sons
-du **drum kit**, la batterie : de quoi choisir d'autres ingrédients pour tes motifs.
+Dans la prochaine partie, vous découvrirez les **notes anglaises** et les sons
+du **drum kit**, la batterie : de quoi choisir d'autres ingrédients pour vos motifs.

@@ -10,7 +10,7 @@ import { onUnmounted, ref, useId } from "vue";
 
 const props = defineProps<{
 	code: string;
-	/** Titre du bloc, ex. « Essaie tout de suite ». Rendu en <h2>. */
+	/** Titre du bloc, ex. « Essayez tout de suite ». Rendu en <h2>. */
 	label?: string;
 }>();
 
@@ -81,7 +81,7 @@ async function togglePlay() {
 			await loadEditor();
 		} catch (cause) {
 			error.value =
-				"L'éditeur n'a pas pu être chargé. Vérifie ta connexion et réessaie.";
+				"L'éditeur n'a pas pu être chargé. Vérifiez votre connexion et réessayez.";
 			return;
 		} finally {
 			isLoading.value = false;
@@ -154,7 +154,7 @@ onUnmounted(() => {
 			</div>
 
 			<span v-if="isReady" class="text-sm text-muted">
-				Modifie le code, puis <kbd class="rounded-md bg-ground px-1.5 py-0.5 font-mono text-xs">Ctrl</kbd> +
+				Modifiez le code, puis <kbd class="rounded-md bg-ground px-1.5 py-0.5 font-mono text-xs">Ctrl</kbd> +
 				<kbd class="rounded-md bg-ground px-1.5 py-0.5 font-mono text-xs">Entrée</kbd> pour réévaluer
 			</span>
 			<span v-else class="text-sm text-muted">

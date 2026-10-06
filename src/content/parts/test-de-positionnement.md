@@ -5,10 +5,10 @@ order: 1
 durationMinutes: 20
 ---
 
-Avant de coder, fais le point pour démarrer **au bon endroit**. La séquence 1
+Avant de coder, faites le point pour démarrer **au bon endroit**. La séquence 1
 présente le live coding, le REPL (Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer),
 les notes en notation anglaise et le drum kit.
-Ce test t'aide à décider si tu peux passer directement à la séquence 2.
+Ce test vous aide à décider si vous pouvez passer directement à la séquence 2.
 
 ## Comment ça marche
 
@@ -29,9 +29,9 @@ Chaque axe a **son propre score** :
 Le JavaScript est un prérequis, non enseigné en séquence 1 : son score donne
 un conseil de révision, sans modifier le parcours recommandé.
 
-Tes résultats ne sont pas enregistrés. **Réponds sans chercher** pour obtenir
-une recommandation adaptée à ton niveau.
+Vos résultats ne sont pas enregistrés. **Répondez sans chercher** pour obtenir
+une recommandation adaptée à votre niveau.
 
-## À toi
+## À vous
 
-> Réponds aux douze questions, valide, puis lis ta recommandation de parcours.
+> Répondez aux douze questions, validez, puis lisez votre recommandation de parcours.

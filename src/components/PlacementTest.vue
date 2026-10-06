@@ -233,7 +233,7 @@ function reset() {
 				tabindex="-1"
 				class="display-title text-3xl sm:text-4xl"
 			>
-				Tes résultats
+				Vos résultats
 			</h3>
 
 			<ul class="mt-6 grid gap-3 sm:grid-cols-3">
@@ -261,16 +261,16 @@ function reset() {
 				<p class="text-sm font-bold text-night-soft">Recommandation</p>
 				<template v-if="recommendation.route === 'skip'">
 					<p class="display-title mt-2 text-3xl sm:text-4xl">
-						Passe directement à la suite
+						Passez directement à la suite
 					</p>
 					<p class="mt-3 max-w-xl leading-relaxed">
-						{{ skippableLabels }} : c'est acquis. La {{ sequenceLabel }} te
-						répéterait surtout ce que tu sais déjà.
+						{{ skippableLabels }} : c'est acquis. La {{ sequenceLabel }} vous
+						répéterait surtout ce que vous savez déjà.
 					</p>
 				</template>
 				<template v-else>
 					<p class="display-title mt-2 text-3xl sm:text-4xl">
-						Suis la {{ sequenceLabel }} en entier
+						Suivez la {{ sequenceLabel }} en entier
 					</p>
 					<p class="mt-3 max-w-xl leading-relaxed">
 						Elle pose le vocabulaire sur lequel tout le reste du cours

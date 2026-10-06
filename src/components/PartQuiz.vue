@@ -52,7 +52,7 @@ function reset() {
 		:aria-labelledby="`${uid}-titre`"
 	>
 		<h2 :id="`${uid}-titre`" class="display-title text-3xl">
-			Vérifie ta compréhension
+			Vérifiez votre compréhension
 		</h2>
 
 		<ol class="mt-8 flex flex-col gap-10">
