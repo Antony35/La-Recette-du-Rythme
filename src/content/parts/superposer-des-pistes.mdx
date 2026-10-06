@@ -1,0 +1,109 @@
+---
+title: "Superposer plusieurs pistes rythmiques"
+sequence: "rythme"
+order: 4
+durationMinutes: 20
+---
+
+import PatternStrip from "@/components/PatternStrip.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Jusqu'ici, tous vos sons se suivaient. Une vraie rythmique ne fonctionne pas
+comme ça : la grosse caisse, la caisse claire et le charleston tournent **en même
+temps**, chacune avec sa propre régularité.
+
+À la fin de ces **20 minutes**, vous aurez trois pistes qui tournent en
+parallèle, et vous saurez en modifier une sans toucher aux autres.
+
+## Pourquoi empiler plutôt qu'enchaîner
+
+Essayez de décrire une batterie en une seule ligne et vous verrez le problème :
+le charleston joue huit fois pendant que la grosse caisse joue deux fois. Tout
+caser dans une même séquence oblige à calculer des subdivisions dans sa tête,
+et le moindre changement force à tout réécrire.
+
+Avec des pistes séparées, chaque instrument garde **sa propre lecture du cycle**.
+Changer le charleston ne déplace plus la caisse claire. C'est la différence
+entre un rythme qu'on bricole et un rythme qu'on travaille.
+
+<PatternStrip label="grosse caisse" code={'s("bd*2")'} steps={["bd", "bd"]} />
+<PatternStrip label="caisse claire" code={'s("~ sd")'} steps={["~", "sd"]} />
+<PatternStrip
+	label="charleston"
+	code={'s("hh*8")'}
+	steps={["hh", "hh", "hh", "hh", "hh", "hh", "hh", "hh"]}
+/>
+
+Trois découpages différents du **même** cycle. Ils démarrent ensemble et se
+retrouvent à chaque tour.
+
+## La virgule
+
+À l'intérieur des guillemets, la virgule sépare des couches qui jouent
+simultanément.
+
+<StrudelRepl
+	client:visible
+	code={'s("bd*2, ~ sd, hh*8")'}
+	label="Trois pistes en parallèle"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Une seule ligne, trois couches. Modifiez le
+		<code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">8</code>
+		du charleston et réévaluez : la grosse caisse et la caisse claire ne
+		bougent pas d'un pouce.
+	</p>
+</StrudelRepl>
+
+C'est ici que le `~` prend tout son sens. `"~ sd"` ne veut pas dire « un silence
+puis une caisse claire » au sens d'une attente : ça veut dire **la caisse claire
+tombe sur la seconde moitié du cycle**. Le silence sert à *placer*.
+
+## La même chose, en plus lisible
+
+Trois couches tiennent encore sur une ligne. Six n'y tiendront plus. `stack()`
+prend les mêmes motifs, mais comme arguments séparés :
+
+```js
+stack(
+  s("bd*2"),
+  s("~ sd"),
+  s("hh*8")
+)
+```
+
+C'est strictement équivalent à la virgule. La différence est pratique : chaque
+piste est sur sa ligne, donc on la lit, on la commente et on la modifie sans
+compter les virgules. Et surtout, **chaque piste peut recevoir ses propres
+fonctions** — par exemple un kit différent :
+
+<StrudelRepl
+	client:visible
+	code={'stack(\n  s("bd*2").bank("RolandTR909"),\n  s("~ sd").bank("RolandTR808"),\n  s("hh*8").bank("RolandTR909")\n)'}
+	label="Une caisse claire venue d'ailleurs"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		La caisse claire vient d'une 808, le reste d'une 909. Mélanger les machines
+		est une pratique courante — et impossible à écrire avec un seul
+		<code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">.bank()</code>
+		posé à la fin.
+	</p>
+</StrudelRepl>
+
+## À vous
+
+> Partez de `s("bd*2, ~ sd, hh*8")` et construisez **votre** rythmique.
+>
+> 1. Faites varier la densité du charleston : `*4`, `*8`, `*16`. Choisissez.
+> 2. Déplacez la caisse claire : `"~ sd"`, puis `"~ ~ sd ~"`, puis
+>    `"~ sd ~ sd"`. Écoutez ce que chaque placement raconte.
+> 3. Ajoutez une **quatrième piste** avec un son que vous n'avez pas encore
+>    utilisé — `cp`, `oh` ou `rim`. Gardez-la discrète : une couche qui sonne
+>    tout le temps sature le rythme.
+> 4. Passez en `stack()` et donnez un kit différent à une seule des pistes.
+> 5. **Gardez ce motif.** C'est la rythmique que la séquence 3 reprendra pour y
+>    poser une mélodie.
+
+Une virgule oubliée ne provoque pas d'erreur : `s("bd*2 ~ sd")` reste un motif
+valide, simplement les sons s'enchaînent au lieu de se superposer. Si votre
+rythme s'est « aplati », comptez vos virgules avant de chercher ailleurs.

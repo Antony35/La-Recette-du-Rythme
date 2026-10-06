@@ -24,9 +24,11 @@ interface Props {
 	steps: Step[];
 	/** Le code illustré, affiché au-dessus. */
 	code?: string;
+	/** Nom de la piste, quand on en empile plusieurs. */
+	label?: string;
 }
 
-const { steps, code }: Props = Astro.props;
+const { steps, code, label }: Props = Astro.props;
 
 const isRest = (value: string) => value === "~" || value === "-";
 ---
@@ -34,6 +36,10 @@ const isRest = (value: string) => value === "~" || value === "-";
 <figure class="not-prose my-6">
     {code && (
         <pre class="mb-2 overflow-x-auto rounded-xl bg-surface px-4 py-2 font-mono text-sm"><code>{code}</code></pre>
+    )}
+
+    {label && (
+        <p class="mb-1 text-sm font-bold text-muted">{label}</p>
     )}
 
     <div class="flex h-16 gap-1 overflow-hidden rounded-xl" aria-hidden="true">
