@@ -542,6 +542,24 @@ Le seul contrôle qui tranche est donc un **clic dans un vrai navigateur**, avec
 la console surveillée. Compter `astro-island` ne détecte que l'oubli de
 `client:*`.
 
+### Les visualisations de Strudel ne s'intègrent pas dans un bloc
+
+`.pianoroll()`, `.punchcard()` et `._scope()` dessinent dans un canvas
+`#test-canvas` ajouté à `<body>`, en `position: fixed` et plein écran. C'est
+conçu pour l'éditeur plein écran de strudel.cc, où ce canvas **est** le fond.
+
+Dans une page de cours, mesuré : le canvas peint un lavis clair par-dessus le
+texte et le rend illisible, et aucune marque n'y apparaît — relevé de densité
+sur tout le tampon, **zéro pixel sombre**. Le cours ne les utilise donc pas dans
+ses blocs : il explique la vue et renvoie à strudel.cc pour la voir. Les grilles
+du cours sont dessinées par `components/PatternStrip.astro`.
+
+Une règle de garde dans `global.css` confine quand même ce canvas à un panneau
+d'angle, pour qu'un `.pianoroll()` tapé par un apprenant n'efface pas la leçon.
+Elle a besoin de `!important` (style en ligne de la bibliothèque) et d'un
+marqueur `data-strudel-playing` sur `<html>`, parce que le canvas survit à
+l'arrêt de la lecture.
+
 ### Un seul bloc sonore à la fois
 
 Une page de cours porte plusieurs `StrudelRepl`. Sans arbitrage, lancer le
@@ -608,8 +626,11 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 ## Écarts connus (état au 2026-10-06)
 
-- **Séquence 1 complète** (1.1 à 1.5). Les sept autres séquences ont titre,
-  objectif, niveau, durée et équipement, **sans corps**.
+- **Séquences 1 et 2 complètes** (1.1 à 1.5, 2.1 à 2.5), chacune avec son quiz.
+  Les six autres séquences ont titre, objectif, niveau, durée et équipement,
+  **sans corps**.
+- **Une image manque en 2.3** : `components/ImagePlaceholder.astro` réserve la
+  place et dit ce qu'il faut (photo libre d'une Roland TR-909).
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
   toutes créées avec titre, objectif, niveau, durée et équipement, **sans
   corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties

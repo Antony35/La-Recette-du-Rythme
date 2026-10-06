@@ -63,33 +63,43 @@ du numéro d'octave.
 
 ## Voir ce qu'on entend
 
-Strudel sait dessiner ce qu'il joue. Ajoutez `.pianoroll()` à la fin de la ligne
-et la gamme s'affiche en arrière-plan de l'éditeur : chaque note devient un
-rectangle, **sa position dit quand**, **sa hauteur dit quelle note**.
+Pendant la lecture, l'éditeur **encadre la note en train de sonner**, directement
+dans votre code.
 
 <StrudelRepl
 	client:visible
-	code={'note("c d e f g a b c5").pianoroll()'}
-	label="La gamme, en escalier"
+	code={'note("c d e f g a b c5")'}
+	label="La gamme, à l'œil"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
-		Les rectangles montent régulièrement : c'est à ça que ressemble une gamme.
-		Une mélodie, elle, dessinera des allers-retours.
+		Lancez, puis regardez le texte au lieu d'écouter : l'encadrement avance de
+		gauche à droite, une note à la fois. C'est le lien le plus direct entre ce
+		que vous avez écrit et ce que vous entendez.
 	</p>
 </StrudelRepl>
 
-Au passage, l'éditeur **surligne la note en cours de lecture** dans le code. Deux
-repères visuels pour un même son : le texte qui s'allume, et le rectangle qui
-défile. C'est ce qui permet de retrouver *où* ça coince quand un rythme sonne
-faux — on y reviendra en séquence 2.
+Strudel sait aussi dessiner un **piano roll** — les notes en rectangles, le temps
+en abscisse et la hauteur en ordonnée. Cette vue est faite pour l'éditeur plein
+écran de [strudel.cc](https://strudel.cc), où elle s'affiche en fond de page ;
+elle n'a pas la place de s'afficher dans un bloc intégré comme celui-ci. Pour la
+voir, collez la ligne suivante sur strudel.cc :
+
+```js
+note("c d e f g a b c5").pianoroll()
+```
+
+Les rectangles y montent en escalier régulier : c'est à ça que ressemble une
+gamme. Une mélodie, elle, dessinera des allers-retours. On réutilisera ce repère
+en séquence 2.
 
 ## À vous
 
-> Reprenez le bloc ci-dessus, lancez-le, puis gardez la lecture en cours pendant
+> Reprenez le bloc « La gamme, à l'œil », lancez-le, puis gardez la lecture en cours pendant
 > tout l'exercice : chaque modification s'entend sans qu'on arrête le son.
 >
 > 1. **Inversez-la** : écrivez les notes de la plus aiguë à la plus grave
->    (`c5 b a g f e d c`) et réévaluez. Le piano roll descend en escalier.
+>    (`c5 b a g f e d c`) et réévaluez. L'encadrement parcourt la même ligne,
+>    mais la gamme descend.
 > 2. **Cassez l'ordre** : mélangez les sept notes comme vous voulez. Vous
 >    n'obtenez pas une gamme, vous obtenez une mélodie — pas forcément belle,
 >    mais une mélodie.

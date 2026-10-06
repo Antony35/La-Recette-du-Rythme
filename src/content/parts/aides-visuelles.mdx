@@ -1,0 +1,131 @@
+---
+title: "Les aides visuelles de Strudel"
+sequence: "rythme"
+order: 5
+durationMinutes: 20
+---
+
+import PatternStrip from "@/components/PatternStrip.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Un rythme qui sonne bancal, on l'entend tout de suite. Savoir **où** il est
+bancal, c'est autre chose — surtout avec trois pistes qui tournent en même
+temps.
+
+À la fin de ces **20 minutes**, vous saurez lire ce que Strudel vous montre
+pendant la lecture, et vous vous en serez servi pour réparer un rythme cassé.
+
+## Pourquoi regarder ce qu'on entend
+
+L'oreille est excellente pour détecter un problème et mauvaise pour le
+localiser. Elle dit « il y a quelque chose qui cloche vers le deuxième temps » ;
+elle ne dit pas « la caisse claire est une case trop tôt ».
+
+Le retour visuel sert exactement à ça : transformer une impression en
+observation. Il ne change rien au son — c'est un instrument de mesure.
+
+## Le surlignage, que vous avez déjà
+
+Vous n'avez rien à activer : pendant la lecture, l'éditeur **encadre dans votre
+code** l'événement en train de sonner.
+
+<StrudelRepl client:visible code={'s("bd hh sd hh")'} label="Suivre le code des yeux">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Lancez, puis regardez le texte plutôt que d'écouter. Les noms s'encadrent à
+		tour de rôle, de gauche à droite. C'est le lien le plus direct entre ce que
+		vous avez écrit et ce que vous entendez.
+	</p>
+</StrudelRepl>
+
+C'est l'outil le plus sous-estimé de Strudel, et il répond déjà à beaucoup de
+questions :
+
+- **un nom qui ne s'encadre jamais n'est jamais joué** — il est mal orthographié,
+  ou dans une piste que vous croyiez active ;
+- **deux encadrements simultanés** veulent dire deux sons au même instant ;
+- **un encadrement qui s'attarde** signale un événement plus long que les autres.
+
+Avec plusieurs pistes, le surlignage se lit colonne par colonne :
+
+<StrudelRepl client:visible code={'s("bd*2, ~ sd, hh*8")'} label="Trois pistes à l'œil">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Regardez le moment où <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">sd</code>
+		s'encadre : rien ne s'allume en même temps du côté de la grosse caisse.
+		C'est le signe que les deux ne se marchent pas dessus.
+	</p>
+</StrudelRepl>
+
+## La grille, pour raisonner à l'arrêt
+
+Le surlignage vit pendant la lecture. Pour réfléchir à un motif sans l'entendre,
+le bon outil est la **grille** : une ligne par piste, une case par position dans
+le cycle. C'est la représentation des boîtes à rythmes depuis quarante ans, et
+celle qu'on utilise dans ce cours.
+
+<PatternStrip label="grosse caisse" code={'s("bd*2")'} steps={["bd", "~", "bd", "~"]} />
+<PatternStrip label="caisse claire" code={'s("~ sd")'} steps={["~", "~", "sd", "~"]} />
+<PatternStrip
+	label="charleston"
+	code={'s("hh*8")'}
+	steps={["hh", "hh", "hh", "hh", "hh", "hh", "hh", "hh"]}
+/>
+
+Lire une grille se résume à deux questions : **est-ce que deux marques tombent
+dans la même colonne ?** et **est-ce qu'une colonne est vide alors qu'elle ne
+devrait pas l'être ?** La plupart des rythmes bancals répondent à l'une des deux.
+
+## Et le piano roll ?
+
+Strudel propose aussi `.pianoroll()` et `.punchcard()`, croisés en séquence 1.
+Une précision honnête : **ces vues sont conçues pour l'éditeur plein écran de
+[strudel.cc](https://strudel.cc)**, où elles s'affichent en fond de page. Dans un
+bloc intégré comme ceux de ce cours, elles n'ont pas la place de s'afficher
+correctement.
+
+Si vous voulez les voir : ouvrez [strudel.cc](https://strudel.cc), collez votre
+motif et ajoutez `.punchcard()` à la fin.
+
+```js
+s("bd*2, ~ sd, hh*8").punchcard()
+```
+
+Vous y retrouverez exactement la grille ci-dessus, animée.
+
+## À vous : réparer un rythme
+
+Le motif ci-dessous est **volontairement faux**. Il sonne bancal, mais il ne
+produit aucune erreur : la syntaxe est irréprochable.
+
+<StrudelRepl
+	client:visible
+	code={'stack(\n  s("bd*2"),\n  s("sd ~"),\n  s("hh*8")\n)'}
+	label="Trouvez ce qui cloche"
+/>
+
+> Ne corrigez pas au hasard. Suivez la méthode :
+>
+> 1. **Lancez et écoutez** deux ou trois cycles. Formulez le problème avec vos
+>    mots — « ça tape deux fois au même endroit », par exemple.
+> 2. **Regardez le surlignage.** Au tout premier temps, combien de noms
+>    s'encadrent en même temps ?
+> 3. **Dessinez la grille** de la caisse claire sur un papier, quatre cases.
+>    Où tombe-t-elle, et où devrait-elle tomber ?
+> 4. **Corrigez** en déplaçant la caisse claire, sans toucher aux deux autres
+>    pistes.
+> 5. **Vérifiez** : plus rien ne doit s'encadrer en même temps que la première
+>    grosse caisse.
+> 6. Cassez-le vous-même autrement — décalez le charleston, passez la grosse
+>    caisse à `*3` — et réparez en utilisant la même méthode.
+
+<details>
+  <summary>La solution, une fois que vous avez cherché</summary>
+  <p>La caisse claire est écrite <code>"sd ~"</code> : elle tombe sur la
+  <strong>première</strong> moitié du cycle, exactement sur la première grosse
+  caisse. Les deux sons se superposent et la seconde moitié reste vide. Il suffit
+  d'inverser : <code>"~ sd"</code>. Le surlignage le montre immédiatement — deux
+  noms encadrés ensemble au premier temps, et plus rien au troisième.</p>
+</details>
+
+C'est la fin de la séquence 2. Vous avez une rythmique à plusieurs pistes, un
+kit choisi, et une méthode pour vérifier ce que vous écrivez. La séquence 3
+reprend ce motif tel quel et lui ajoute une mélodie.

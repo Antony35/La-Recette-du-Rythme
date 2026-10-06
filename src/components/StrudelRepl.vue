@@ -68,12 +68,28 @@ async function loadEditor() {
 }
 
 /**
+ * Le panneau de visualisation de Strudel (`.pianoroll()`, `.punchcard()`…) est
+ * un canvas plein écran ajouté à <body>, qui reste là après l'arrêt. On marque
+ * donc la lecture sur <html> : `global.css` ne montre le panneau que pendant ce
+ * temps, sinon une boîte vide resterait dans le coin de l'écran.
+ */
+function markPlaying(playing: boolean) {
+	const root = document.documentElement;
+	if (playing) {
+		root.dataset.strudelPlaying = "true";
+	} else {
+		delete root.dataset.strudelPlaying;
+	}
+}
+
+/**
  * Arrête ce bloc-ci. Référence stable : c'est elle que `playback` mémorise, et
  * une fonction recréée à chaque appel ne pourrait jamais être reconnue.
  */
 function stopHere() {
 	editorElement?.editor?.stop();
 	isPlaying.value = false;
+	markPlaying(false);
 }
 
 async function togglePlay() {
@@ -82,6 +98,7 @@ async function togglePlay() {
 	if (isPlaying.value) {
 		await editorElement?.editor?.stop();
 		isPlaying.value = false;
+		markPlaying(false);
 		playback.release(stopHere);
 		return;
 	}
@@ -111,12 +128,17 @@ async function togglePlay() {
 	playback.claim(stopHere);
 	await editorElement.editor.evaluate();
 	isPlaying.value = true;
+	// Après `claim`, qui a pu éteindre le marqueur en arrêtant l'autre bloc.
+	markPlaying(true);
 }
 
 // Sans ça, le scheduler continuerait de jouer alors que le composant a disparu.
 onUnmounted(() => {
 	editorElement?.editor?.stop();
 	playback.release(stopHere);
+	if (isPlaying.value) {
+		markPlaying(false);
+	}
 });
 </script>
 
