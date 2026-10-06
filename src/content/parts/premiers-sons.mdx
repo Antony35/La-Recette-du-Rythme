@@ -1,0 +1,95 @@
+---
+title: "Premiers sons — bd, sd, hh"
+sequence: "rythme"
+order: 1
+durationMinutes: 15
+---
+
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Trois sons suffisent à faire un rythme. Pas trois instruments, pas trois pistes :
+trois codes, `bd`, `sd` et `hh`, qu'on a nommés en séquence 1 et qu'on va
+maintenant faire sonner.
+
+À la fin de ces **15 minutes**, vous aurez entendu chacun des trois isolément,
+puis les aurez enchaînés dans un même motif — le squelette de toute la séquence.
+
+## Pourquoi ces trois-là
+
+Ouvrez n'importe quel morceau de musique électronique et vous les retrouverez.
+Ils occupent trois places différentes, et c'est pour ça qu'ils tiennent ensemble :
+
+- **`bd`**, la grosse caisse, est **grave** et marque le temps. C'est elle qu'on
+  suit du pied.
+- **`sd`**, la caisse claire, est **médium et sèche**. Elle répond à la grosse
+  caisse, en général à contretemps.
+- **`hh`**, le charleston, est **aigu et court**. Il remplit les trous et donne
+  la vitesse.
+
+Grave, médium, aigu : les trois ne se marchent pas dessus. Ajoutez-en un
+quatrième dans le même registre et vous obtiendrez de la boue — c'est pour ça
+qu'on commence par trois.
+
+## Un son à la fois
+
+`s()` choisit le son à jouer. C'est la forme courte de `sound()`, et les deux
+fonctionnent.
+
+<StrudelRepl client:visible code={'s("bd")'} label="Un seul son">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Un seul événement par cycle : vous entendez un coup, puis le silence, puis
+		le même coup. Remplacez <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">bd</code>
+		par <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">sd</code>,
+		puis par <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">hh</code>,
+		en réévaluant à chaque fois.
+	</p>
+</StrudelRepl>
+
+Écoutez-les vraiment un par un avant de les mélanger. L'oreille a besoin de deux
+ou trois passages pour retenir un timbre — et toute la suite du cours suppose que
+vous reconnaissez ces trois-là sans réfléchir.
+
+## Les mettre à la suite
+
+Un **espace** sépare deux sons, et ils se partagent le cycle en parts égales.
+Deux sons, deux moitiés ; quatre sons, quatre quarts.
+
+<StrudelRepl client:visible code={'s("bd sd")'} label="Deux sons, deux moitiés">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		La grosse caisse sur la première moitié, la caisse claire sur la seconde.
+		C'est déjà un rythme : le plus simple qui existe.
+	</p>
+</StrudelRepl>
+
+Maintenant quatre, en intercalant le charleston :
+
+```js
+s("bd hh sd hh")
+```
+
+Vous reconnaissez sans doute quelque chose. C'est le motif le plus joué de toute
+la musique populaire : grosse caisse, charleston, caisse claire, charleston. Les
+quatre événements durent exactement le même temps.
+
+**Rien n'impose quatre sons.** Essayez `s("bd sd hh")` : trois événements, trois
+tiers de cycle. Le motif n'est pas « faux », il est juste ternaire — et il sonne
+tout de suite comme une valse plutôt que comme un morceau de club.
+
+## À vous
+
+> Reprenez le bloc ci-dessus et gardez la lecture en cours.
+>
+> 1. Faites sonner `bd`, `sd` puis `hh` **isolément**, en réévaluant à chaque
+>    fois, et dites leur nom à voix haute pendant que ça tourne.
+> 2. Enchaînez les trois : `s("bd sd hh")`. Comptez « 1, 2, 3 » avec eux.
+> 3. Passez à quatre : `s("bd hh sd hh")`. Comptez « 1, 2, 3, 4 ».
+> 4. Ajoutez-en un cinquième de votre choix, pris dans le tableau de la
+>    séquence 1 (`oh`, `cp`, `rim`, `lt`…). Écoutez comment le cycle se resserre.
+> 5. Gardez le motif à quatre temps : c'est la base qu'on enrichira jusqu'à la
+>    fin de la séquence.
+
+Si vous n'entendez rien, vérifiez l'orthographe du code : Strudel ne signale pas
+un son inconnu, il laisse un blanc.
+
+Dans la prochaine partie, on arrête d'ajouter des sons les uns derrière les
+autres et on apprend la **syntaxe du temps** : répéter, taire, subdiviser.
