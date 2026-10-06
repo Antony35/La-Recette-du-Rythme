@@ -11,6 +11,7 @@ durationMinutes: 20
     préfixé par `base`, et les dimensions d'origine. */}
 import drumKit from "@/assets/Drum_set.svg";
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import NoteKeyboard from "@/components/NoteKeyboard.vue";
 
 Strudel ne comprend ni « do » ni « grosse caisse ». Il attend `c` et `bd`.
 Ce sont deux vocabulaires courts — sept lettres d'un côté, une dizaine
@@ -27,7 +28,10 @@ des outils de musique assistée par ordinateur. La notation par **lettres** y es
 la norme ; la notation par **syllabes** (do, ré, mi) est surtout française,
 italienne et espagnole.
 
-Les deux décrivent exactement les mêmes sons. Seul le nom change :
+Les deux décrivent exactement les mêmes sons. Seul le nom change — et le plus
+rapide pour s'en convaincre est de les entendre :
+
+<NoteKeyboard client:visible />
 
 | Notation anglaise | Notation française |
 | --- | --- |

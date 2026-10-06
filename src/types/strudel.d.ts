@@ -64,4 +64,23 @@ declare module "@strudel/webaudio" {
 	}
 
 	export const webaudioRepl: () => WebaudioRepl;
+
+	/**
+	 * `@strudel/webaudio` réexporte tout `superdough` (`export * from
+	 * "superdough"`). On ne déclare que les deux fonctions utilisées par
+	 * `lib/strudel-sound.ts`.
+	 */
+
+	/** Enregistre les formes d'onde intégrées : sine, square, sawtooth, triangle. */
+	export const registerSynthSounds: () => void;
+
+	/**
+	 * Déclenche un son unique à l'instant `time` de l'horloge audio. C'est le
+	 * niveau en dessous du scheduler : aucune boucle, aucun motif.
+	 */
+	export const superdough: (
+		value: Record<string, unknown>,
+		time: number,
+		duration: number,
+	) => Promise<void>;
 }
