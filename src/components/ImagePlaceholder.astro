@@ -1,0 +1,39 @@
+---
+/**
+ * Emplacement réservé à une image qu'on n'a pas encore.
+ *
+ * Même intention que `VideoPlaceholder` : réserver la place dans la page pour
+ * juger la mise en forme tout de suite, et dire **précisément ce qu'il faut**
+ * pour que quelqu'un puisse aller la chercher sans rouvrir la discussion.
+ *
+ * Contour en pointillés plutôt qu'un aplat plein : on doit voir au premier coup
+ * d'œil que ce n'est pas du contenu. `pulse` n'est pas utilisé — ce jeton est
+ * réservé à ce qui est actif ou faux, et une image manquante n'est ni l'un ni
+ * l'autre, c'est une tâche.
+ */
+interface Props {
+	/** Ce que l'image devra montrer, en une ligne. */
+	title: string;
+	/** Le cadrage, la source possible, la licence attendue. */
+	need: string;
+	/** Proportions réservées. Par défaut 16/9. */
+	ratio?: string;
+}
+
+const { title, need, ratio = "16 / 9" }: Props = Astro.props;
+---
+
+<figure class="not-prose my-10">
+    <div
+        role="img"
+        aria-label={`Emplacement d'image : ${title}`}
+        class="flex w-full flex-col items-center justify-center gap-3 rounded-3xl border-2 border-dashed border-rule bg-surface p-6 text-center"
+        style={`aspect-ratio: ${ratio}`}
+    >
+        <p class="display-title text-3xl text-muted sm:text-5xl">Ici image</p>
+        <p class="max-w-md text-sm font-bold text-ink">{title}</p>
+    </div>
+    <figcaption class="mt-3 text-sm text-muted">
+        À fournir — {need}
+    </figcaption>
+</figure>

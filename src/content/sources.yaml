@@ -312,3 +312,32 @@
     Source de l'origine des lettres : Boèce, De institutione musica (VIe siècle).
     Britannica dit la même chose mais répond 403 aux robots, donc non retenue.
   checkedAt: 2026-10-06
+
+- id: tidal-drum-machines
+  title: "tidal-drum-machines — les banques de boîtes à rythmes"
+  url: "https://github.com/ritchse/tidal-drum-machines"
+  category: documentation
+  author: "ritchse"
+  note: >-
+    Source des échantillons derrière `.bank()`. Les 73 noms utilisables sont les
+    noms de dossiers de `machines/`, relevés via l'API GitHub.
+  checkedAt: 2026-10-07
+
+- id: wikipedia-tr909
+  title: "Roland TR-909"
+  url: "https://en.wikipedia.org/wiki/Roland_TR-909"
+  category: articles
+  author: "Wikipedia"
+  note: >-
+    Source des chiffres de la partie 2.3 : produite de 1983 à 1985, environ
+    10 000 exemplaires, abandonnée au profit de machines plus réalistes.
+  checkedAt: 2026-10-07
+
+- id: musicradar-homework
+  title: "Daft Punk's Homework turns 25: the gear behind the sound"
+  url: "https://www.musicradar.com/news/daft-punk-homework-25-synths-drum-machines-sampler"
+  category: articles
+  author: "MusicRadar"
+  note: "Relaie la liste de matériel donnée par le duo : TR-909, TR-808, TR-707, LinnDrum."
+  checkedAt: 2026-10-07
+
