@@ -1,0 +1,165 @@
+---
+title: "Notes anglaises et drum kit — le vocabulaire minimal"
+sequence: "prerequis-et-decouverte"
+order: 4
+durationMinutes: 20
+---
+
+{/* Import d'asset, mais pas le composant <Image /> : celui-ci cherche à
+    rastériser, donc réclame Sharp, alors qu'un SVG n'a rien à optimiser — il est
+    déjà net à toutes les tailles. L'import donne quand même le chemin haché,
+    préfixé par `base`, et les dimensions d'origine. */}
+import drumKit from "@/assets/Drum_set.svg";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Strudel ne comprend ni « do » ni « grosse caisse ». Il attend `c` et `bd`.
+Ce sont deux vocabulaires courts — sept lettres d'un côté, une dizaine
+d'abréviations de l'autre — et tant qu'on ne les a pas, on ne peut rien écrire.
+
+À la fin de ces **20 minutes**, vous saurez nommer une note et un son de
+batterie dans la langue de Strudel, et reconnaître à l'oreille ce que vous avez
+écrit.
+
+## Pourquoi l'anglais
+
+Strudel est un portage de TidalCycles, écrit en anglais, comme la quasi-totalité
+des outils de musique assistée par ordinateur. La notation par **lettres** y est
+la norme ; la notation par **syllabes** (do, ré, mi) est surtout française,
+italienne et espagnole.
+
+Les deux décrivent exactement les mêmes sons. Seul le nom change :
+
+| Notation anglaise | Notation française |
+| --- | --- |
+| **C** | do |
+| **D** | ré |
+| **E** | mi |
+| **F** | fa |
+| **G** | sol |
+| **A** | la |
+| **B** | si |
+
+Trois repères pour s'y retrouver :
+
+- **Le point d'ancrage, c'est A = la.** Les deux alphabets partent du même
+  endroit, mais pas du même nom : la série des lettres commence à A, celle des
+  syllabes commence à do. D'où le décalage apparent.
+- **Dans Strudel, on écrit en minuscules** : `note("c e g")`.
+- **Un dièse s'écrit avec `#`**, un bémol avec `b` : `c#` se lit « do dièse »,
+  `db` « ré bémol ». Ce sont la même touche du clavier.
+
+Un chiffre précise l'octave, c'est-à-dire la hauteur : `c3` est plus grave que
+`c4`. Sans chiffre, Strudel choisit une octave par défaut. Les détails sont dans
+[l'atelier officiel First Notes](https://strudel.cc/workshop/first-notes/).
+
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>Les deux notations n'ont pas le même âge ni la même origine. Les
+  <strong>lettres</strong> viennent de l'alphabet latin : au <strong>VI<sup>e</sup> siècle</strong>,
+  Boèce s'en sert pour désigner les degrés de la gamme. Les
+  <strong>syllabes</strong>, elles, sont un moyen mnémotechnique : au
+  <strong>XI<sup>e</sup> siècle</strong>, le moine Guido d'Arezzo remarque qu'un hymne à
+  saint Jean-Baptiste, <em>Ut queant laxis</em>, monte d'un degré à chaque vers —
+  et il baptise chaque degré de la première syllabe du vers correspondant :
+  <em>ut, ré, mi, fa, sol, la</em>. « Ut » est devenu « do » bien plus tard, parce
+  qu'il se chantait mal.</p>
+  <a href="https://fr.wikipedia.org/wiki/Ut_queant_laxis">L'hymne et son manuscrit ↗</a>
+</aside>
+
+## La batterie, pièce par pièce
+
+Les sons de batterie portent eux aussi des noms anglais, raccourcis à deux
+lettres. Le schéma ci-dessous numérote les six familles d'une batterie
+acoustique ; la légende donne le code correspondant.
+
+{/* Aplat `snow` fixe : le schéma est sur fond transparent et ses numéros sont
+    cernés de noir. Posé directement sur la page, il disparaîtrait en thème
+    sombre. `snow` ne suit pas le thème, c'est exactement son rôle.
+
+    La légende reste *en dehors* de cet aplat : son texte et ses liens utilisent
+    les couleurs du thème (`muted`, `accent`), qui en thème sombre deviennent
+    gris clair et jaune — illisibles sur du blanc. */}
+<figure>
+	<div class="rounded-3xl bg-snow p-4 sm:p-8">
+		<img
+			src={drumKit.src}
+			width={drumKit.width}
+			height={drumKit.height}
+			alt="Schéma d'une batterie acoustique, six éléments numérotés de 1 à 6."
+		/>
+	</div>
+	<figcaption>
+		Schéma&nbsp;: <a href="https://commons.wikimedia.org/wiki/File:Drum_set.svg">Pbroks13,
+		Wikimedia Commons</a>, licence <a href="https://creativecommons.org/licenses/by/3.0/">CC&nbsp;BY&nbsp;3.0</a>.
+	</figcaption>
+</figure>
+
+| № | Pièce | Code | De l'anglais |
+| --- | --- | --- | --- |
+| 1 | cymbale ride | `rd` | *ride cymbal* |
+| 2 | tom basse | `lt` | *low tom* |
+| 3 | tom médium | `mt` | *middle tom* |
+| 3 | tom aigu | `ht` | *high tom* |
+| 4 | grosse caisse | `bd` | *bass drum* |
+| 5 | caisse claire | `sd` | *snare drum* |
+| 5 | coup sur le cercle | `rim` | *rimshot* |
+| 6 | charleston fermé | `hh` | *hihat* |
+| 6 | charleston ouvert | `oh` | *open hihat* |
+
+Vous avez peut-être remarqué l'anomalie : **six numéros, neuf codes.** Ce n'est
+pas une erreur, et c'est même le plus utile à comprendre ici.
+
+- **`sd` et `rim` sont le même fût.** La caisse claire sonne autrement selon
+  qu'on frappe la peau ou le cercle métallique. Deux gestes, deux codes.
+- **`hh` et `oh` sont le même instrument.** Le charleston est une paire de
+  cymbales serrées par une pédale : relâchée, le son continue de vibrer.
+- **Un code ne décrit donc pas une pièce, mais un son.** C'est la bonne façon
+  d'y penser pour la suite du cours.
+
+Deux codes de plus n'apparaissent pas sur le schéma :
+
+- **`cr`** (*crash cymbal*), la cymbale d'accentuation — le schéma n'en numérote
+  qu'une, la ride ;
+- **`cp`** (*clap*), un claquement de mains. Celui-là n'est pas un élément de
+  batterie du tout : il vient des boîtes à rythmes, où il remplace souvent la
+  caisse claire. Vous le retrouverez en séquence 2.
+
+La liste complète est maintenue dans
+[la documentation Strudel](https://strudel.cc/learn/samples/).
+
+## À vous
+
+Un rythme ne demande que trois de ces sons. **Lancez-le d'abord, lisez
+ensuite** : le motif continue de tourner pendant que vous parcourez la suite de
+la page, et c'est précisément comme ça qu'on apprend à reconnaître un son — en
+l'entendant pendant qu'on lit son nom.
+
+<StrudelRepl client:visible code={'s("bd sd hh")'} label="Trois sons, un rythme">
+	<div class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		<p>Les trois sons se succèdent dans l'ordre où on les entend le plus souvent :</p>
+		<ul class="mt-2 flex flex-col gap-1">
+			<li><strong class="text-ink">bd</strong> — la grosse caisse marque le temps, c'est le coup grave.</li>
+			<li><strong class="text-ink">sd</strong> — la caisse claire répond, plus sèche et plus haute.</li>
+			<li><strong class="text-ink">hh</strong> — le charleston remplit, c'est le petit grésillement métallique.</li>
+		</ul>
+	</div>
+</StrudelRepl>
+
+> Cliquez sur **Play** ci-dessus, puis gardez la lecture en cours pendant toute
+> la suite : vous modifierez le code sans jamais arrêter le son.
+>
+> 1. Écoutez jusqu'à distinguer les trois sons l'un de l'autre, et **nommez-les
+>    à voix haute** pendant que ça tourne : « grosse caisse, caisse claire,
+>    charleston ».
+> 2. Remplacez `hh` par `oh` et réévaluez. Le charleston ouvert laisse traîner
+>    le son : c'est la même cymbale, pédale relâchée.
+> 3. Remplacez `sd` par `rim` et réévaluez. Même fût, frappe différente.
+> 4. Choisissez trois sons du tableau que vous n'avez pas encore essayés et
+>    faites-les jouer ensemble.
+
+Si un code est mal orthographié, Strudel ne trouve aucun son et reste
+silencieux sans afficher d'erreur. En cas de silence, vérifiez d'abord
+l'orthographe du code dans le tableau ci-dessus.
+
+Dans la prochaine partie, vous jouerez une **gamme complète** : les sept notes
+à la suite, pour entendre ce que les lettres désignent.

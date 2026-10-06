@@ -128,6 +128,7 @@ const sources = defineCollection({
 			"switch-angel",
 			"articles",
 			"tutoriels",
+			"illustrations",
 		]),
 		author: z.string().min(1).optional(),
 		note: z.string().min(1).optional(),

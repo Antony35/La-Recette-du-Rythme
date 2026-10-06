@@ -199,6 +199,17 @@
   checkedAt: 2026-09-15
 
 # --- Articles -------------------------------------------------------------------
+- id: webexpo-switch-angel-portrait
+  title: "From luthier to live coder: How Switch Angel is refactoring music"
+  url: "https://webexpo.net/blog/from-luthier-to-live-coder-how-switch-angel-is-refactoring-music/"
+  category: articles
+  author: "Steven Wright, WebExpo (4 février 2026)"
+  note: >-
+    C'est la source de la mention « mainteneuse du projet Strudel » :
+    « Jade is a maintainer of Strudel ». Recoupé par le dépôt
+    tidalcycles/strudel, où son compte daslyfe est le deuxième contributeur.
+  checkedAt: 2026-10-06
+
 - id: hackaday-live-coding-techno
   title: "Live Coding Techno With Strudel"
   url: "https://hackaday.com/2025/10/16/live-coding-techno-with-strudel/"
@@ -257,3 +268,47 @@
   category: tutoriels
   author: "GoSuraj Official"
   checkedAt: 2026-09-15
+
+- id: strudel-samples
+  title: "Samples — la liste des sons et des drum machines"
+  url: "https://strudel.cc/learn/samples/"
+  category: documentation
+  note: "Source du tableau des abréviations (bd, sd, hh…) de la partie 1.4."
+  checkedAt: 2026-10-06
+
+# --- Illustrations --------------------------------------------------------------
+- id: drum-set-schema
+  title: "Drum set — schéma numéroté d'une batterie acoustique"
+  url: "https://commons.wikimedia.org/wiki/File:Drum_set.svg"
+  category: illustrations
+  author: "Pbroks13, Wikimedia Commons"
+  note: >-
+    Licence CC BY 3.0, qui impose de créditer l'auteur. Utilisé en partie 1.4
+    (src/assets/Drum_set.svg). Seul ajout au fichier : un `title` et un `desc`,
+    pour lui donner un nom accessible et embarquer le crédit dans l'image.
+  checkedAt: 2026-10-06
+
+- id: wikipedia-ut-queant-laxis
+  title: "Ut queant laxis"
+  url: "https://fr.wikipedia.org/wiki/Ut_queant_laxis"
+  category: articles
+  author: "Wikipédia"
+  note: "L'hymne dont Guido d'Arezzo tire ut, ré, mi, fa, sol, la."
+  checkedAt: 2026-10-06
+
+- id: wikipedia-guido-arezzo
+  title: "Guido d'Arezzo"
+  url: "https://fr.wikipedia.org/wiki/Guido_d%27Arezzo"
+  category: articles
+  author: "Wikipédia"
+  checkedAt: 2026-10-06
+
+- id: wikipedia-letter-notation
+  title: "Letter notation"
+  url: "https://en.wikipedia.org/wiki/Letter_notation"
+  category: articles
+  author: "Wikipedia"
+  note: >-
+    Source de l'origine des lettres : Boèce, De institutione musica (VIe siècle).
+    Britannica dit la même chose mais répond 403 aux robots, donc non retenue.
+  checkedAt: 2026-10-06

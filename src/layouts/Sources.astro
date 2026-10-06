@@ -12,11 +12,24 @@ const { sources }: Props = Astro.props;
 
 // L'ordre des rubriques est un choix éditorial : on l'écrit ici plutôt que de
 // dépendre de l'ordre d'apparition dans le fichier YAML.
+// `description` est facultative : une rubrique ne la porte que si l'intitulé ne
+// suffit pas. Un nom propre, lui, ne dit pas pourquoi il est là.
 const categories = [
 	{ id: "documentation", label: "Documentation officielle" },
-	{ id: "switch-angel", label: "Switch Angel" },
+	{
+		id: "switch-angel",
+		label: "Switch Angel",
+		description:
+			"Mainteneuse du projet Strudel et live codeuse : ses vidéos sont ce qui a fait connaître l'outil hors du cercle du live coding. Le portrait qui l'atteste est en rubrique Articles.",
+	},
 	{ id: "articles", label: "Articles" },
 	{ id: "tutoriels", label: "Tutoriels" },
+	{
+		id: "illustrations",
+		label: "Illustrations",
+		description:
+			"Les images du cours qui ne viennent pas de nous. Une licence comme CC BY impose de créditer l'auteur : c'est ici que le crédit est porté, en plus de la légende sous chaque image.",
+	},
 ] as const;
 
 const groups = categories.map((category) => ({
@@ -57,6 +70,10 @@ const trail = [{ label: "Accueil", href: withBase("/") }, { label: "Sources" }];
                         <span class="display-title text-3xl sm:text-4xl">{group.label}</span>
                         <span class="text-sm font-bold text-muted tabular-nums">{group.entries.length}</span>
                     </h2>
+
+                    {"description" in group && (
+                        <p class="mt-4 max-w-2xl leading-relaxed text-muted">{group.description}</p>
+                    )}
 
                     <ul class="mt-6 flex flex-col gap-2">
                         {group.entries.map((source) => (
