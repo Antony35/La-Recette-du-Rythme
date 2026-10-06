@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { withBase } from "./url";
+import { withBase } from "@/lib/url";
 
 /**
  * Chaque test passe la base explicitement : on vérifie la fonction, pas la

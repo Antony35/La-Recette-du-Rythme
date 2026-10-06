@@ -1,15 +1,14 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { useSoundButton } from "@/composables/useSoundButton";
 import { blackKeys, type Key, keyBox, whiteKeys } from "@/lib/notes";
-import { playOnce } from "@/lib/strudel-sound";
 
 /**
  * Une octave de clavier : chaque touche porte son nom anglais et son nom
  * français, et la joue au clic.
  *
- * Ce sont de vrais `<button>`, pas des formes SVG : on récupère gratuitement
- * le focus clavier, l'activation à Entrée et Espace, et le rôle annoncé par un
- * lecteur d'écran. Le dessin, lui, ne tient qu'à du positionnement.
+ * Ce sont de vrais `<button>`, pas des formes SVG : on récupère gratuitement le
+ * focus clavier, l'activation à Entrée et Espace, et le rôle annoncé par un
+ * lecteur d'écran. Le dessin ne tient qu'à du positionnement.
  *
  * La géométrie vient de `lib/notes.ts` et n'est pas recopiée ici : les touches
  * blanches n'ont volontairement pas toutes la même largeur, parce que ce sont
@@ -23,28 +22,12 @@ const props = withDefaults(
 	{ octave: 4 },
 );
 
-/** Touche en cours de pression, pour le retour visuel. */
-const active = ref<string | null>(null);
-const failed = ref(false);
+const { active, failed, trigger } = useSoundButton();
 
-const press = async (key: Key) => {
-	active.value = key.code;
-	window.setTimeout(() => {
-		// Ne pas éteindre une autre touche jouée entre-temps.
-		if (active.value === key.code) {
-			active.value = null;
-		}
-	}, 220);
-
-	try {
-		// `triangle` est une forme d'onde intégrée : elle sonne sans télécharger
-		// le moindre échantillon, contrairement à un piano.
-		await playOnce({ note: `${key.code}${props.octave}`, s: "triangle" }, 0.6);
-		failed.value = false;
-	} catch {
-		failed.value = true;
-	}
-};
+// `triangle` est une forme d'onde intégrée : elle sonne sans télécharger le
+// moindre échantillon, contrairement à un piano.
+const press = (key: Key) =>
+	trigger(key.code, { note: `${key.code}${props.octave}`, s: "triangle" }, 0.6);
 </script>
 
 <template>

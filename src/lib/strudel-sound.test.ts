@@ -4,7 +4,7 @@ import {
 	DEFAULT_DURATION,
 	LEAD_TIME,
 	type SoundEngine,
-} from "./strudel-sound";
+} from "@/lib/strudel-sound";
 
 /** Un moteur factice : on vérifie la logique, pas le son. */
 const fakeEngine = () => {

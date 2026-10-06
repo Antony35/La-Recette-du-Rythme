@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { recommend, scoreByAxis } from "./placement";
+import { recommend, scoreByAxis } from "@/lib/placement";
 
 const axes = [
 	{ id: "musique", threshold: 2, skippable: true },

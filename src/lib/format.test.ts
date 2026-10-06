@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { codeSegments, formatDuration, plural, splitTitle } from "./format";
+import { codeSegments, formatDuration, plural, splitTitle } from "@/lib/format";
 
 describe("plural", () => {
 	it("garde le singulier pour zéro et un", () => {

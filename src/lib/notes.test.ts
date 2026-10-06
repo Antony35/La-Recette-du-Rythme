@@ -6,7 +6,7 @@ import {
 	OCTAVE_WIDTH,
 	WHITE_HEIGHT,
 	whiteKeys,
-} from "./notes";
+} from "@/lib/notes";
 
 describe("notes", () => {
 	it("donne les sept notes naturelles dans l'ordre du clavier", () => {

@@ -1,5 +1,5 @@
 import { describe, expect, it } from "vitest";
-import { drums, drumsOfFigure, figureNumbers } from "./drums";
+import { drums, drumsOfFigure, figureNumbers } from "@/lib/drums";
 
 describe("drums", () => {
 	it("déclare les dix codes de la documentation Strudel", () => {

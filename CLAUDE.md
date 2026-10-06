@@ -529,6 +529,41 @@ composant doit être **importé explicitement**, rien n'est implicite comme en
 `.astro`. Vérification qui tranche, sur le build et pas dans le navigateur :
 `grep -c astro-island dist/…/index.html` doit renvoyer ≥ 1.
 
+**Mais compter les îlots ne suffit pas.** Un îlot peut être présent dans le HTML
+et ne jamais s'hydrater : Astro sérialise les props pour les rejouer dans le
+navigateur, et une prop qu'il ne sait pas sérialiser fait échouer l'hydratation
+avec un `TypeError` en console — l'îlot s'affiche quand même, rendu côté
+serveur, et reste **inerte**. Constaté en passant l'objet `ImageMetadata`
+complet d'un import d'asset à un composant Vue : « Error parsing props … t is
+not iterable ». Correctif : ne passer que des **valeurs simples**
+(`src`, `width`, `height`), jamais un objet venu d'une API d'Astro.
+
+Le seul contrôle qui tranche est donc un **clic dans un vrai navigateur**, avec
+la console surveillée. Compter `astro-island` ne détecte que l'oubli de
+`client:*`.
+
+### Un seul moteur audio par page
+
+`lib/strudel-sound.ts` garde son état **au niveau du module** : deux îlots qui
+l'importent partagent un `AudioContext` et un téléchargement. C'est la promesse
+à vérifier quand on ajoute un composant sonore — en instrumentant le
+constructeur dans la page :
+
+```js
+await page.addInitScript(() => {
+	window.__ctxs = [];
+	const Orig = window.AudioContext;
+	window.AudioContext = class extends Orig {
+		constructor(...a) { super(...a); window.__ctxs.push(this); }
+	};
+});
+// après avoir cliqué dans les deux îlots : window.__ctxs.length doit valoir 1
+```
+
+`superdough(value, time, durée)` est le déclencheur **ponctuel**, réexporté par
+`@strudel/webaudio` ; `webaudioRepl()` ferait tourner une boucle, ce qui n'est
+pas ce qu'on veut sur un clic.
+
 Côté Vue : `<script setup lang="ts">` (le projet est en TypeScript strict),
 `ref()` pour ce qui est affiché, une variable ordinaire pour ce qui ne l'est pas
 (l'élément et son éditeur), et `onUnmounted` pour couper le son.

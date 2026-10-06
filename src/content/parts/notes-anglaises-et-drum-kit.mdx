@@ -12,6 +12,7 @@ durationMinutes: 20
 import drumKit from "@/assets/Drum_set.svg";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 import NoteKeyboard from "@/components/NoteKeyboard.vue";
+import DrumKitMap from "@/components/DrumKitMap.vue";
 
 Strudel ne comprend ni « do » ni « grosse caisse ». Il attend `c` et `bd`.
 Ce sont deux vocabulaires courts — sept lettres d'un côté, une dizaine
@@ -76,39 +77,13 @@ Les sons de batterie portent eux aussi des noms anglais, raccourcis à deux
 lettres. Le schéma ci-dessous numérote les six familles d'une batterie
 acoustique ; la légende donne le code correspondant.
 
-{/* Aplat `snow` fixe : le schéma est sur fond transparent et ses numéros sont
-    cernés de noir. Posé directement sur la page, il disparaîtrait en thème
-    sombre. `snow` ne suit pas le thème, c'est exactement son rôle.
-
-    La légende reste *en dehors* de cet aplat : son texte et ses liens utilisent
-    les couleurs du thème (`muted`, `accent`), qui en thème sombre deviennent
-    gris clair et jaune — illisibles sur du blanc. */}
-<figure>
-	<div class="rounded-3xl bg-snow p-4 sm:p-8">
-		<img
-			src={drumKit.src}
-			width={drumKit.width}
-			height={drumKit.height}
-			alt="Schéma d'une batterie acoustique, six éléments numérotés de 1 à 6."
-		/>
-	</div>
-	<figcaption>
-		Schéma&nbsp;: <a href="https://commons.wikimedia.org/wiki/File:Drum_set.svg">Pbroks13,
-		Wikimedia Commons</a>, licence <a href="https://creativecommons.org/licenses/by/3.0/">CC&nbsp;BY&nbsp;3.0</a>.
-	</figcaption>
-</figure>
-
-| № | Pièce | Code | De l'anglais |
-| --- | --- | --- | --- |
-| 1 | cymbale ride | `rd` | *ride cymbal* |
-| 2 | tom basse | `lt` | *low tom* |
-| 3 | tom médium | `mt` | *middle tom* |
-| 3 | tom aigu | `ht` | *high tom* |
-| 4 | grosse caisse | `bd` | *bass drum* |
-| 5 | caisse claire | `sd` | *snare drum* |
-| 5 | coup sur le cercle | `rim` | *rimshot* |
-| 6 | charleston fermé | `hh` | *hihat* |
-| 6 | charleston ouvert | `oh` | *open hihat* |
+<DrumKitMap
+	client:visible
+	src={drumKit.src}
+	width={drumKit.width}
+	height={drumKit.height}
+	alt="Schéma d'une batterie acoustique, six éléments numérotés de 1 à 6."
+/>
 
 Vous avez peut-être remarqué l'anomalie : **six numéros, neuf codes.** Ce n'est
 pas une erreur, et c'est même le plus utile à comprendre ici.
@@ -120,7 +95,7 @@ pas une erreur, et c'est même le plus utile à comprendre ici.
 - **Un code ne décrit donc pas une pièce, mais un son.** C'est la bonne façon
   d'y penser pour la suite du cours.
 
-Deux codes de plus n'apparaissent pas sur le schéma :
+Deux codes du tableau portent un tiret à la place du numéro :
 
 - **`cr`** (*crash cymbal*), la cymbale d'accentuation — le schéma n'en numérote
   qu'une, la ride ;

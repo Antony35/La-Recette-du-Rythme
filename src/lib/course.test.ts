@@ -1,5 +1,5 @@
 import { describe, expect, test } from "vitest";
-import { buildCourse, flattenCourse, getNeighbours } from "./course";
+import { buildCourse, flattenCourse, getNeighbours } from "@/lib/course";
 
 /**
  * Les fonctions testées ici sont volontairement pures : elles reçoivent les
