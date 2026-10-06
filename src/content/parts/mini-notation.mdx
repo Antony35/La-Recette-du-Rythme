@@ -1,0 +1,129 @@
+---
+title: "Mini-notation — répétitions et silences"
+sequence: "rythme"
+order: 2
+durationMinutes: 20
+---
+
+import PatternStrip from "@/components/PatternStrip.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Ce qui est entre guillemets dans `s("…")` n'est pas une simple liste de noms.
+C'est un petit langage à part entière — la **mini-notation** — et son sujet
+unique est le **temps**.
+
+À la fin de ces **20 minutes**, vous saurez répéter un son, en taire un, et
+découper un temps en deux. Trois symboles, et de quoi écrire la plupart des
+rythmiques du cours.
+
+## Pourquoi un langage dans le langage
+
+Un cycle a une durée fixe. La mini-notation ne sert qu'à répondre à une
+question : **comment on se la partage.**
+
+Rien de ce qui suit ne change le tempo. Ajouter des sons ne rallonge pas le
+cycle, en retirer ne le raccourcit pas : ça ne fait que redécouper le même
+gâteau. C'est le point à garder en tête, parce que tout le reste en découle.
+
+## L'espace : les uns après les autres
+
+Vous l'avez déjà utilisé en 2.1. Chaque espace ajoute un événement, et tous se
+partagent le cycle équitablement.
+
+<PatternStrip code={'s("bd hh sd hh")'} steps={["bd", "hh", "sd", "hh"]}>
+	Quatre événements, quatre quarts de cycle.
+</PatternStrip>
+
+## `*` : répéter sans prendre plus de place
+
+`*` multiplie un événement **à l'intérieur de sa propre case**. Le son se répète
+plus vite, mais n'empiète pas sur ses voisins.
+
+<PatternStrip
+	code={'s("bd hh*2 sd hh*2")'}
+	steps={["bd", ["hh", "hh"], "sd", ["hh", "hh"]]}
+>
+	Le charleston est joué deux fois dans le même quart. Les trois autres cases
+	n'ont pas bougé.
+</PatternStrip>
+
+<StrudelRepl client:visible code={'s("bd hh*2 sd hh*2")'} label="Doubler le charleston">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Essayez <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">hh*4</code>,
+		puis <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">hh*8</code>.
+		Le rythme se densifie, la grosse caisse et la caisse claire restent
+		exactement où elles étaient.
+	</p>
+</StrudelRepl>
+
+C'est la différence entre `*` et l'espace, et c'est tout l'intérêt du symbole :
+**l'espace ajoute des cases, `*` remplit une case.** Comparez `s("bd hh hh sd")`
+et `s("bd hh*2 sd")` — même nombre de coups de charleston, placements
+complètement différents.
+
+## `~` : la case vide
+
+`~` occupe une case sans rien jouer. Ce n'est pas « rien » : c'est un événement
+silencieux, qui prend sa part du cycle comme les autres. On peut aussi écrire
+`-`, les deux sont équivalents.
+
+<PatternStrip code={'s("bd ~ sd ~")'} steps={["bd", "~", "sd", "~"]}>
+	Toujours quatre cases. Deux sonnent, deux se taisent.
+</PatternStrip>
+
+<StrudelRepl client:visible code={'s("bd ~ sd ~")'} label="Laisser respirer">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Comparez avec <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">s("bd sd")</code> :
+		les coups tombent au même endroit, mais ici vous avez gardé quatre temps,
+		donc de la place pour y poser autre chose ensuite.
+	</p>
+</StrudelRepl>
+
+Le silence est un outil de composition, pas un trou. Un rythme où tout sonne est
+fatigant ; c'est souvent en retirant qu'on l'améliore.
+
+## En bonus : `[ ]` pour grouper
+
+Les crochets enferment plusieurs sons dans **une seule case**, qu'ils se
+partagent. `[bd sd]` fait tenir deux coups là où il n'y en avait qu'un.
+
+<PatternStrip
+	code={'s("bd [bd sd] sd ~")'}
+	steps={["bd", ["bd", "sd"], "sd", "~"]}
+>
+	La deuxième case contient deux sons deux fois plus courts.
+</PatternStrip>
+
+C'est le même principe que `*`, en plus souple : `*` répète le *même* son,
+les crochets acceptent n'importe quoi. La
+[documentation de la mini-notation](https://strudel.cc/learn/mini-notation/)
+recense tous les symboles ; on y reviendra au fil du cours.
+
+## À vous
+
+<StrudelRepl client:visible code={'s("bd hh sd hh")'} label="Votre rythme à quatre temps" />
+
+> Partez du motif à quatre temps et transformez-le **sans jamais arrêter la
+> lecture**.
+>
+> 1. Doublez le charleston avec `*2`, puis quadruplez-le. Arrêtez-vous à la
+>    densité qui vous plaît.
+> 2. Remplacez un des quatre événements par un `~`. Écoutez le vide qui apparaît.
+> 3. Déplacez ce silence : mettez-le avant la caisse claire, puis après.
+> 4. Faites tenir deux sons dans une seule case avec `[ ]`.
+> 5. **Gardez votre motif.** Il sert de point de départ à la partie suivante, où
+>    on va lui changer de kit.
+
+Quand plus rien ne sort, deux pannes très différentes sont possibles, et les
+distinguer fait gagner beaucoup de temps :
+
+- **Un crochet non refermé** — `s("bd [sd")` — est une **erreur de syntaxe**.
+  Strudel ne sait pas lire le motif, le dit, et n'applique pas le changement.
+  Vous avez un message : lisez-le, il nomme le caractère attendu.
+- **Un nom de son inconnu** — `s("zzz")` — n'est **pas** une erreur. Le motif
+  est parfaitement valide ; simplement, Strudel cherche un son appelé `zzz`, ne
+  le trouve pas, et laisse un blanc. Aucun message dans l'éditeur : le seul
+  indice est dans la console du navigateur.
+
+Retenez la règle : **si Strudel se plaint, c'est la syntaxe ; s'il se tait,
+c'est l'orthographe.**

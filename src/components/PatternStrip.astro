@@ -1,0 +1,61 @@
+---
+/**
+ * Un cycle découpé en cases, pour montrer *où* tombent les sons.
+ *
+ * Le piano roll de Strudel dit la même chose, mais seulement pendant la
+ * lecture : cette bande reste lisible à l'arrêt, dans le fil du texte, et à
+ * côté du code qu'elle illustre.
+ *
+ * Aucun calcul : les largeurs viennent de `flex-1`, donc une case par
+ * événement, et une sous-bande pour un groupe. C'est la même règle que Strudel
+ * applique au temps — le cycle se divise, il ne s'allonge pas.
+ *
+ * Purement décoratif : `aria-hidden`, parce que l'information est écrite juste
+ * à côté en toutes lettres. Un lecteur d'écran n'a rien à faire d'une grille.
+ *
+ * Les cases pleines utilisent `accent`/`ground`, qui s'inversent avec le thème.
+ * Un aplat `night` aurait disparu en thème sombre : c'est exactement la couleur
+ * du fond.
+ */
+export type Step = string | string[];
+
+interface Props {
+	/** Un élément par événement. `"~"` marque un silence, un tableau un groupe. */
+	steps: Step[];
+	/** Le code illustré, affiché au-dessus. */
+	code?: string;
+}
+
+const { steps, code }: Props = Astro.props;
+
+const isRest = (value: string) => value === "~" || value === "-";
+---
+
+<figure class="not-prose my-6">
+    {code && (
+        <pre class="mb-2 overflow-x-auto rounded-xl bg-surface px-4 py-2 font-mono text-sm"><code>{code}</code></pre>
+    )}
+
+    <div class="flex h-16 gap-1 overflow-hidden rounded-xl" aria-hidden="true">
+        {steps.map((step) => (
+            <div class="flex flex-1 gap-1">
+                {(Array.isArray(step) ? step : [step]).map((label) => (
+                    <div
+                        class:list={[
+                            "flex flex-1 items-center justify-center rounded-lg font-mono text-sm font-bold",
+                            isRest(label)
+                                ? "border-2 border-dashed border-rule text-muted"
+                                : "bg-accent text-ground",
+                        ]}
+                    >
+                        {isRest(label) ? "" : label}
+                    </div>
+                ))}
+            </div>
+        ))}
+    </div>
+
+    <figcaption class="mt-2 text-sm text-muted">
+        <slot />
+    </figcaption>
+</figure>
