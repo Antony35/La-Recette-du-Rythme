@@ -340,6 +340,21 @@ place exacte (16/9) avec titre, durée et format de tournage :
 Emplacements : présentation du cours sur l'accueil, pré-requis sur la page de
 la séquence 1.
 
+## Images
+
+Dans `src/assets/`, jamais dans `public/` ni chez un hébergeur tiers. Importer
+l'asset donne le chemin haché, déjà préfixé par `base` :
+
+```mdx
+import schema from "@/assets/Drum_set.svg";
+
+<img src={schema.src} width={schema.width} height={schema.height} alt="…" />
+```
+
+Pas de `<Image />` pour un SVG : il réclame `sharp` pour rastériser ce qui n'en
+a pas besoin. Une image sous licence se crédite sous l'image **et** dans
+`sources.yaml`, rubrique `illustrations`.
+
 ## Sources
 
 Page `/sources`, alimentée par `src/content/sources.yaml`. **N'ajouter une source
@@ -354,6 +369,11 @@ qu'après avoir vérifié son URL**, et renseigner `checkedAt` :
   note: "…"                    # facultatif
   checkedAt: 2026-09-15
 ```
+
+Une **affirmation sur une personne** (« mainteneuse du projet Strudel ») se
+traite comme une URL : elle n'entre sur le site que si une source de la page la
+porte, et la `note` de cette source dit laquelle. Sinon la page de sources
+devient elle-même une source non vérifiée.
 
 Pour une vidéo YouTube, l'API oEmbed confirme qu'elle existe et donne son titre
 exact :

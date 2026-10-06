@@ -393,7 +393,45 @@ format de tournage. Deux emplacements, d'après les scripts de la scénarisation
 - **Vidéo 2 — Les pré-requis (2 min 30)** : corps de
   `sequences/prerequis-et-decouverte.mdx`, d'où son extension `.mdx`.
 
+C'est la **version V2 des scripts** (section « V2 SCRIPT VIDEO » de la
+scénarisation) qui fait foi ; les durées n'ont pas changé. L'accroche de
+l'accueil et ses **trois promesses** en sont reprises : ce que la page annonce
+doit être ce que la vidéo annonce.
+
 Le jour du tournage, on remplace le composant par le lecteur au même endroit.
+
+### Images
+
+Les images de contenu vivent dans **`src/assets/`**, jamais dans `public/` et
+jamais chez un hébergeur tiers (postimages et compagnie) : un lien externe
+pourrit sans prévenir, aucun build ne le détecte, et chaque visiteur verrait son
+adresse IP partir chez un tiers. GitHub Pages publie jusqu'à ~1 Go par site : la
+place n'est pas le sujet.
+
+L'import d'asset donne le chemin haché, **déjà préfixé par `base`**, plus les
+dimensions d'origine :
+
+```mdx
+import drumKit from "@/assets/Drum_set.svg";
+
+<img src={drumKit.src} width={drumKit.width} height={drumKit.height} alt="…" />
+```
+
+- **Pas de `<Image />` pour un SVG.** Le composant cherche à rastériser, donc
+  réclame `sharp`, et le build échoue sur `MissingSharp` — alors qu'un
+  vectoriel n'a rien à optimiser. `<Image />` reste le bon choix pour une photo.
+- **`width` et `height` sont obligatoires** : sans eux le texte sous l'image
+  saute au chargement.
+- **Un schéma sur fond transparent se pose sur un aplat fixe** (`bg-snow`) :
+  sinon ses traits noirs disparaissent en thème sombre. Mais **la légende reste
+  en dehors de cet aplat** — `figcaption` utilise `--tw-prose-captions`
+  (`muted`) et ses liens `accent`, qui deviennent gris clair et jaune en thème
+  sombre : illisibles sur du blanc. Erreur commise et corrigée en 1.4.
+- **Une image sous licence se crédite deux fois** : une `<figcaption>` visible
+  sous l'image, et une entrée dans `sources.yaml` rubrique `illustrations`.
+  CC BY l'exige ; un site qui affiche une page « Sources » n'a aucune excuse.
+  Le crédit est aussi copié dans le `<desc>` du SVG, pour qu'il voyage avec le
+  fichier.
 
 ### Page Sources
 
@@ -412,6 +450,16 @@ reçoit la date : HTTP 200 pour une page, API oEmbed de YouTube pour une vidéo
 (elle renvoie aussi le vrai titre et l'auteur). Medium répond 403 aux robots :
 URL confirmée par un index de recherche, dit dans la `note`. La page affiche la
 date du contrôle **le plus ancien**.
+
+Une rubrique peut porter une `description` (facultative, dans
+`layouts/Sources.astro`) quand son intitulé ne suffit pas — un nom propre ne dit
+pas pourquoi il est là. **Toute affirmation sur une personne y est traitée comme
+une URL** : elle n'est publiée que si une source de la page l'atteste, et la
+`note` de cette source le dit. « Mainteneuse du projet Strudel » tient sur le
+portrait WebExpo (« Jade is a maintainer of Strudel », 4 février 2026), recoupé
+par le dépôt `tidalcycles/strudel` où son compte `daslyfe` est le deuxième
+contributeur. Hackaday, la source citée au départ, ne dit que son usage de
+l'outil : elle ne suffisait pas.
 
 ### Pièges `astro check`
 
@@ -509,8 +557,15 @@ Les trois paquets `@strudel/*` sont du JavaScript sans types. `src/types/strudel
 déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 (`setCps`, `pause`…) suppose de compléter ce fichier, pas de basculer en `any`.
 
-## Écarts connus (état au 2026-09-15)
+## Écarts connus (état au 2026-10-06)
 
+- **Séquence 1 : 1.1 à 1.4 rédigées**, 1.5 encore vide. Les sept autres
+  séquences ont titre, objectif, niveau, durée et équipement, **sans corps**.
+- **Les deux composants interactifs de 1.4 restent à écrire** (`NoteKeyboard`,
+  `DrumKitMap`) : la page est complète en texte + image, le son au clic viendra
+  par-dessus. Le déclencheur ponctuel est `superdough(value, t, durée)`,
+  disponible via `@strudel/webaudio` qui fait `export * from "superdough"` —
+  pas besoin d'une dépendance de plus, ni de `webaudioRepl()` qui bouclerait.
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
   toutes créées avec titre, objectif, niveau, durée et équipement, **sans
   corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties
@@ -552,6 +607,39 @@ utilisateur. La surface d'attaque tient en trois points, à garder en tête.
   overrides là, pas dans `package.json`).
 
 ## Ajouter du contenu
+
+### Ton du cours
+
+- **Vouvoiement partout**, y compris dans les libellés d'interface et les
+  messages d'erreur des composants. Le site s'adresse à un groupe d'apprenants,
+  pas à un copain.
+- L'impératif se met au pluriel (« tapez », « écoutez », « revenez à `4` »).
+- Tourner la phrase plutôt que d'accorder au masculin : « vous êtes prêt·e·s »
+  s'évite en écrivant « tout est prêt ».
+- Contrôle, qui doit revenir vide :
+
+  ```bash
+  grep -rnE "\b([Tt]u|[Tt]on|[Tt]a|[Tt]es|[Tt]oi|te)\b" src/content src/components src/layouts
+  ```
+
+### Gabarit d'une partie
+
+Les colonnes du tableau de la scénarisation **sont** le plan de la page. On ne
+réinvente pas une structure par sous-séance :
+
+| Colonne de la scénarisation | Section de la page |
+|---|---|
+| *(titre de la sous-séance)* | `title` du frontmatter |
+| — | accroche : 2 à 4 lignes sans titre, ce qu'on saura faire à la fin |
+| Pourquoi | `## Pourquoi …` |
+| Comment | `## …` suivi du visuel |
+| Point info *(facultatif)* | `<aside class="course-fun-fact">` |
+| Exercice de live coding | `## À vous` suivi d'une citation `>` |
+
+Et les règles de rédaction qui vont avec : une idée par paragraphe, trois lignes
+au plus ; le gras sur le **mot** à retenir, jamais sur une phrase entière ; le
+« pourquoi » avant le « comment » ; aucune promesse de ce qui n'est pas sur la
+page.
 
 Séquence — `src/content/sequences/<slug>.md`, corps facultatif :
 
