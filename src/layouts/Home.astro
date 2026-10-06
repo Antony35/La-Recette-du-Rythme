@@ -34,6 +34,15 @@ const totalMinutes = course.reduce(
 // Le vrai point de départ : la première partie rédigée dans l'ordre de lecture.
 const start = flattenCourse(course)[0];
 
+// Les trois promesses du cours, reprises mot pour mot du script de la vidéo de
+// présentation (version V2 de la scénarisation) : c'est ce qu'on annonce à
+// l'oral, la page ne doit pas promettre autre chose.
+const promises = [
+	"Composer un morceau électronique complet en écrivant du code",
+	"Utiliser ses propres sons et les sculpter",
+	"Jouer en direct, en modifiant sa musique pendant qu'elle tourne",
+];
+
 // Les chiffres clés, à la manière du bandeau « Skolae, c'est… ».
 const figures = [
 	{ value: String(course.length), label: "séquences" },
@@ -59,10 +68,24 @@ const byLevel = Object.entries(levels).map(([level, meta]) => ({
             Créer de la musique sur le web avec Strudel
         </h1>
         <p class="mt-8 max-w-2xl text-lg leading-relaxed text-muted sm:text-xl">
-            Quelques lignes de JavaScript, un navigateur et un casque. Tu écris du
-            code, tu l'évalues, tu entends le résultat — sans logiciel à installer
-            ni solfège à connaître.
+            Une ligne de code, un rythme. En quinze heures, vous en faites un morceau
+            complet — sans logiciel à installer ni solfège à connaître. La boucle
+            est celle que vous connaissez déjà en dev, sauf qu'ici le retour d'erreur,
+            c'est votre oreille.
         </p>
+
+        {/* Les trois promesses du script de présentation, dans son ordre.
+            Numérotées, donc un <ol> : « trois choses » y est dit explicitement. */}
+        <ol class="mt-10 grid max-w-4xl gap-4 sm:grid-cols-3">
+            {promises.map((promise, index) => (
+                <li class="border-t-2 border-rule pt-4">
+                    <span class="display-title text-2xl text-muted tabular-nums">
+                        {String(index + 1).padStart(2, "0")}
+                    </span>
+                    <p class="mt-2 leading-snug font-extrabold text-balance">{promise}</p>
+                </li>
+            ))}
+        </ol>
 
         <div class="mt-10 flex flex-wrap items-center gap-3">
             {start && (
@@ -98,17 +121,17 @@ const byLevel = Object.entries(levels).map(([level, meta]) => ({
         <VideoPlaceholder
             title="Présentation du cours"
             duration="2 min 45"
-            format="alternance des deux voix face caméra, captures d'écran de Strudel en incrustation"
+            format={'script V2 : ouverture sur s("bd*4") tapé en direct, puis alternance des deux voix et captures de Strudel'}
         />
 
-        <StrudelRepl client:visible label="Essaie tout de suite" code={'s("bd*4")'}>
+        <StrudelRepl client:visible label="Essayez tout de suite" code={'s("bd*4")'}>
             <p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
                 Ce n'est pas un fichier son : ce motif est exécuté dans le moteur
-                audio de ton navigateur, et tu peux le réécrire. <code
+                audio de votre navigateur, et vous pouvez le réécrire. <code
                     class="rounded-md bg-surface px-1 py-0.5 font-mono text-xs text-ink">bd</code
                 > est une grosse caisse, <code
                     class="rounded-md bg-surface px-1 py-0.5 font-mono text-xs text-ink">*4</code
-                > la répète quatre fois par cycle. Essaie <code
+                > la répète quatre fois par cycle. Essayez <code
                     class="rounded-md bg-surface px-1 py-0.5 font-mono text-xs text-ink">s("bd*4, hh*8")</code
                 >.
             </p>
