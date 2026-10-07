@@ -567,8 +567,12 @@ conçu pour l'éditeur plein écran de strudel.cc, où ce canvas **est** le fond
 Dans une page de cours, mesuré : le canvas peint un lavis clair par-dessus le
 texte et le rend illisible, et aucune marque n'y apparaît — relevé de densité
 sur tout le tampon, **zéro pixel sombre**. Le cours ne les utilise donc pas dans
-ses blocs : il explique la vue et renvoie à strudel.cc pour la voir. Les grilles
-du cours sont dessinées par `components/PatternStrip.astro`.
+ses blocs : il explique la vue et renvoie à strudel.cc pour la voir. Le lien `https://strudel.cc/#IA%3D%3D` charge un espace encodé en base64 :
+l’éditeur est visuellement vide et ne restaure pas le dernier motif enregistré.
+Un fragment vide ne suffit pas. Vérifié dans le navigateur et dans le décodeur
+public du REPL. La 1.5 utilise `c4` après `c d e f g a b` : l’octave implicite
+est 3 ; son clavier reçoit aussi `octave={3}`.
+Les grilles du cours sont dessinées par `components/PatternStrip.astro`.
 
 **`#test-canvas { display: none }`**, toujours. Le canvas n'existe pas
 seulement quand on l'appelle : `<strudel-editor>` exécute `getDrawContext()`

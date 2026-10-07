@@ -13,8 +13,8 @@ Vous savez écrire le nom d'une note. Reste à savoir ce qu'elle *fait* — et p
 ça, il faut l'entendre en contexte, pas isolée.
 
 À la fin de ces **15 minutes**, vous aurez joué une gamme entière, vous saurez
-lire le <CourseTerm term="piano-roll" /> de Strudel, et vous aurez entendu la différence entre une
-suite de notes qui monte et une suite qui part dans tous les sens.
+lire le <CourseTerm term="piano-roll" /> de Strudel, et vous aurez entendu
+la différence entre une suite de notes qui monte et une suite qui part dans tous les sens.
 
 ## Pourquoi une gamme
 
@@ -29,7 +29,7 @@ deviner ce qu'elle va donner avant de l'évaluer.
 
 Commencez par la jouer à la main, de gauche à droite, sans vous presser :
 
-<NoteKeyboard client:visible />
+<NoteKeyboard client:visible octave={3} />
 
 Deux choses à remarquer en montant :
 
@@ -51,11 +51,12 @@ espaces. Chaque note occupe une part égale du <CourseTerm term="cycle" />.
 	</p>
 </StrudelRepl>
 
-Pour entendre l'octave se refermer, ajoutez un huitième élément : le `c` du
-dessus, qui porte un numéro parce qu'il n'est plus dans la même octave.
+Sans chiffre, Strudel utilise l’<CourseTerm term="octave" /> 3 : `c` équivaut
+à `c3`. Pour refermer la gamme, ajoutez le `c4`, le do de l’octave juste
+au-dessus, après le `b` (si).
 
 ```js
-note("c d e f g a b c5")
+note("c d e f g a b c4")
 ```
 
 Vous entendez alors la gamme « finir », au lieu de s'arrêter en chemin. C'est le
@@ -69,7 +70,7 @@ dans votre code.
 
 <StrudelRepl
 	client:visible
-	code={'note("c d e f g a b c5")'}
+	code={'note("c d e f g a b c4")'}
 	label="La gamme, à l'œil"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
@@ -79,19 +80,23 @@ dans votre code.
 	</p>
 </StrudelRepl>
 
-Strudel sait aussi dessiner un **piano roll** — les notes en rectangles, le temps
-en abscisse et la hauteur en ordonnée. Cette vue est faite pour l'éditeur plein
-écran de [strudel.cc](https://strudel.cc), où elle s'affiche en fond de page ;
+Un **piano roll** représente chaque note par un rectangle : le temps avance
+de gauche à droite, et les notes aiguës se placent au-dessus des notes graves.
+Strudel peut le dessiner pendant la lecture avec `.pianoroll()`.
+
+Cette vue est faite pour l'éditeur plein écran de
+[strudel.cc](https://strudel.cc), où elle s'affiche en fond de page ;
 elle n'a pas la place de s'afficher dans un bloc intégré comme celui-ci. Pour la
-voir, collez la ligne suivante sur strudel.cc :
+voir, [ouvrez un REPL Strudel vide](https://strudel.cc/#IA%3D%3D),
+collez la ligne suivante, puis cliquez sur **Play** :
 
 ```js
-note("c d e f g a b c5").pianoroll()
+note("c d e f g a b c4").pianoroll()
 ```
 
-Les rectangles y montent en escalier régulier : c'est à ça que ressemble une
-gamme. Une mélodie, elle, dessinera des allers-retours. On réutilisera ce repère
-en séquence 2.
+La [documentation des aides visuelles](https://strudel.cc/learn/visual-feedback/)
+présente cette vue. Les rectangles y montent en escalier : c’est à ça que ressemble
+une gamme. Une mélodie dessinera des allers-retours. On réutilisera ce repère en séquence 2.
 
 ## À vous
 
@@ -99,7 +104,7 @@ en séquence 2.
 > tout l'exercice : chaque modification s'entend sans qu'on arrête le son.
 >
 > 1. **Inversez-la** : écrivez les notes de la plus aiguë à la plus grave
->    (`c5 b a g f e d c`) et réévaluez. L'encadrement parcourt la même ligne,
+>    (`c4 b a g f e d c`) et réévaluez. L'encadrement parcourt la même ligne,
 >    mais la gamme descend.
 > 2. **Cassez l'ordre** : mélangez les sept notes comme vous voulez. Vous
 >    n'obtenez pas une gamme, vous obtenez une mélodie — pas forcément belle,

@@ -80,13 +80,14 @@ devrait pas l'être ?** La plupart des rythmes bancals répondent à l'une des d
 Vous avez découvert le <CourseTerm term="piano-roll" /> en séquence 1
 avec `.pianoroll()`. Strudel propose aussi `.punchcard()` pour visualiser les
 événements d’un rythme.
+
 Une précision honnête : **ces vues sont conçues pour l'éditeur plein écran de
 [strudel.cc](https://strudel.cc)**, où elles s'affichent en fond de page. Dans un
 bloc intégré comme ceux de ce cours, elles n'ont pas la place de s'afficher
 correctement.
 
-Si vous voulez les voir : ouvrez [strudel.cc](https://strudel.cc), collez votre
-motif et ajoutez `.punchcard()` à la fin.
+Pour essayer, [ouvrez un REPL Strudel vide](https://strudel.cc/#IA%3D%3D),
+collez ce motif, puis cliquez sur **Play** :
 
 ```js
 s("bd*2, ~ sd, hh*8").punchcard()

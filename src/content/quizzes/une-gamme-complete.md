@@ -14,17 +14,17 @@ questions:
       Le cycle est la durée de référence : il ne dépend pas du nombre de notes.
       Trois notes se partagent donc le même temps que sept, et durent chacune
       plus longtemps. C'est le principe qui expliquera `*` et `~` en séquence 2.
-  - question: "À quoi sert le `5` de `c5` ?"
+  - question: "À quoi sert le `4` de `c4` ?"
     options:
       [
         "À dire dans quelle octave jouer la note, donc à quelle hauteur",
-        "À jouer la note cinq fois",
+        "À jouer la note quatre fois",
         "À régler le volume de la note",
-        "À placer la note au cinquième temps du cycle",
+        "À placer la note au quatrième temps du cycle",
       ]
     answer: 0
     explanation: >-
-      Le nom donne la note, le chiffre donne l'octave. `c4` et `c5` sont le même
+      Le nom donne la note, le chiffre donne l'octave. `c3` et `c4` sont le même
       « do », à deux hauteurs différentes — c'est ce qui permet à une gamme de
       « se refermer » au lieu de s'arrêter en chemin.
   - question: "Sur le piano roll, que lit-on sur l'axe vertical ?"

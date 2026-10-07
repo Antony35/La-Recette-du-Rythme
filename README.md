@@ -24,6 +24,8 @@ termine par un exercice autonome et une question avec corrigé dépliable.
 
 Les choix de tous les quiz et du test de positionnement sont mélangés à chaque
 ouverture et à chaque nouvelle tentative. Le score conserve les réponses du contenu.
+La partie 1.5 ferme la gamme sur `c4` et explique le piano roll ; les parties
+1.5 et 2.5 proposent un lien vers un REPL Strudel vide pour les visualisations.
 Les termes soulignés en pointillés affichent un rappel au survol, au focus clavier
 ou au toucher (piano roll, octave, cycle, REPL). Échap ferme le rappel.
 

@@ -13,6 +13,13 @@
   category: documentation
   checkedAt: 2026-09-15
 
+- id: strudel-empty-repl
+  title: "Strudel — REPL vide"
+  url: "https://strudel.cc/#IA%3D%3D"
+  category: documentation
+  note: "Lien d’exercice des parties 1.5 et 2.5 : le fragment encode un espace pour ouvrir un éditeur vide."
+  checkedAt: 2026-10-07
+
 - id: strudel-first-sounds
   title: "Workshop — First Sounds"
   url: "https://strudel.cc/workshop/first-sounds/"
@@ -30,7 +37,7 @@
   title: "Workshop — First Notes"
   url: "https://strudel.cc/workshop/first-notes/"
   category: documentation
-  checkedAt: 2026-09-15
+  checkedAt: 2026-10-07
 
 - id: strudel-effects
   title: "Audio effects"
@@ -48,7 +55,8 @@
   title: "Visual feedback"
   url: "https://strudel.cc/learn/visual-feedback/"
   category: documentation
-  checkedAt: 2026-09-15
+  note: "Représentation des notes dans le piano roll et visualisation des événements rythmiques."
+  checkedAt: 2026-10-07
 
 - id: tidalcycles
   title: "Live code with Tidal Cycles"
