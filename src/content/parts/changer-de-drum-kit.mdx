@@ -5,7 +5,10 @@ order: 3
 durationMinutes: 15
 ---
 
-import ImagePlaceholder from "@/components/ImagePlaceholder.astro";
+{/* Une photo, mais pas <Image /> : le projet n'installe pas Sharp, et le build
+    échouerait sur MissingSharp. L'image source fait 901 px de large, il n'y a
+    rien à gagner à la redimensionner. */}
+import tr909 from "@/assets/Roland_TR-909.jpg";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
 Votre motif est écrit. Il n'a pourtant encore aucun caractère : `bd` ne dit pas
@@ -84,10 +87,18 @@ de gauche : `RolandTR909`, pas `Roland TR-909`.
   <a href="https://www.musicradar.com/news/daft-punk-homework-25-synths-drum-machines-sampler">Le matériel de Homework, chez MusicRadar ↗</a>
 </aside>
 
-<ImagePlaceholder
-	title="Une Roland TR-909 de face, boutons et pas visibles"
-	need="photo en licence libre (Wikimedia Commons en a plusieurs sous CC BY-SA), cadrage horizontal sur la façade, pour qu'on reconnaisse les 16 pas et les potentiomètres dont on parle en 2.5. À créditer sous l'image et dans /sources."
-/>
+<figure>
+	<img
+		src={tr909.src}
+		width={tr909.width}
+		height={tr909.height}
+		alt="Une Roland TR-909 vue de face : une rangée de potentiomètres par son en haut, les seize touches de pas numérotées en bas."
+	/>
+	<figcaption>
+		Roland TR-909. Photo <a href="https://commons.wikimedia.org/wiki/File:Roland_TR-909.jpg">Emhoo, retouchée par Metoc</a>,
+		Wikimedia Commons, licence CC BY-SA 3.0.
+	</figcaption>
+</figure>
 
 ## À vous
 

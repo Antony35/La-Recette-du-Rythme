@@ -288,6 +288,17 @@
     pour lui donner un nom accessible et embarquer le crédit dans l'image.
   checkedAt: 2026-10-06
 
+- id: roland-tr-909-photo
+  title: "Roland TR-909 — photo de face"
+  url: "https://commons.wikimedia.org/wiki/File:Roland_TR-909.jpg"
+  category: illustrations
+  author: "Emhoo, retouche Metoc, Wikimedia Commons"
+  note: >-
+    Double licence GFDL et CC BY-SA 3.0 ; on retient CC BY-SA 3.0, qui impose
+    de créditer l'auteur. Utilisé en partie 2.3 (src/assets/Roland_TR-909.jpg),
+    fichier identique à l'original (empreinte SHA-1 vérifiée).
+  checkedAt: 2026-10-07
+
 - id: wikipedia-ut-queant-laxis
   title: "Ut queant laxis"
   url: "https://fr.wikipedia.org/wiki/Ut_queant_laxis"
