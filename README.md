@@ -22,6 +22,9 @@ Strudel intégré : jouer `s("bd*4")`, modifier le nombre de coups et réévalue
 pendant la lecture. Elle distingue le texte modifié du motif en cours et se
 termine par un exercice autonome et une question avec corrigé dépliable.
 
+Les choix de tous les quiz et du test de positionnement sont mélangés à chaque
+ouverture et à chaque nouvelle tentative. Le score conserve les réponses du contenu.
+
 ## Démarrage
 
 **Node >= 24** (`nvm use` lit le `.nvmrc`) et **pnpm** — la version est fixée par

@@ -779,6 +779,12 @@ relecture et donnerait un quiz qui corrige faux, sans jamais planter. Vérifié 
 cassant volontairement un fichier — le build s'arrête sur
 `questions.0.answer: \`answer\` doit désigner une option existante`.
 
+Les deux composants de quiz utilisent `lib/quiz.ts` : mélange Fisher–Yates
+des **indices des options**, en conservant `answer`, les valeurs radio et les
+questions dans leur ordre d’origine. Mélanger seulement dans `onMounted` et
+sur « Recommencer » : un tirage au rendu serveur ou dans le setup provoquerait
+une divergence d’hydratation. Aucun nouveau tirage lors du choix ou du corrigé.
+
 Une partie sans quiz est normale : la prop est optionnelle côté layout, plutôt
 que d'imposer un fichier vide partout.
 

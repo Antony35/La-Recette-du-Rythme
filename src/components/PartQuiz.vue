@@ -1,6 +1,7 @@
 <script setup lang="ts">
-import { computed, ref, useId } from "vue";
+import { computed, onMounted, ref, useId } from "vue";
 import { codeSegments as segments } from "@/lib/format";
+import { shuffleOptions } from "@/lib/quiz";
 
 /**
  * Auto-évaluation de fin de partie.
@@ -23,6 +24,13 @@ const props = defineProps<{ questions: Question[] }>();
 // de boutons radio en ont besoin, et Math.random() provoquerait une divergence.
 const uid = useId();
 
+// Le premier rendu reste identique au HTML serveur ; mélange après hydratation.
+const optionOrder = ref(props.questions.map((q) => q.options.map((_, i) => i)));
+const shuffle = () => {
+	optionOrder.value = shuffleOptions(props.questions);
+};
+onMounted(shuffle);
+
 const chosen = ref<(number | null)[]>(props.questions.map(() => null));
 const checked = ref(false);
 
@@ -41,6 +49,7 @@ function check() {
 }
 
 function reset() {
+	shuffle();
 	chosen.value = props.questions.map(() => null);
 	checked.value = false;
 }
@@ -78,7 +87,7 @@ function reset() {
 
 					<div class="mt-4 flex flex-col gap-2">
 						<label
-							v-for="(option, choice) in item.options"
+							v-for="choice in optionOrder[index]"
 							:key="choice"
 							class="flex cursor-pointer items-start gap-3 rounded-xl border-2 bg-ground px-4 py-3 transition-colors"
 							:class="[
@@ -97,7 +106,7 @@ function reset() {
 								class="mt-1 accent-pulse"
 							/>
 							<span class="text-sm leading-relaxed">
-								<template v-for="(seg, s) in segments(option)" :key="s">
+								<template v-for="(seg, s) in segments(item.options[choice])" :key="s">
 									<code
 										v-if="seg.code"
 										class="rounded-md bg-surface px-1 py-0.5 font-mono text-[0.9em]"
