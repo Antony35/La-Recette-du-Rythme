@@ -9,6 +9,7 @@ durationMinutes: 20
     rastériser, donc réclame Sharp, alors qu'un SVG n'a rien à optimiser — il est
     déjà net à toutes les tailles. L'import donne quand même le chemin haché,
     préfixé par `base`, et les dimensions d'origine. */}
+import CourseTerm from "@/components/CourseTerm.astro";
 import drumKit from "@/assets/Drum_set.svg";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 import NoteKeyboard from "@/components/NoteKeyboard.vue";
@@ -53,7 +54,7 @@ Trois repères pour s'y retrouver :
 - **Un dièse s'écrit avec `#`**, un bémol avec `b` : `c#` se lit « do dièse »,
   `db` « ré bémol ». Ce sont la même touche du clavier.
 
-Un chiffre précise l'octave, c'est-à-dire la hauteur : `c3` est plus grave que
+Un chiffre précise l’<CourseTerm term="octave" />, c'est-à-dire la hauteur : `c3` est plus grave que
 `c4`. Sans chiffre, Strudel choisit une octave par défaut. Les détails sont dans
 [l'atelier officiel First Notes](https://strudel.cc/workshop/first-notes/).
 

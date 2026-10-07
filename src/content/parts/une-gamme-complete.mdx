@@ -5,6 +5,7 @@ order: 5
 durationMinutes: 15
 ---
 
+import CourseTerm from "@/components/CourseTerm.astro";
 import NoteKeyboard from "@/components/NoteKeyboard.vue";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
@@ -12,7 +13,7 @@ Vous savez écrire le nom d'une note. Reste à savoir ce qu'elle *fait* — et p
 ça, il faut l'entendre en contexte, pas isolée.
 
 À la fin de ces **15 minutes**, vous aurez joué une gamme entière, vous saurez
-lire le piano roll de Strudel, et vous aurez entendu la différence entre une
+lire le <CourseTerm term="piano-roll" /> de Strudel, et vous aurez entendu la différence entre une
 suite de notes qui monte et une suite qui part dans tous les sens.
 
 ## Pourquoi une gamme
@@ -41,7 +42,7 @@ Deux choses à remarquer en montant :
 ## La même chose, en code
 
 En Strudel, une suite de notes s'écrit entre guillemets, séparée par des
-espaces. Chaque note occupe une part égale du cycle.
+espaces. Chaque note occupe une part égale du <CourseTerm term="cycle" />.
 
 <StrudelRepl client:visible code={'note("c d e f g a b")'} label="La gamme, de c à b">
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">

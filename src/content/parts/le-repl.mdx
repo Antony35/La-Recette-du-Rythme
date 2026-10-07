@@ -5,6 +5,7 @@ order: 3
 durationMinutes: 20
 ---
 
+import CourseTerm from "@/components/CourseTerm.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
 Dans la partie précédente, vous avez découvert le principe du live coding :
@@ -48,7 +49,7 @@ Cette ligne se lit ainsi :
 
 - **`s(...)`** choisit le son à jouer ; c'est la forme courte de `sound(...)`.
 - **`bd`** signifie *bass drum*, la grosse caisse.
-- **`*4`** répète ici ce son quatre fois dans un **cycle**, la durée de référence
+- **`*4`** répète ici ce son quatre fois dans un <CourseTerm term="cycle" />, la durée de référence
   du motif. Une fois ce cycle terminé, le motif recommence.
 
 Les parenthèses et les guillemets font partie de l'écriture : conservez-les.
@@ -107,7 +108,7 @@ la sortie audio et que l'onglet n'est pas muet.
 
 ## Ce qu'il faut retenir — 2 min
 
-Le REPL permet d'essayer une idée et d'en écouter le résultat. Vous n'avez pas
+Le <CourseTerm term="repl" /> permet d'essayer une idée et d'en écouter le résultat. Vous n'avez pas
 besoin d'écrire un morceau entier avant de jouer : une ligne suffit pour
 commencer, puis vous la transformez par petites étapes.
 

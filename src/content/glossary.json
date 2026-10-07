@@ -1,0 +1,18 @@
+{
+	"piano-roll": {
+		"label": "piano roll",
+		"definition": "Vue des notes sous forme de rectangles : le temps avance de gauche à droite, la hauteur va du grave en bas à l’aigu en haut."
+	},
+	"octave": {
+		"label": "octave",
+		"definition": "Intervalle entre deux notes de même nom, l’une plus grave, l’autre plus aiguë. Dans Strudel, le chiffre précise le registre : c4 est une octave au-dessus de c3."
+	},
+	"cycle": {
+		"label": "cycle",
+		"definition": "Durée de référence de Strudel, qui se répète en boucle. Les événements d’un motif se partagent cette durée."
+	},
+	"repl": {
+		"label": "REPL",
+		"definition": "Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer. Dans Strudel, l’éditeur permet d’écrire du code, de l’évaluer et d’en écouter le résultat."
+	}
+}

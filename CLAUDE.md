@@ -351,6 +351,17 @@ Les deux exclusions sont des marqueurs de machine, pas du texte rédigé :
 les ancres d'hydratation des fragments Vue. Les commentaires d'un `<template>`
 Vue, eux, sont bel et bien retirés en production par le compilateur.
 
+### Rappels de vocabulaire
+
+`components/CourseTerm.astro` lit les définitions de `content/glossary.json`.
+Usage MDX : importer le composant, puis `<CourseTerm term="piano-roll" />`.
+Le bouton natif reste accessible au clavier et au toucher ; le rappel reste
+visible lorsqu’on le survole et se ferme avec Échap ou au défilement.
+Le positionnement tient dans la largeur de l’écran, les couleurs suivent les
+jetons du thème. Pas d’îlot Vue ni de dépendance supplémentaire.
+Les rappels complètent l’explication visible du cours, sans donner de réponse
+dans les quiz. Les acronymes restent développés lors de leur introduction.
+
 ### Test de positionnement
 
 La sous-séquence 1.1 porte un test en **trois axes** (culture musicale, MAO,

@@ -5,6 +5,7 @@ order: 5
 durationMinutes: 20
 ---
 
+import CourseTerm from "@/components/CourseTerm.astro";
 import PatternStrip from "@/components/PatternStrip.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
@@ -76,7 +77,9 @@ devrait pas l'être ?** La plupart des rythmes bancals répondent à l'une des d
 
 ## Et le piano roll ?
 
-Strudel propose aussi `.pianoroll()` et `.punchcard()`, croisés en séquence 1.
+Vous avez découvert le <CourseTerm term="piano-roll" /> en séquence 1
+avec `.pianoroll()`. Strudel propose aussi `.punchcard()` pour visualiser les
+événements d’un rythme.
 Une précision honnête : **ces vues sont conçues pour l'éditeur plein écran de
 [strudel.cc](https://strudel.cc)**, où elles s'affichent en fond de page. Dans un
 bloc intégré comme ceux de ce cours, elles n'ont pas la place de s'afficher

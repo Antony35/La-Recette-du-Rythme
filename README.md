@@ -24,6 +24,8 @@ termine par un exercice autonome et une question avec corrigé dépliable.
 
 Les choix de tous les quiz et du test de positionnement sont mélangés à chaque
 ouverture et à chaque nouvelle tentative. Le score conserve les réponses du contenu.
+Les termes soulignés en pointillés affichent un rappel au survol, au focus clavier
+ou au toucher (piano roll, octave, cycle, REPL). Échap ferme le rappel.
 
 ## Démarrage
 
@@ -102,6 +104,14 @@ Quelques règles suivies dans le projet :
   jamais de `../..`.
 - **Les identifiants de code sont en anglais** (`parts`, `order`, `objective`),
   les URLs et le contenu restent en français (`/cours/…`).
+
+## Rappels de vocabulaire
+
+Les définitions vivent dans `src/content/glossary.json`. Dans une leçon MDX,
+importer `CourseTerm` depuis `@/components/CourseTerm.astro`, puis écrire
+`<CourseTerm term="piano-roll" />` à l’endroit utile. Garder une explication
+visible à la première introduction d’une notion ; le rappel sert à la retrouver.
+Ne pas ajouter de rappel dans les questions d’un quiz qui évalue cette notion.
 
 ## Parties interactives (`.mdx`)
 
