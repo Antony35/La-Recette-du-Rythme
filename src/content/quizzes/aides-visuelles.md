@@ -24,10 +24,10 @@ questions:
       ]
     answer: 0
     explanation: >-
-      Superposer deux sons est parfois exactement ce qu'on veut, par exemple une
-      grosse caisse et un clap. Mais c'est aussi la panne typique d'une piste mal
-      décalée — comme la caisse claire de l'exercice, posée sur le premier temps
-      au lieu du troisième.
+      Superposer deux sons peut renforcer un accent : dans le bloc « Trois
+      pistes à l'œil », la caisse claire tombe avec la deuxième grosse caisse.
+      L'encadrement montre leur simultanéité ; c'est le résultat recherché qui
+      permet de dire si leur placement convient.
   - question: "Les deux questions à se poser devant la grille d'un cycle sont…"
     options:
       [

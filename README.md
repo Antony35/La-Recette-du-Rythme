@@ -29,6 +29,10 @@ La partie 1.5 ferme la gamme sur `c4` et explique le piano roll ; les parties
 Les termes soulignés en pointillés affichent un rappel au survol, au focus clavier
 ou au toucher (piano roll, octave, cycle, REPL). Échap ferme le rappel.
 
+La partie 2.5 fait comparer un modèle de quatre coups à une version dont les
+deux derniers coups sont remplacés par des silences. L’exercice relie écoute,
+surlignage et grille avant la correction.
+
 ## Démarrage
 
 **Node >= 24** (`nvm use` lit le `.nvmrc`) et **pnpm** — la version est fixée par

@@ -51,8 +51,9 @@ Avec plusieurs pistes, le surlignage se lit colonne par colonne :
 <StrudelRepl client:visible code={'s("bd*2, ~ sd, hh*8")'} label="Trois pistes à l'œil">
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
 		Regardez le moment où <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">sd</code>
-		s'encadre : rien ne s'allume en même temps du côté de la grosse caisse.
-		C'est le signe que les deux ne se marchent pas dessus.
+		s'encadre : le deuxième coup de grosse caisse tombe au même instant.
+		Deux sons peuvent se renforcer volontairement : leur superposition n'est
+		pas une erreur en soi.
 	</p>
 </StrudelRepl>
 
@@ -95,40 +96,62 @@ s("bd*2, ~ sd, hh*8").punchcard()
 
 Vous y retrouverez exactement la grille ci-dessus, animée.
 
-## À vous : réparer un rythme
+## À vous : retrouver les deux coups manquants
 
-Le motif ci-dessous est **volontairement faux**. Il sonne bancal, mais il ne
-produit aucune erreur : la syntaxe est irréprochable.
+Le but est précis : entendre **« boum, tchak, boum, tchak »**, quatre coups
+régulièrement espacés, sans case silencieuse. Écoutez d'abord le modèle en
+comptant « 1, 2, 3, 4 » :
 
 <StrudelRepl
 	client:visible
-	code={'stack(\n  s("bd*2"),\n  s("sd ~"),\n  s("hh*8")\n)'}
-	label="Trouvez ce qui cloche"
+	code={'s("bd sd bd sd")'}
+	label="Le modèle : quatre coups réguliers"
 />
 
-> Ne corrigez pas au hasard. Suivez la méthode :
+<PatternStrip label="Le rythme à retrouver" steps={["bd", "sd", "bd", "sd"]}>
+	Cases 1 et 3 : grosse caisse. Cases 2 et 4 : caisse claire.
+</PatternStrip>
+
+Lancez maintenant cette version : vous entendez **« boum, tchak »**, puis un
+grand vide avant que la boucle reparte. Deux coups ont été remplacés par des
+silences. La ligne fonctionne, mais elle ne reproduit plus le modèle.
+
+<StrudelRepl
+	client:visible
+	code={'s("bd sd ~ ~")'}
+	label="À réparer : le rythme s'interrompt"
+/>
+
+> Retrouvez les quatre coups du modèle dans le bloc « À réparer » :
 >
-> 1. **Lancez et écoutez** deux ou trois cycles. Formulez le problème avec vos
->    mots — « ça tape deux fois au même endroit », par exemple.
-> 2. **Regardez le surlignage.** Au tout premier temps, combien de noms
->    s'encadrent en même temps ?
-> 3. **Dessinez la grille** de la caisse claire sur un papier, quatre cases.
->    Où tombe-t-elle, et où devrait-elle tomber ?
-> 4. **Corrigez** en déplaçant la caisse claire, sans toucher aux deux autres
->    pistes.
-> 5. **Vérifiez** : plus rien ne doit s'encadrer en même temps que la première
->    grosse caisse.
-> 6. Cassez-le vous-même autrement — décalez le charleston, passez la grosse
->    caisse à `*3` — et réparez en utilisant la même méthode.
+> 1. **Écoutez** deux cycles en comptant « 1, 2, 3, 4 », même pendant le vide.
+>    Sur quels numéros les coups manquent-ils ?
+> 2. **Regardez le code** : suivez les encadrements de `bd` et `sd`, puis
+>    repérez les deux `~`. Chacun garde une case du cycle sans jouer de son.
+> 3. **Dessinez quatre cases**, remplissez celles qui sonnent et comparez avec
+>    la grille du modèle. Quels sons doivent occuper les cases vides ?
+> 4. **Remplacez les deux silences**, puis réévaluez avec **Ctrl + Entrée**.
+>    Gardez quatre éléments séparés par des espaces.
+> 5. **Vérifiez à l'oreille et à l'écran** : quatre coups réguliers, quatre
+>    noms de sons encadrés l'un après l'autre, plus de grand vide.
+> 6. **Essayez un autre trou** : remplacez le deuxième son par `~`. Prédisez
+>    le coup qui va manquer, écoutez, puis restaurez-le.
 
 <details>
   <summary>La solution, une fois que vous avez cherché</summary>
-  <p>La caisse claire est écrite <code>"sd ~"</code> : elle tombe sur la
-  <strong>première</strong> moitié du cycle, exactement sur la première grosse
-  caisse. Les deux sons se superposent et la seconde moitié reste vide. Il suffit
-  d'inverser : <code>"~ sd"</code>. Le surlignage le montre immédiatement — deux
-  noms encadrés ensemble au premier temps, et plus rien au troisième.</p>
+
+Les cases **3 et 4** sont silencieuses. Remplacez le premier `~` par `bd`,
+le second par `sd` : `s("bd sd bd sd")`. Après réévaluation, les quatre coups
+se succèdent à intervalles réguliers.
+
+Supprimer les deux `~` donnerait `s("bd sd")` : seulement deux coups, plus
+espacés, dans le même cycle. Pour retrouver le modèle, il faut **remplacer**
+les silences, pas les retirer.
+
 </details>
+
+Un silence peut être un choix musical. Ici, c'est une erreur uniquement parce
+que la consigne demande de reproduire les quatre coups du modèle.
 
 C'est la fin de la séquence 2. Vous avez une rythmique à plusieurs pistes, un
 kit choisi, et une méthode pour vérifier ce que vous écrivez. La séquence 3
