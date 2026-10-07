@@ -289,11 +289,20 @@
    d'exercice**. Elle prend l'aplat jaune, comme les appels à l'action SKOLAE.
    Un vrai extrait cité devra passer par un autre balisage. */
 .prose-cours blockquote {
+	/* Le fond reste jaune : les marqueurs et le gras doivent rester sombres. */
+	--tw-prose-counters: var(--color-night);
+	--tw-prose-bullets: var(--color-night);
+	--tw-prose-bold: var(--color-night);
+	--tw-prose-links: var(--color-night);
 	border-radius: 0.8rem;
 	background: var(--color-lemon);
 	padding: 1rem 1.5rem;
 	font-style: normal;
 	font-weight: 600;
+}
+
+.prose-cours blockquote a {
+	text-decoration-color: currentColor;
 }
 
 .prose-cours blockquote p::before,
@@ -321,6 +330,40 @@
 .prose-cours blockquote :not(pre) > code {
 	color: var(--color-night);
 	background: color-mix(in oklab, var(--color-night) 10%, transparent);
+}
+
+/* Le corrigé reste un contrôle natif, identifiable même lorsqu'il est fermé. */
+.prose-cours details {
+	margin-block: 2rem;
+	border: 2px solid var(--color-accent);
+	border-radius: 0.8rem;
+	background: var(--color-surface);
+}
+
+.prose-cours summary {
+	border-radius: 0.6rem;
+	background: var(--color-accent);
+	padding: 1rem 1.5rem;
+	color: var(--color-ground);
+	font-weight: 800;
+	cursor: pointer;
+}
+
+.prose-cours summary:hover {
+	text-decoration: underline;
+	text-underline-offset: 0.2em;
+}
+
+.prose-cours summary::marker {
+	color: currentColor;
+}
+
+.prose-cours details[open] > summary {
+	border-radius: 0.6rem 0.6rem 0 0;
+}
+
+.prose-cours details > :not(summary) {
+	margin: 1rem 1.5rem;
 }
 
 /* ---------------------------------------------------------------------------

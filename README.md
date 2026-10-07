@@ -31,7 +31,9 @@ ou au toucher (piano roll, octave, cycle, REPL). Échap ferme le rappel.
 
 La partie 2.5 fait comparer un modèle de quatre coups à une version dont les
 deux derniers coups sont remplacés par des silences. L’exercice relie écoute,
-surlignage et grille avant la correction.
+surlignage et grille avant la correction. Les listes et le gras des consignes
+sur fond jaune restent sombres dans les deux thèmes. Les corrigés dépliables
+ont un en-tête contrasté « Voir le corrigé » et restent utilisables au clavier.
 
 ## Démarrage
 

@@ -189,6 +189,17 @@ arrondis (`rounded-xl` 0,75 rem, `rounded-3xl` 1,5 rem), boutons en pilule.
   est si étroite que « CRÉER DE LA » se lisait « CRÉERDELA ».
 - **Une citation Markdown (`>`) est une consigne d'exercice** : aplat jaune.
   Un vrai extrait cité devra passer par un autre balisage.
+  Dans ces encadrés, `--tw-prose-counters`, `--tw-prose-bullets`,
+  `--tw-prose-bold` et `--tw-prose-links` restent sur `night` : les couleurs
+  de texte du thème sombre seraient illisibles sur le jaune fixe. Vérifier
+  les `::marker` des listes, pas seulement la couleur des paragraphes.
+- **Les corrigés dépliables** gardent le HTML natif `<details>/<summary>`.
+  Leur style partagé dans `global.css` utilise un en-tête `accent`/`ground`,
+  une bordure contrastée et un corps `surface`. Garder le marqueur natif et
+  le focus visible : le corrigé doit être repérable et ouvrable au clavier.
+  En MDX, écrire le corps du corrigé en Markdown avec des lignes vides et
+  des backticks pour le code : deux `<code>~</code>` bruts peuvent être
+  interprétés comme du texte barré et casser les paragraphes.
 - **Les anecdotes « Le saviez-vous ? »** utilisent un `<aside>` HTML dans le
   Markdown, avec `course-fun-fact not-prose` : encadré pêche, texte `night`,
   styles dans `global.css`. Elles restent distinctes des exercices jaunes.
