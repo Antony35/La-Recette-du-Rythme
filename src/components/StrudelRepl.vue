@@ -8,6 +8,7 @@
 import type { StrudelMirror } from "@strudel/codemirror";
 import { onUnmounted, ref, useId } from "vue";
 import { playback } from "@/lib/exclusive";
+import { type LoadSamples, loadDrumKit } from "@/lib/strudel-sound";
 
 const props = defineProps<{
 	code: string;
@@ -63,23 +64,23 @@ async function loadEditor() {
 	element.setAttribute("code", props.code);
 	host.value.append(element);
 
+	// L'éditeur naît dans connectedCallback, donc pendant `append`. Il lance
+	// alors le chargement de ses sons par défaut, dont `bd`, `sd`, `hh` depuis
+	// GitHub. On attend la fin, puis on réenregistre ces noms vers les fichiers
+	// du site : le dernier enregistrement l'emporte. Les machines de `.bank()`,
+	// elles, restent chargées depuis GitHub.
+	//
+	// Le `samples` à appeler est celui *du REPL*, qui embarque sa propre copie de
+	// Strudel (voir `loadDrumKit`). Il le publie sur `globalThis` pour le code
+	// tapé dans l'éditeur ; c'est là qu'on le prend.
+	await element.editor?.prebaked;
+	const replSamples = (globalThis as { samples?: LoadSamples }).samples;
+	if (replSamples) {
+		await loadDrumKit(replSamples);
+	}
+
 	editorElement = element;
 	isReady.value = true;
-}
-
-/**
- * Le panneau de visualisation de Strudel (`.pianoroll()`, `.punchcard()`…) est
- * un canvas plein écran ajouté à <body>, qui reste là après l'arrêt. On marque
- * donc la lecture sur <html> : `global.css` ne montre le panneau que pendant ce
- * temps, sinon une boîte vide resterait dans le coin de l'écran.
- */
-function markPlaying(playing: boolean) {
-	const root = document.documentElement;
-	if (playing) {
-		root.dataset.strudelPlaying = "true";
-	} else {
-		delete root.dataset.strudelPlaying;
-	}
 }
 
 /**
@@ -89,7 +90,6 @@ function markPlaying(playing: boolean) {
 function stopHere() {
 	editorElement?.editor?.stop();
 	isPlaying.value = false;
-	markPlaying(false);
 }
 
 async function togglePlay() {
@@ -98,7 +98,6 @@ async function togglePlay() {
 	if (isPlaying.value) {
 		await editorElement?.editor?.stop();
 		isPlaying.value = false;
-		markPlaying(false);
 		playback.release(stopHere);
 		return;
 	}
@@ -128,17 +127,12 @@ async function togglePlay() {
 	playback.claim(stopHere);
 	await editorElement.editor.evaluate();
 	isPlaying.value = true;
-	// Après `claim`, qui a pu éteindre le marqueur en arrêtant l'autre bloc.
-	markPlaying(true);
 }
 
 // Sans ça, le scheduler continuerait de jouer alors que le composant a disparu.
 onUnmounted(() => {
 	editorElement?.editor?.stop();
 	playback.release(stopHere);
-	if (isPlaying.value) {
-		markPlaying(false);
-	}
 });
 </script>
 

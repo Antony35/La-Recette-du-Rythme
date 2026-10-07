@@ -319,47 +319,25 @@
 	line-height: 1.6;
 }
 
-/* Garde-fou pour les visualisations de Strudel.
+/* Le canvas des visualisations de Strudel ne s'affiche jamais.
 
    `.pianoroll()`, `.punchcard()` et `._scope()` dessinent dans un canvas
-   `#test-canvas` que la bibliothèque ajoute à <body>, en `position: fixed` et
-   plein écran. C'est fait pour l'éditeur plein écran de strudel.cc, où le canvas
-   *est* le fond de page.
+   `#test-canvas`, ajouté à <body> en `position: fixed` et plein écran : c'est
+   le fond de page de l'éditeur de strudel.cc. Dans une page de cours, mesuré :
+   il peint un lavis clair par-dessus le texte, et aucune marque n'y est visible.
+   Le cours n'utilise donc pas ces fonctions dans ses blocs — il renvoie à
+   strudel.cc.
 
-   Dans une page de cours, deux problèmes mesurés : le canvas peint un lavis
-   clair par-dessus le texte et le rend illisible, et aucune marque n'y est
-   visible (relevé : zéro pixel sombre sur tout le tampon). Le cours n'utilise
-   donc pas ces fonctions dans ses blocs — il renvoie à strudel.cc.
+   On ne peut pas se contenter de ne pas l'appeler : <strudel-editor> appelle
+   `getDrawContext()` dès son installation, donc le canvas existe sur toute page
+   où un bloc a été chargé. Une ancienne version le montrait dans un panneau
+   d'angle pendant la lecture : on y voyait un rectangle blanc vide.
 
-   Cette règle reste par sécurité : si quelqu'un tape `.pianoroll()` dans un
-   bloc, le lavis se limite à un panneau d'angle au lieu d'effacer la leçon.
-
-   `!important` est nécessaire : taille et position sont posées en style *en
-   ligne* par la bibliothèque, et rien d'autre ne peut les reprendre. Le canvas
-   survit à l'arrêt de la lecture, d'où `data-strudel-playing`, posé sur <html>
-   par StrudelRepl — sans quoi un rectangle vide resterait à l'écran. */
-/* biome-ignore-start lint/complexity/noImportantStyles: style en ligne de la bibliothèque */
+   Pas besoin de `!important` : le style en ligne de la bibliothèque fixe taille
+   et position, jamais `display`. */
 #test-canvas {
-	position: fixed !important;
-	top: auto !important;
-	right: 1rem !important;
-	left: auto !important;
-	/* Le tampon fait la taille du viewport : réduire largeur et hauteur du même
-	   pourcentage conserve ses proportions au lieu de l'écraser. */
-	width: 34vw !important;
-	height: 34vh !important;
-	bottom: 1rem;
-	z-index: 20;
 	display: none;
-	border: 2px solid var(--color-rule);
-	border-radius: 0.75rem;
-	background: var(--color-ground);
 }
-
-:root[data-strudel-playing] #test-canvas {
-	display: block;
-}
-/* biome-ignore-end lint/complexity/noImportantStyles: fin de l'exception */
 
 /* ---------------------------------------------------------------------------
    Le témoin de lecture.

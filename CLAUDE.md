@@ -419,7 +419,12 @@ import drumKit from "@/assets/Drum_set.svg";
 
 - **Pas de `<Image />` pour un SVG.** Le composant cherche à rastériser, donc
   réclame `sharp`, et le build échoue sur `MissingSharp` — alors qu'un
-  vectoriel n'a rien à optimiser. `<Image />` reste le bon choix pour une photo.
+  vectoriel n'a rien à optimiser. Pour une photo, `<Image />` serait le bon
+  choix **si** `sharp` était installé ; il ne l'est pas, et la photo de la 2.3
+  (901 px, Wikimedia Commons) est déjà à la bonne taille : `<img>` simple.
+- **Une photo de vente n'est pas libre de droits.** La première TR-909 proposée
+  portait le filigrane d'un magasin : refusée. Wikimedia Commons d'abord, et
+  comparer l'empreinte SHA-1 du fichier avec celle qu'annonce l'API.
 - **`width` et `height` sont obligatoires** : sans eux le texte sous l'image
   saute au chargement.
 - **Un schéma sur fond transparent se pose sur un aplat fixe** (`bg-snow`) :
@@ -554,11 +559,13 @@ sur tout le tampon, **zéro pixel sombre**. Le cours ne les utilise donc pas dan
 ses blocs : il explique la vue et renvoie à strudel.cc pour la voir. Les grilles
 du cours sont dessinées par `components/PatternStrip.astro`.
 
-Une règle de garde dans `global.css` confine quand même ce canvas à un panneau
-d'angle, pour qu'un `.pianoroll()` tapé par un apprenant n'efface pas la leçon.
-Elle a besoin de `!important` (style en ligne de la bibliothèque) et d'un
-marqueur `data-strudel-playing` sur `<html>`, parce que le canvas survit à
-l'arrêt de la lecture.
+**`#test-canvas { display: none }`**, toujours. Le canvas n'existe pas
+seulement quand on l'appelle : `<strudel-editor>` exécute `getDrawContext()`
+dès son installation, donc il est créé sur toute page où un bloc a été chargé.
+Une ancienne règle le montrait dans un panneau d'angle pendant la lecture (avec
+un marqueur `data-strudel-playing` sur `<html>`) : les apprenants voyaient un
+rectangle blanc vide à chaque Play. Pas de `!important` : le style en ligne de
+la bibliothèque fixe taille et position, jamais `display`.
 
 ### Un seul bloc sonore à la fois
 
@@ -573,6 +580,30 @@ vient de prendre sa place.
 La fonction passée à `claim` doit être une **référence stable** (`stopHere`,
 déclarée une fois) : une fonction recréée à chaque appel ne serait jamais
 reconnue, et le bloc s'arrêterait lui-même.
+
+### Les sons de batterie sont servis par le site
+
+`public/samples/uzu-drumkit/` est une copie du dépôt `tidalcycles/uzu-drumkit`
+(Unlicense, 41 fichiers, 2,7 Mo) : c'est le kit que le REPL charge par défaut
+pour `s("bd")`. `loadDrumKit(samples)` (`lib/strudel-sound.ts`) l'enregistre.
+
+- **La base est passée en second argument de `samples()`**, via `withBase()`,
+  et le `_base` est retiré du `strudel.json`. Strudel sait la déduire de l'URL
+  du fichier, mais `getBaseURL()` en retire la barre finale : le dossier se
+  collerait au nom du son (`uzu-drumkitbd/…`). Un test le verrouille.
+- **La page contient deux copies de Strudel.** `@strudel/repl` est publié déjà
+  assemblé, avec la sienne (« @strudel/core was loaded more than once » en
+  console). Chaque copie a **son propre registre de sons** : appeler le
+  `samples` de `@strudel/webaudio` ne change rien à ce que joue le REPL — vérifié,
+  `bd` partait toujours chez GitHub. `StrudelRepl` passe donc à `loadDrumKit` le
+  `samples` que le REPL publie sur `globalThis` (pour le code de l'apprenant),
+  **après** `editor.prebaked` : le dernier enregistrement d'un nom l'emporte.
+- **`.bank()` reste sur GitHub** : `ritchse/tidal-drum-machines` enregistre de
+  vraies machines du commerce, licence floue. On ne le copie pas.
+- Avant ce changement, la carte de la 1.4 chargeait `tidalcycles/dirt-samples`,
+  qui n'a ni `rim`, ni `oh`, ni `rd` : trois boutons muets, **aucune erreur**.
+  Un nom absent de la banque ne lève rien ; seule une écoute (ou la liste des
+  requêtes `.wav` dans un navigateur) le révèle.
 
 ### Un seul moteur audio par page
 
@@ -624,13 +655,17 @@ Les trois paquets `@strudel/*` sont du JavaScript sans types. `src/types/strudel
 déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 (`setCps`, `pause`…) suppose de compléter ce fichier, pas de basculer en `any`.
 
-## Écarts connus (état au 2026-10-06)
+## Écarts connus (état au 2026-10-07)
 
 - **Séquences 1 et 2 complètes** (1.1 à 1.5, 2.1 à 2.5), chacune avec son quiz.
   Les six autres séquences ont titre, objectif, niveau, durée et équipement,
   **sans corps**.
-- **Une image manque en 2.3** : `components/ImagePlaceholder.astro` réserve la
-  place et dit ce qu'il faut (photo libre d'une Roland TR-909).
+- `components/ImagePlaceholder.astro` n'est plus utilisé (la photo de la 2.3
+  est arrivée) ; gardé pour les prochaines images manquantes.
+- **Deux copies de Strudel par page** (voir « Les sons de batterie… ») : le
+  `getAudioContext().resume()` de `StrudelRepl` réveille le contexte de *notre*
+  copie, pas forcément celui du REPL. Le son sort quand même ; à vérifier sans
+  l'option d'autoplay du navigateur de test avant d'y toucher.
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
   toutes créées avec titre, objectif, niveau, durée et équipement, **sans
   corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties
@@ -660,10 +695,10 @@ utilisateur. La surface d'attaque tient en trois points, à garder en tête.
 - **Un `.mdx` est du code exécuté**, au build (Node) comme dans le navigateur.
   Une partie de cours peut importer n'importe quoi. Relire les fichiers de
   `content/` comme du code, surtout s'ils viennent de l'extérieur.
-- **`samples("github:tidalcycles/dirt-samples")`** fait télécharger des sons
-  depuis `raw.githubusercontent.com` par le navigateur du visiteur, au clic.
-  Dépendance à un tiers, sans intégrité vérifiable ; acceptable pour un site de
-  cours, à rapatrier dans `public/` le jour où ça ne l'est plus.
+- **Les sons de base sont servis par le site** (`public/samples/`), mais le
+  REPL télécharge encore au clic ses index de sons et les machines de `.bank()`
+  depuis `raw.githubusercontent.com`. Dépendance à un tiers, sans intégrité
+  vérifiable ; acceptable pour un site de cours.
 - **`pnpm audit` avant chaque montée de version.** Les avis transitifs qui ne
   touchent que le build (`js-yaml`, `nanoid`) ne sont pas des failles du site
   publié : rien de tout ça n'atterrit dans `dist/`. Ne pas les corriger à coups

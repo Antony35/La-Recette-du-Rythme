@@ -220,6 +220,10 @@ depuis le fichier variable, voir CLAUDE.md), JetBrains Mono (code, 64 Ko).
 SKOLAE utilise Basier Circle et GT Walsheim, commerciales : on prend les
 équivalents libres qu'elle déclare elle-même en repli.
 
+**Sons de batterie servis par le site** : `public/samples/uzu-drumkit/` (kit
+par défaut du REPL de Strudel, Unlicense, 2,7 Mo). `bd`, `sd`, `hh`… ne
+dépendent plus de GitHub ; les machines de `.bank()` (`RolandTR909`…), si.
+
 Biome ne parse `@theme` et `@plugin` qu'avec `css.parser.tailwindDirectives`
 activé dans `biome.json`.
 
@@ -351,8 +355,9 @@ import schema from "@/assets/Drum_set.svg";
 <img src={schema.src} width={schema.width} height={schema.height} alt="…" />
 ```
 
-Pas de `<Image />` pour un SVG : il réclame `sharp` pour rastériser ce qui n'en
-a pas besoin. Une image sous licence se crédite sous l'image **et** dans
+Pas de `<Image />` : il réclame `sharp`, que le projet n'installe pas — ni pour
+un SVG, qui n'a rien à rastériser, ni pour une photo déjà à la bonne taille
+(la TR-909 de la 2.3 fait 901 px). Une image sous licence se crédite sous l'image **et** dans
 `sources.yaml`, rubrique `illustrations`.
 
 ## Sources

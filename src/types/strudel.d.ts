@@ -31,6 +31,11 @@ declare module "@strudel/codemirror" {
 		stop: () => Promise<void>;
 		toggle: () => Promise<void>;
 		setCode: (code: string) => void;
+		/**
+		 * Promesse du chargement initial des sons (`prebake`). Il faut l'attendre
+		 * avant d'enregistrer les nôtres, sinon le REPL les écraserait.
+		 */
+		prebaked: Promise<void>;
 	}
 }
 
@@ -51,8 +56,11 @@ declare module "@strudel/webaudio" {
 	/** Crée ou réveille l'AudioContext. À appeler dans la suite d'un geste utilisateur. */
 	export const initAudio: () => Promise<void>;
 
-	/** Charge une banque de sons, ex. `samples("github:tidalcycles/dirt-samples")`. */
-	export const samples: (source: string) => Promise<void>;
+	/**
+	 * Charge une banque de sons décrite par un `strudel.json`. `baseUrl`, s'il
+	 * est donné, préfixe chaque fichier à la place du `_base` du JSON.
+	 */
+	export const samples: (source: string, baseUrl?: string) => Promise<void>;
 
 	export interface WebaudioRepl {
 		setPattern: (pattern: Pattern, autostart?: boolean) => Promise<Pattern>;

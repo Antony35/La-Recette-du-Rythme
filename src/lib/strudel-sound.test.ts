@@ -3,6 +3,7 @@ import {
 	createPlayer,
 	DEFAULT_DURATION,
 	LEAD_TIME,
+	loadDrumKit,
 	type SoundEngine,
 } from "@/lib/strudel-sound";
 
@@ -90,5 +91,19 @@ describe("createPlayer", () => {
 		await expect(player.play({ s: "bd" })).rejects.toThrow("réseau coupé");
 		await expect(player.play({ s: "bd" })).resolves.toBeUndefined();
 		expect(load).toHaveBeenCalledTimes(2);
+	});
+});
+
+describe("loadDrumKit", () => {
+	it("charge le kit servi par le site, base comprise, avec la barre finale", async () => {
+		const samples = vi.fn(async () => {});
+
+		await loadDrumKit(samples);
+
+		// Sans la barre finale, Strudel collerait le dossier au nom du fichier.
+		expect(samples).toHaveBeenCalledWith(
+			"/samples/uzu-drumkit/strudel.json",
+			"/samples/uzu-drumkit/",
+		);
 	});
 });

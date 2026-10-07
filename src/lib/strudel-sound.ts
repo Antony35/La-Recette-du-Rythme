@@ -20,6 +20,8 @@
  * principe que `withBase()` et sa base en second paramètre.
  */
 
+import { withBase } from "@/lib/url";
+
 /** Ce qu'on demande à Strudel de jouer : `{ s: "bd" }`, `{ note: "c4" }`… */
 export type SoundValue = Record<string, unknown>;
 
@@ -74,8 +76,41 @@ export const createPlayer = (load: () => Promise<SoundEngine>) => {
 	};
 };
 
-/** Banque de sons de batterie, téléchargée au premier clic. */
-export const DRUM_SAMPLES = "github:tidalcycles/dirt-samples";
+/**
+ * Le kit de batterie du cours, copié dans `public/samples/uzu-drumkit/`.
+ *
+ * C'est le kit que le REPL de Strudel charge par défaut pour `s("bd")` : la
+ * carte de la 1.4 et les blocs de code jouent donc le même son. L'ancienne
+ * banque (`tidalcycles/dirt-samples`) n'avait ni `rim`, ni `oh`, ni `rd` — trois
+ * boutons restaient muets, sans la moindre erreur.
+ *
+ * Servi par le site plutôt que par `raw.githubusercontent.com` : plus de
+ * dépendance à un tiers pour les sons de base. Licence Unlicense (domaine
+ * public), copie dans le dossier.
+ */
+const DRUM_KIT = withBase("/samples/uzu-drumkit/");
+
+/** La fonction `samples` de Strudel, réduite à ce qu'on en appelle. */
+export type LoadSamples = (source: string, baseUrl?: string) => Promise<void>;
+
+/**
+ * Enregistre le kit local auprès de Strudel.
+ *
+ * La base est passée en second argument au lieu d'être écrite dans le
+ * `strudel.json` (`_base`) : elle dépend de `base`, donc de la configuration
+ * d'Astro, et passe par `withBase()` comme tout chemin interne. Strudel saurait
+ * la déduire de l'URL du fichier, mais il en retire la barre finale, ce qui
+ * collerait le dossier au nom du son (`uzu-drumkitbd/…`).
+ *
+ * `samples` est reçu en argument, et ce n'est pas que pour les tests : la page
+ * contient **deux copies** de Strudel. `@strudel/repl` est publié déjà
+ * assemblé, avec la sienne ; la console le signale (« @strudel/core was loaded
+ * more than once »). Chaque copie a son propre registre de sons : enregistrer
+ * le kit dans la nôtre ne change rien à ce que joue le REPL. Chaque appelant
+ * passe donc le `samples` de la copie qu'il utilise.
+ */
+export const loadDrumKit = (samples: LoadSamples) =>
+	samples(`${DRUM_KIT}strudel.json`, DRUM_KIT);
 
 const loadStrudel = async (): Promise<SoundEngine> => {
 	// Import dynamique, et pas en tête de fichier : Astro exécuterait celui-ci
@@ -92,7 +127,7 @@ const loadStrudel = async (): Promise<SoundEngine> => {
 	await initAudio();
 	// Sans ça, `s: "triangle"` ne désigne rien et les notes restent muettes.
 	registerSynthSounds();
-	await samples(DRUM_SAMPLES);
+	await loadDrumKit(samples);
 
 	return {
 		now: () => getAudioContext().currentTime,
