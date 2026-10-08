@@ -4,20 +4,53 @@ import { withBase } from "@/lib/url";
 interface Props {
 	title: string;
 	src: string;
+	poster?: string;
 }
 
-const { title, src }: Props = Astro.props;
+const { title, src, poster = "/videos/placeholder.png" }: Props = Astro.props;
 ---
 
-<figure class="not-prose my-10">
+<figure class="video-player not-prose relative my-10">
     <video
         controls
         playsinline
-        preload="metadata"
+        preload="none"
+        poster={withBase(poster)}
         aria-label={title}
-        class="aspect-video w-full rounded-3xl border border-rule bg-night"
+        class="block aspect-video w-full rounded-3xl border border-rule bg-night"
     >
         <source src={withBase(src)} type="video/mp4" />
         <a href={withBase(src)}>Télécharger la vidéo : {title}</a>
     </video>
+    <button
+        type="button"
+        hidden
+        aria-label={`Lire la vidéo : ${title}`}
+        class="absolute inset-0 cursor-pointer rounded-3xl bg-night/20 text-lemon hover:bg-night/30 active:bg-night/40"
+    >
+        <span class="inline-flex h-20 w-20 items-center justify-center rounded-full bg-lemon text-night shadow-lg">
+            <svg viewBox="0 0 24 24" class="h-9 w-9" aria-hidden="true">
+                <path d="M8 4 L20 12 L8 20 Z" fill="currentColor" />
+            </svg>
+        </span>
+    </button>
 </figure>
+
+<script>
+	for (const player of document.querySelectorAll<HTMLElement>(".video-player")) {
+		const video = player.querySelector("video")!;
+		const button = player.querySelector("button")!;
+		video.controls = false;
+		button.hidden = false;
+		button.addEventListener("click", async () => {
+			button.hidden = true;
+			video.controls = true;
+			video.focus();
+			try {
+				await video.play();
+			} catch {
+				// Les contrôles natifs restent accessibles si la lecture échoue.
+			}
+		});
+	}
+</script>
