@@ -1,7 +1,7 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import StrudelRepl from "@/components/StrudelRepl.vue";
-import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+import Video from "@/components/Video.astro";
 import BaseLayout from "@/layouts/BaseLayout.astro";
 import { type buildCourse, flattenCourse } from "@/lib/course";
 import { formatDuration, plural, splitTitle } from "@/lib/format";
@@ -118,10 +118,9 @@ const byLevel = Object.entries(levels).map(([level, meta]) => ({
     </dl>
 
     <div class="mt-16 grid gap-10 lg:grid-cols-2 lg:items-center">
-        <VideoPlaceholder
+        <Video
             title="Présentation du cours"
-            duration="2 min 45"
-            format={'script V2 : ouverture sur s("bd*4") tapé en direct, puis alternance des deux voix et captures de Strudel'}
+            src="/videos/intro-v1.mp4"
         />
 
         <StrudelRepl client:visible label="Essayez tout de suite" code={'s("bd*4")'}>

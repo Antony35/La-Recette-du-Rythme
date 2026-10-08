@@ -1,0 +1,23 @@
+---
+import { withBase } from "@/lib/url";
+
+interface Props {
+	title: string;
+	src: string;
+}
+
+const { title, src }: Props = Astro.props;
+---
+
+<figure class="not-prose my-10">
+    <video
+        controls
+        playsinline
+        preload="metadata"
+        aria-label={title}
+        class="aspect-video w-full rounded-3xl border border-rule bg-night"
+    >
+        <source src={withBase(src)} type="video/mp4" />
+        <a href={withBase(src)}>Télécharger la vidéo : {title}</a>
+    </video>
+</figure>
