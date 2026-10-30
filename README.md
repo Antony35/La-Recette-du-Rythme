@@ -235,7 +235,8 @@ le thème. Tout passe par un jeton de `@theme`.
 `prose` vient de `@tailwindcss/typography`, `prose-cours` ne fait que lui passer
 les couleurs du projet via ses variables `--tw-prose-*`.
 
-**Polices auto-hébergées** dans `public/fonts/`, licences OFL à côté, sans CDN :
+**Polices auto-hébergées** dans `src/assets/fonts/` (licences OFL publiées
+dans `public/fonts/`), sans CDN :
 Manrope (texte, 23 Ko), Archivo condensée noire italique (titres, 12 Ko — figée
 depuis le fichier variable, voir CLAUDE.md), JetBrains Mono (code, 64 Ko).
 SKOLAE utilise Basier Circle et GT Walsheim, commerciales : on prend les

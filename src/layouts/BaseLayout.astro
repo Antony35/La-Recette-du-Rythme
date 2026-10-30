@@ -1,5 +1,7 @@
 ---
 import "@/styles/global.css";
+import archivoUrl from "@/assets/fonts/archivo-condensed-black-italic.woff2?url";
+import manropeUrl from "@/assets/fonts/manrope-variable.woff2?url";
 import { withBase } from "@/lib/url";
 
 interface Props {
@@ -23,10 +25,9 @@ const repository = "https://github.com/Antony35/La-Recette-du-Rythme";
 // précharger évite de voir la police de repli remplacée une seconde plus tard.
 // `crossorigin` est obligatoire sur un préchargement de police, même servie par
 // le même domaine — sans lui, le navigateur télécharge le fichier deux fois.
-const preloadedFonts = [
-	"/fonts/manrope-variable.woff2",
-	"/fonts/archivo-condensed-black-italic.woff2",
-];
+// `?url` rend le chemin final, haché et déjà préfixé par la base : le même que
+// celui des @font-face de global.css. Pas de withBase() dessus.
+const preloadedFonts = [manropeUrl, archivoUrl];
 
 const navigation = [
 	{ label: "Cours", href: withBase("/") },
@@ -47,7 +48,7 @@ const isCurrent = (href: string) => trim(Astro.url.pathname) === trim(href);
         <meta name="generator" content={Astro.generator}/>
         <title>{title}</title>
         {preloadedFonts.map((font) => (
-            <link rel="preload" as="font" type="font/woff2" href={withBase(font)} crossorigin />
+            <link rel="preload" as="font" type="font/woff2" href={font} crossorigin />
         ))}
 
         {/*

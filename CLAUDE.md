@@ -214,8 +214,20 @@ arrondis (`rounded-xl` 0,75 rem, `rounded-3xl` 1,5 rem), boutons en pilule.
 
 #### Polices
 
-Toutes auto-hébergées dans `public/fonts/`, licences OFL à côté, préchargées
-dans `BaseLayout` (`crossorigin` obligatoire, sinon double téléchargement).
+Toutes auto-hébergées dans **`src/assets/fonts/`**, appelées par chemin
+relatif depuis `global.css` (`url("../assets/fonts/…")`), préchargées dans
+`BaseLayout` via un import `?url` (`crossorigin` obligatoire, sinon double
+téléchargement). Les licences OFL restent dans `public/fonts/`, pour être
+publiées avec le site.
+
+**Pas dans `public/`.** Un `url("/fonts/…")` vers `public/` n'était préfixé
+par la base qu'au build : en `pnpm dev`, Astro 7 refusait la requête (« Request
+URLs for public/ assets must also include your base ») et toute la page
+s'affichait dans la police de repli, sans rien de visible en ligne. Un fichier
+de `src/` passe par Vite, qui gère la base dans les deux modes. L'import `?url`
+rend le chemin final, haché et préfixé : pas de `withBase()` dessus. Contrôle
+après build — le `href` du préchargement doit être identique à l'`url()` du
+CSS : `grep -oE 'rel="preload"[^>]*' dist/index.html`.
 
 | Rôle | Police | Poids servi |
 |---|---|---|

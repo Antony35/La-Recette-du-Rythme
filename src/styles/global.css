@@ -2,8 +2,14 @@
 @plugin "@tailwindcss/typography";
 
 /* ---------------------------------------------------------------------------
-   Polices auto-hébergées dans public/fonts/, sans CDN : une requête vers un
-   tiers en moins, et aucune donnée de visiteur envoyée ailleurs.
+   Polices auto-hébergées dans src/assets/fonts/, sans CDN : une requête vers
+   un tiers en moins, et aucune donnée de visiteur envoyée ailleurs.
+
+   Chemins relatifs, et surtout pas dans public/ : Vite traite les fichiers de
+   src/, donc préfixe la base en dev comme au build. Un `url("/fonts/…")` vers
+   public/ n'était préfixé qu'au build — en dev, Astro refusait la requête et
+   la page s'affichait dans la police de repli. Les licences OFL, elles,
+   restent dans public/fonts/ pour être publiées avec le site.
 
    La charte SKOLAE s'appuie sur Basier Circle et GT Walsheim Condensed, deux
    polices commerciales qu'on n'a pas le droit de redistribuer. On prend leurs
@@ -18,7 +24,7 @@
 --------------------------------------------------------------------------- */
 @font-face {
 	font-family: "Manrope";
-	src: url("/fonts/manrope-variable.woff2") format("woff2");
+	src: url("../assets/fonts/manrope-variable.woff2") format("woff2");
 	font-weight: 200 800;
 	font-style: normal;
 	font-display: swap;
@@ -26,7 +32,8 @@
 
 @font-face {
 	font-family: "Archivo Condensed";
-	src: url("/fonts/archivo-condensed-black-italic.woff2") format("woff2");
+	src: url("../assets/fonts/archivo-condensed-black-italic.woff2")
+		format("woff2");
 	font-weight: 900;
 	font-style: italic;
 	font-display: swap;
@@ -35,7 +42,7 @@
 /* JetBrains Mono reste la police du code : c'est un cours de programmation. */
 @font-face {
 	font-family: "JetBrains Mono";
-	src: url("/fonts/jetbrains-mono-regular.woff2") format("woff2");
+	src: url("../assets/fonts/jetbrains-mono-regular.woff2") format("woff2");
 	font-weight: 400;
 	font-style: normal;
 	font-display: swap;
@@ -43,7 +50,7 @@
 
 @font-face {
 	font-family: "JetBrains Mono";
-	src: url("/fonts/jetbrains-mono-bold.woff2") format("woff2");
+	src: url("../assets/fonts/jetbrains-mono-bold.woff2") format("woff2");
 	font-weight: 700;
 	font-style: normal;
 	font-display: swap;
