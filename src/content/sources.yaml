@@ -440,3 +440,14 @@
     Musique de fond de la vidéo 1.2. Pixabay répond 403 aux robots : page
     vérifiée dans un navigateur.
   checkedAt: 2026-11-01
+
+- id: uzu-drumkit
+  title: "uzu-drumkit — sons de batterie"
+  url: "https://github.com/tidalcycles/uzu-drumkit"
+  category: illustrations
+  author: "TidalCycles (Switch Angel, Mot4i, Ludens)"
+  note: >-
+    Domaine public (Unlicense). Copie servie par le site
+    (public/samples/uzu-drumkit) : ce sont les sons de `s("bd")` dans les
+    blocs Strudel, et ceux de la vidéo 1.4.
+  checkedAt: 2026-11-01
