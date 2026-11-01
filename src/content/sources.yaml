@@ -360,3 +360,83 @@
   note: "Relaie la liste de matériel donnée par le duo : TR-909, TR-808, TR-707, LinnDrum."
   checkedAt: 2026-10-07
 
+
+# Vidéo 1.2 — images d'archives, dates de la frise et musique de fond.
+# Chaque crédit d'image est affiché à l'écran pendant que l'image est visible.
+
+- id: illiac-memory-drum-photo
+  title: "Tambour mémoire de l'ILLIAC I — photo"
+  url: "https://commons.wikimedia.org/wiki/File:Illiac_memory_drum_IMG_1108.jpg"
+  category: illustrations
+  author: "Rama, Wikimedia Commons"
+  note: "Licence CC BY-SA 2.0 FR. Vidéo 1.2, passage 1957 ; empreinte SHA-1 vérifiée."
+  checkedAt: 2026-11-01
+
+- id: modular-synthesizers-tokyo-photo
+  title: "Synthétiseurs modulaires — Tokyo Festival of Modular 2014"
+  url: "https://commons.wikimedia.org/wiki/File:Modular_synthesizers_-_Tokyo_Festival_of_Modular_2014_-_Day_2_(2014-06-08).jpg"
+  category: illustrations
+  author: "Kazuhisa Otsubo, Wikimedia Commons"
+  note: "Licence CC BY 2.0. Vidéo 1.2, passage 1964 ; empreinte SHA-1 vérifiée."
+  checkedAt: 2026-11-01
+
+- id: lmms-screenshot
+  title: "LMMS 1.2.1 — capture du logiciel de MAO"
+  url: "https://commons.wikimedia.org/wiki/File:LMMS_1.2.1_Demo.png"
+  category: illustrations
+  author: "Ranged Ranger, Wikimedia Commons"
+  note: "Domaine public (CC0). Vidéo 1.2, passage 1983 ; empreinte SHA-1 vérifiée."
+  checkedAt: 2026-11-01
+
+- id: toplap-mark
+  title: "Logo de TOPLAP"
+  url: "https://commons.wikimedia.org/wiki/File:TOPLAP_mark.svg"
+  category: illustrations
+  author: "Adrian Ward, version vectorielle Yaxu, Wikimedia Commons"
+  note: >-
+    Licence CC BY-SA 4.0. Vidéo 1.2, passage 2004, en couleurs inversées sur
+    fond noir (modification signalée dans le crédit à l'écran).
+  checkedAt: 2026-11-01
+
+- id: anna-xambo-live-coding-photo
+  title: "Anna Xambó en live coding au festival Noiselets, Barcelone"
+  url: "https://commons.wikimedia.org/wiki/File:Anna_Xamb%C3%B3_live_coding_at_the_Noiselets_microfestival_in_Barcelona.jpg"
+  category: illustrations
+  author: "Helena Coll, Wikimedia Commons"
+  note: "Licence CC BY-SA 4.0. Vidéo 1.2, passage 2004 : le code projeté au public ; empreinte SHA-1 vérifiée."
+  checkedAt: 2026-11-01
+
+- id: tidal-code-screenshot
+  title: "Code TidalCycles — capture d'écran"
+  url: "https://commons.wikimedia.org/wiki/File:Tidal_Code_Screenshot.png"
+  category: illustrations
+  author: "Kindohm, Wikimedia Commons"
+  note: "Licence CC BY-SA 4.0. Vidéo 1.2, passage TidalCycles ; empreinte SHA-1 vérifiée."
+  checkedAt: 2026-11-01
+
+- id: wikipedia-moog-synthesizer
+  title: "Moog synthesizer"
+  url: "https://en.wikipedia.org/wiki/Moog_synthesizer"
+  category: articles
+  author: "Wikipédia (anglais)"
+  note: "Date de 1964 (synthétiseur modulaire de Robert Moog), en partie 1.2 et dans sa vidéo."
+  checkedAt: 2026-11-01
+
+- id: wikipedia-mao
+  title: "Musique assistée par ordinateur"
+  url: "https://fr.wikipedia.org/wiki/Musique_assist%C3%A9e_par_ordinateur"
+  category: articles
+  author: "Wikipédia"
+  note: "Date de 1983 (norme MIDI, premiers séquenceurs), en partie 1.2 et dans sa vidéo."
+  checkedAt: 2026-11-01
+
+- id: dopetronic-echoes-from-nowhere
+  title: "Echoes From Nowhere (Original Mix) — musique de fond"
+  url: "https://pixabay.com/music/techno-trance-dopetronic-echoes-from-nowhere-original-mix-gift-track-321994/"
+  category: illustrations
+  author: "Dopetronic, Pixabay"
+  note: >-
+    Licence Pixabay (Pixabay Content License), sans crédit obligatoire.
+    Musique de fond de la vidéo 1.2. Pixabay répond 403 aux robots : page
+    vérifiée dans un navigateur.
+  checkedAt: 2026-11-01

@@ -5,6 +5,10 @@ order: 2
 durationMinutes: 15
 ---
 
+import Video from "@/components/Video.astro";
+
+<Video title="Brève histoire du live coding" src="/videos/histoire-du-live-coding.mp4" />
+
 Écrire du code pour faire de la musique peut sembler récent. Pourtant, les
 ordinateurs participent à la composition depuis les années 1950. Ce qui change
 avec le **live coding**, c'est le moment où l'on programme : on écrit et on
@@ -36,10 +40,13 @@ deux pratiques différentes.
 
 ## Les synthés modulaires — le son en pièces détachées
 
-En parallèle, les **synthétiseurs modulaires** ouvrent une autre piste :
-construire son son en reliant des briques, appelées **modules**. Un oscillateur
-produit un son, un filtre en change la couleur, et d'autres modules font évoluer
-les réglages. Les câbles dessinent le trajet : c'est le **patch**.
+Dans les années 1960, les **synthétiseurs modulaires** ouvrent une autre piste :
+construire son son en reliant des briques, appelées **modules**. Celui de
+Robert Moog, présenté en **1964**, est le premier vendu dans le commerce
+([Wikipédia](https://en.wikipedia.org/wiki/Moog_synthesizer)).
+
+Un oscillateur produit un son, un filtre en change la couleur, et d'autres
+modules font évoluer les réglages. Les câbles dessinent le trajet : c'est le **patch**.
 
 Imaginez une note tenue qui fait « wouaaah » : un signal de commande peut faire
 bouger le filtre à votre place. Les câbles transportent donc du son, mais aussi
@@ -60,6 +67,11 @@ Exemple : vous posez une grosse caisse sur chaque temps, ajoutez une basse,
 puis retirez la batterie pour créer une pause. Le **séquenceur** organise les
 événements dans le temps ; les effets transforment leur son.
 [Le manuel d'Ableton illustre ces bases](https://www.ableton.com/en/manual/live-concepts/).
+
+La MAO se répand dans les années 1980. En **1983**, la norme **MIDI**
+(*Musical Instrument Digital Interface*, interface numérique pour instruments
+de musique) permet à un ordinateur de piloter claviers et boîtes à rythmes
+([Wikipédia](https://fr.wikipedia.org/wiki/Musique_assist%C3%A9e_par_ordinateur)).
 
 Le live coding fait lui aussi partie de la MAO : on y décrit et transforme
 la musique avec du code. Câbles, blocs à l'écran ou lignes de texte : ces
@@ -123,6 +135,23 @@ la manipulation de motifs, et Strudel rend cette approche accessible sur le web.
 
 > Avec vos mots, expliquez la différence entre un programme qui prépare une
 > partition et un programme que l'on modifie pendant un concert.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Une réponse possible : le premier programme travaille **avant** le concert. Il
+fabrique une partition, comme pour l'*Illiac Suite* en 1957, puis des musiciens
+la jouent ; pendant le concert, le programme n'intervient plus.
+
+Le second **est** l'instrument. Il produit la musique en direct, et l'artiste
+change ses instructions pendant que le public écoute : le morceau évolue au fil
+des modifications.
+
+Votre réponse est juste si elle place la différence dans le **moment** où l'on
+programme : avant ou pendant. Elle ne tient pas à l'ordinateur, puisque les deux
+en utilisent un.
+
+</details>
 
 Dans la prochaine partie, vous prendrez en main le **REPL**
 (Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer) : l'espace où vous allez
