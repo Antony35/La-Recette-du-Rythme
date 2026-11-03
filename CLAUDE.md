@@ -417,22 +417,38 @@ Vérifié dans un vrai navigateur (playwright-core + chromium headless) : saut
 recommandé avec musique et MAO à 4/4 et JS à 0/4, séquence 1 recommandée avec
 musique à 0/4, focus sur le titre des résultats, aucune erreur console.
 
-### Vidéos pas encore tournées
+### Vidéos
 
-`components/VideoPlaceholder.astro` occupe exactement la place de la future
-vidéo (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
-format de tournage. Deux emplacements, d'après les scripts de la scénarisation :
+**Une vidéo courte par sous-séance**, placée en tête de la page, juste après les
+imports et avant l'accroche. Il n'y a pas de vidéo de séquence. Le plan complet
+(durées, sous-séances sans vidéo, sujets complexes) est dans
+`scripts-video/PLAN-VIDEOS.md`, et les scripts sont rangés par séquence dans le
+même dossier.
 
-- **Vidéo 1 — Présentation du cours (2 min 45)** : `layouts/Home.astro` ;
-- **Vidéo 2 — Les pré-requis (2 min 30)** : corps de
-  `sequences/prerequis-et-decouverte.mdx`, d'où son extension `.mdx`.
+- **Tournées** : présentation de l'équipe et du cours (`layouts/Home.astro`,
+  `intro-v1.mp4`), prérequis et test de positionnement (1.1, `pre-requis.mp4`),
+  histoire du live coding (1.2, `histoire-du-live-coding.mp4`, 1 min, montée
+  dans Kdenlive : frise et bandeau défilant, crédits à l'écran, musique Pixabay),
+  le REPL (1.3, `le-repl.mp4`, 1 min 30, intro REPL en images puis Strudel à
+  l'écran), notes anglaises et drum kit (1.4,
+  `notes-anglaises-et-drum-kit.mp4`, 1 min 15, lettres une à une et une fiche
+  par son), une gamme complète (1.5, `une-gamme-complete.mp4`, 1 min 30, claviers
+  des hauteurs et des dièses, piano roll sur strudel.cc),
+  via `components/Video.astro`.
+- **À tourner** : `components/VideoPlaceholder.astro` en occupe exactement la
+  place (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
+  format. La séquence 1 n'en a plus ; il servira aux séquences suivantes. Le jour
+  du tournage, on le remplace par `<Video>` au même endroit.
+- **La vidéo montre, elle ne résume pas la page** : le cahier des charges veut
+  un contenu vidéo différent du texte. Seule exception : la 1.2 (histoire,
+  images d'archives).
+- Un composant dans le contenu impose le `.mdx` : la 1.2 est passée de `.md` à
+  `.mdx` pour son emplacement. La page de la séquence 1 est revenue en `.md`,
+  sans corps, comme les autres séquences.
 
-C'est la **version V2 des scripts** (section « V2 SCRIPT VIDEO » de la
-scénarisation) qui fait foi ; les durées n'ont pas changé. L'accroche de
-l'accueil et ses **trois promesses** en sont reprises : ce que la page annonce
-doit être ce que la vidéo annonce.
-
-Le jour du tournage, on remplace le composant par le lecteur au même endroit.
+L'accueil reprend l'accroche et les **trois promesses** de la vidéo de
+présentation (version V2 des scripts de la scénarisation) : ce que la page
+annonce doit être ce que la vidéo annonce.
 
 ### Images
 
@@ -693,7 +709,7 @@ Les trois paquets `@strudel/*` sont du JavaScript sans types. `src/types/strudel
 déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 (`setCps`, `pause`…) suppose de compléter ce fichier, pas de basculer en `any`.
 
-## Écarts connus (état au 2026-10-07)
+## Écarts connus (état au 2026-10-31)
 
 - **Séquences 1 et 2 complètes** (1.1 à 1.5, 2.1 à 2.5), chacune avec son quiz.
   Les six autres séquences ont titre, objectif, niveau, durée et équipement,
@@ -704,18 +720,13 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
   `getAudioContext().resume()` de `StrudelRepl` réveille le contexte de *notre*
   copie, pas forcément celui du REPL. Le son sort quand même ; à vérifier sans
   l'option d'autoplay du navigateur de test avant d'y toucher.
-- **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h),
-  toutes créées avec titre, objectif, niveau, durée et équipement, **sans
-  corps initialement**. Seule la séquence 1 a ses 5 sous-séquences. Les parties
-  **1.1** (test de positionnement), **1.2** (histoire du live coding) et **1.3**
-  (prise en main du REPL) sont rédigées. La 1.3 utilise `le-repl.mdx` pour
-  intégrer `StrudelRepl` avec `client:visible`, un exercice de réévaluation en
-  lecture et une question avec corrigé dépliable. Les références des parties
-  1.2 et 1.3 figurent dans le texte et le catalogue des sources. Les états
-  « à venir » et « contenu en cours de rédaction » restent visibles ailleurs.
-- La collection `quizzes` est **vide** (les anciens quiz portaient sur l'ancien
-  contenu) : `astro build` affiche un avertissement du glob loader, sans effet.
-- **Les deux vidéos ne sont pas tournées** : emplacements « Ici vidéo ».
+- **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h).
+  Les états « à venir » et « contenu en cours de rédaction » restent visibles
+  pour les séquences 4 à 8.
+- **Vidéos de sous-séance** : toute la séquence 1 est tournée ; les séquences
+  suivantes restent à tourner (voir « Vidéos »).
+- **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −23
+  (accueil). Viser −16 LUFS pour les suivantes.
 - Les **niveaux** (1 : S1–S3, 2 : S4–S5, 3 : S6–S8) sont une lecture de la
   vidéo de présentation, pas un découpage écrit dans la scénarisation : à valider.
 - Les références historiques de la scénarisation (Xenakis, George Lewis,
@@ -826,7 +837,8 @@ une divergence d’hydratation. Aucun nouveau tirage lors du choix ou du corrig�
 Une partie sans quiz est normale : la prop est optionnelle côté layout, plutôt
 que d'imposer un fichier vide partout.
 
-Le texte des quiz est **brut, pas du Markdown rendu**. `PartQuiz.vue` découpe sur
+Le texte des quiz est **brut, pas du Markdown rendu** : un `**gras**` s'y
+affiche avec ses astérisques (erreur trouvée dans quatre quiz de S1–S2). `PartQuiz.vue` découpe sur
 les accents graves pour produire des `<code>` — en construisant des nœuds de
 texte, jamais avec `v-html`, donc sans risque d'injection depuis un fichier de
 contenu.
@@ -836,7 +848,7 @@ le corps contient le cours :
 
 ```yaml
 ---
-title: "Le REPL — écrire, évaluer, entendre, recommencer"
+title: "Le REPL — lire, évaluer, afficher, recommencer"
 sequence: "prerequis-et-decouverte"  # id d'une entrée de sequences/
 order: 1
 durationMinutes: 15                  # 15 par défaut

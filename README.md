@@ -316,7 +316,7 @@ Le corps du fichier contient le cours.
 
 ```yaml
 ---
-title: "Le REPL — écrire, évaluer, entendre, recommencer"
+title: "Le REPL — lire, évaluer, afficher, recommencer"
 sequence: "prerequis-et-decouverte"   # identifiant d'une entrée de sequences/, vérifié au build
 order: 1                  # position dans la séquence
 durationMinutes: 15       # 15 par défaut
@@ -356,15 +356,19 @@ rédaction » : on peut poser tout le découpage avant d'écrire.
 
 ## Vidéos
 
-Les vidéos ne sont pas encore tournées. `VideoPlaceholder.astro` en réserve la
+Une vidéo courte par sous-séance, en tête de la page. Le plan et les scripts
+sont dans `scripts-video/` (`PLAN-VIDEOS.md` pour la vue d'ensemble).
+
+Une vidéo tournée passe par `Video.astro` (fichier dans `public/videos/`) ; une
+vidéo à tourner est réservée par `VideoPlaceholder.astro`, qui en occupe la
 place exacte (16/9) avec titre, durée et format de tournage :
 
 ```astro
-<VideoPlaceholder title="Les pré-requis" duration="2 min 30" format="…" />
+<VideoPlaceholder title="Le REPL" duration="2 min" format="…" />
 ```
 
-Emplacements : présentation du cours sur l'accueil, pré-requis sur la page de
-la séquence 1.
+Tournées : présentation du cours (accueil), prérequis (1.1), histoire du
+live coding (1.2), REPL (1.3), notes anglaises (1.4) et gamme (1.5). Toute la séquence 1 est tournée ; les suivantes restent à tourner.
 
 ## Images
 
