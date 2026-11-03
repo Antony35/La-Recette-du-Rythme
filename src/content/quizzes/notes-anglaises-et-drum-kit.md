@@ -40,7 +40,7 @@ questions:
     answer: 0
     explanation: >-
       C'est le piège le plus coûteux du débutant : un code mal orthographié ne
-      déclenche **aucune erreur**. Strudel cherche un son nommé `sdd`, ne le
+      déclenche aucune erreur. Strudel cherche un son nommé `sdd`, ne le
       trouve pas, et laisse simplement un blanc. Devant un silence inattendu, la
       première chose à vérifier est l'orthographe.
 ---

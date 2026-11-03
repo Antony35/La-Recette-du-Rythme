@@ -1,5 +1,5 @@
 ---
-title: "Le REPL (Read, Evaluate, Print, Loop) — écrire, évaluer, entendre, recommencer"
+title: "Le REPL (Read, Evaluate, Print, Loop) — lire, évaluer, afficher, recommencer"
 sequence: "prerequis-et-decouverte"
 order: 3
 durationMinutes: 20
@@ -17,7 +17,8 @@ le faire. Avec une seule ligne de code, vous allez lancer un rythme, le modifier
 et entendre le résultat sans arrêter la lecture.
 
 À la fin de ces **20 minutes**, vous saurez utiliser la boucle de travail de
-tout le cours : **écrire → évaluer → écouter → recommencer**.
+tout le cours : vous **écrivez** du code, Strudel le **lit** et l'**évalue**,
+vous **écoutez** le résultat, puis vous **recommencez**.
 
 ## Comprendre le REPL — 3 min
 
@@ -36,6 +37,14 @@ Le mot *Print* désigne habituellement l'affichage d'un résultat. Pour la
 musique, on parle aussi de *Play* : le résultat se joue.
 [La documentation du REPL Strudel](https://strudel.cc/technical-manual/repl/)
 présente cette adaptation au live coding.
+
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>Le REPL n’est pas une invention de Strudel : c’est un <strong>principe de programmation</strong> né dès <strong>1964</strong> avec le langage <strong>Lisp</strong>. JavaScript a aussi le sien : avec Node.js installé, tapez <code>node</code> dans un terminal, et chaque ligne est lue, évaluée, puis affichée. Strudel garde le principe, mais le résultat ne s’affiche pas : il se joue, en boucle.</p>
+  <a href="https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop">L’histoire du REPL sur Wikipédia ↗</a>
+  <span aria-hidden="true">&nbsp;·&nbsp;</span>
+  <a href="https://nodejs.org/api/repl.html">Le REPL de Node.js ↗</a>
+</aside>
 
 Il y a donc deux boucles : **le motif sonore se répète**, et **vous, vous répétez
 les gestes d'écriture et d'écoute** pour le faire évoluer.
@@ -102,6 +111,26 @@ continu, sans arrêter la lecture entre les étapes.
 > 4. Retrouvez les quatre coups de départ, puis terminez avec Stop.
 >
 > Recommencez jusqu'à pouvoir enchaîner ces gestes sans relire les consignes.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Les quatre versions se succèdent dans l'éditeur, chacune suivie de
+**Ctrl + Entrée** :
+
+```js
+s("bd*4")
+s("bd*2")
+s("bd*8")
+s("bd*4")
+```
+
+Le changement doit s'entendre **au moment où vous réévaluez**, pas quand vous
+tapez : avec `*2`, les coups s'espacent ; avec `*8`, ils se serrent ; le cycle,
+lui, garde la même durée. L'exercice est réussi si la musique ne s'est jamais
+arrêtée avant le Stop final.
+
+</details>
 
 Si vous n'entendez pas le changement, cliquez bien **dans l'éditeur** avant de
 faire Ctrl + Entrée. Si une erreur apparaît, comparez votre ligne avec

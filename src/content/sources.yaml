@@ -33,6 +33,21 @@
   note: "Boucle lire, évaluer, afficher ou jouer, recommencer ; mise à jour des motifs en cours de lecture."
   checkedAt: 2026-09-27
 
+- id: nodejs-repl
+  title: "REPL — Node.js Documentation"
+  url: "https://nodejs.org/api/repl.html"
+  category: documentation
+  note: "Le REPL de JavaScript, lancé par la commande node."
+  checkedAt: 2026-10-31
+
+- id: wikipedia-repl
+  title: "Read–eval–print loop"
+  url: "https://en.wikipedia.org/wiki/Read%E2%80%93eval%E2%80%93print_loop"
+  category: articles
+  author: "Wikipédia (en anglais)"
+  note: "Origine du principe : « READ-EVAL-PRINT cycle » chez L. Peter Deutsch et Edmund Berkeley, Lisp sur PDP-1, 1964."
+  checkedAt: 2026-10-31
+
 - id: strudel-first-notes
   title: "Workshop — First Notes"
   url: "https://strudel.cc/workshop/first-notes/"

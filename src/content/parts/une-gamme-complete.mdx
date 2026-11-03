@@ -8,6 +8,9 @@ durationMinutes: 15
 import CourseTerm from "@/components/CourseTerm.astro";
 import NoteKeyboard from "@/components/NoteKeyboard.vue";
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import Video from "@/components/Video.astro";
+
+<Video title="Une gamme complète" src="/videos/une-gamme-complete.mp4" />
 
 Vous savez écrire le nom d'une note. Reste à savoir ce qu'elle *fait* — et pour
 ça, il faut l'entendre en contexte, pas isolée.
@@ -113,6 +116,29 @@ une gamme. Une mélodie dessinera des allers-retours. On réutilisera ce repère
 >    dure plus longtemps. La durée se partage, elle ne s'additionne pas.
 > 4. **Rejouez votre suite préférée** et notez-la quelque part : elle resservira
 >    en séquence 3, quand on ajoutera une mélodie à une rythmique.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+La gamme inversée :
+
+```js
+note("c4 b a g f e d c")
+```
+
+Pour l'étape 2, tout ordre des sept notes convient, par exemple
+`note("e c g d a f b")`. Ce qui compte : sept noms séparés par des espaces.
+
+Pour l'étape 3, avec trois notes, chacune dure un tiers du cycle :
+
+```js
+note("c e g")
+```
+
+Le cycle n'a pas raccourci. Les notes se partagent la même durée, et chacune en
+reçoit une plus grande part.
+
+</details>
 
 Si rien ne sort, vérifiez que chaque note est bien séparée par un espace et que
 les guillemets encadrent l'ensemble. `note("cdefgab")` ne joue rien : Strudel y

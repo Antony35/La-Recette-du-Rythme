@@ -6,11 +6,3 @@ level: 1
 durationMinutes: 90
 equipment: ["Éditeur strudel.cc", "Casque ou enceintes"]
 ---
-
-import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
-
-<VideoPlaceholder
-	title="Les pré-requis"
-	duration="2 min 30"
-	format="Script V2 : question-réponse entre les deux voix, snippet JS, puis aperçu du QCM (questionnaire à choix multiples) de positionnement"
-/>
