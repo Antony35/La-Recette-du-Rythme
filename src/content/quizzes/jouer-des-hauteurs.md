@@ -14,25 +14,26 @@ questions:
       Avec `s()`, on désigne un son enregistré, comme une grosse caisse. Avec
       `note()`, on désigne une hauteur précise, que Strudel joue avec un synthé
       (`triangle` par défaut).
-  - question: "Dans `note(\"a3 c4\")`, de combien `c4` est-il au-dessus de `a3` ?"
+  - question: "Dans `note(\"b3 c4\")`, de combien `c4` est-il au-dessus de `b3` ?"
     options:
       [
-        "De deux notes seulement : la, si, do",
+        "D'une seule note : si, puis do, deux notes voisines",
         "D'une octave entière",
         "De deux octaves",
         "Il est en dessous de `a3`",
       ]
     answer: 0
     explanation: >-
-      Le chiffre d'octave change sur le do, pas sur le la. `a3`, `b3`, puis
-      `c4` : malgré le changement de chiffre, ce sont trois notes voisines.
-  - question: "Comment jouer `note(\"e4 g4 a4\")` une octave plus haut ?"
+      Le chiffre d'octave change sur le do. `b3` est la dernière note de
+      l'octave 3, `c4` la première de l'octave 4 : malgré le changement de
+      chiffre, elles sont voisines.
+  - question: "Comment jouer `note(\"d4 f4 a4\")` une octave plus haut ?"
     options:
       [
-        "`note(\"e5 g5 a5\")`",
-        "`note(\"f4 a4 b4\")`",
-        "`note(\"e4 g4 a4 e5\")`",
-        "`note(\"e8 g8 a8\")`",
+        "`note(\"d5 f5 a5\")`",
+        "`note(\"e4 g4 b4\")`",
+        "`note(\"d4 f4 a4 d5\")`",
+        "`note(\"d8 f8 a8\")`",
       ]
     answer: 0
     explanation: >-
@@ -50,4 +51,17 @@ questions:
     explanation: >-
       Sans chiffre, `c` équivaut à `c3`. C'est pour ça qu'en séquence 1, il
       fallait écrire `c4` pour refermer la gamme une octave plus haut.
+  - question: "Que change le `~` dans `note(\"d4 ~ e4 ~ f4 ~ a4 ~\")` par rapport à `note(\"d4 e4 f4 a4\")` ?"
+    options:
+      [
+        "Les notes tombent aux mêmes instants, mais deviennent courtes et détachées",
+        "Les notes jouent une octave plus bas",
+        "Le motif dure deux cycles au lieu d'un",
+        "Rien : `~` est ignoré dans `note()`",
+      ]
+    answer: 0
+    explanation: >-
+      `note()` lit la mini-notation comme `s()`. Chaque `~` prend la moitié de
+      la place d'une note : elle commence au même moment, mais s'arrête plus
+      tôt. C'est ce qui donne au pluck ses notes pincées.
 ---

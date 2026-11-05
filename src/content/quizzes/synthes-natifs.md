@@ -13,7 +13,7 @@ questions:
     explanation: >-
       `triangle` est le synthé par défaut. `s()` ne sert qu'à en choisir un
       autre : `sine`, `square` ou `sawtooth`.
-  - question: "Vous écrivez `note(\"a3 c4\").s(\"sinus\")`. Que se passe-t-il ?"
+  - question: "Vous écrivez `note(\"d4 e4\").s(\"sinus\")`. Que se passe-t-il ?"
     options:
       [
         "Rien ne sonne, sans message d'erreur : le nom attendu est `sine`",
@@ -25,7 +25,7 @@ questions:
     explanation: >-
       Les noms de synthés sont en anglais. Strudel cherche un son appelé
       `sinus`, ne le trouve pas et se tait : les notes s'encadrent, mais rien
-      ne sort. C'est le même piège qu'une faute de frappe sur `oh`.
+      ne sort. C'est le même piège que `pc` au lieu de `cp` en 2.5.
   - question: "Quel synthé donne le son le plus brillant et le plus agressif ?"
     options:
       [

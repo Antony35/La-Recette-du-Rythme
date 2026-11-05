@@ -52,12 +52,12 @@ questions :
 
 Avec plusieurs pistes, le surlignage se lit colonne par colonne :
 
-<StrudelRepl client:visible code={'s("bd*2, ~ sd, hh*8")'} label="Trois pistes à l'œil">
+<StrudelRepl client:visible code={'s("bd*4, ~ sd ~ sd, hh*8")'} label="Trois pistes à l'œil">
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
 		Regardez le moment où <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">sd</code>
-		s'encadre : le deuxième coup de grosse caisse tombe au même instant.
-		Deux sons peuvent se renforcer volontairement : leur superposition n'est
-		pas une erreur en soi.
+		s'encadre : un <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">bd</code>
+		s'encadre au même instant, sur les temps 2 et 4. Deux sons peuvent se
+		renforcer volontairement : leur superposition n'est pas une erreur en soi.
 	</p>
 </StrudelRepl>
 
@@ -68,8 +68,8 @@ le bon outil est la **grille** : une ligne par piste, une case par position dans
 le cycle. C'est la représentation des boîtes à rythmes depuis quarante ans, et
 celle qu'on utilise dans ce cours.
 
-<PatternStrip label="grosse caisse" code={'s("bd*2")'} steps={["bd", "~", "bd", "~"]} />
-<PatternStrip label="caisse claire" code={'s("~ sd")'} steps={["~", "~", "sd", "~"]} />
+<PatternStrip label="grosse caisse" code={'s("bd*4")'} steps={["bd", "bd", "bd", "bd"]} />
+<PatternStrip label="caisse claire" code={'s("~ sd ~ sd")'} steps={["~", "sd", "~", "sd"]} />
 <PatternStrip
 	label="charleston"
 	code={'s("hh*8")'}
@@ -95,7 +95,7 @@ Pour essayer, [ouvrez un REPL Strudel vide](https://strudel.cc/#IA%3D%3D),
 collez ce motif, puis cliquez sur **Play** :
 
 ```js
-s("bd*2, ~ sd, hh*8").punchcard()
+s("bd*4, ~ sd ~ sd, hh*8").punchcard()
 ```
 
 Vous y retrouverez exactement la grille ci-dessus, animée.
@@ -117,17 +117,17 @@ Pour combler un trou, on **remplace** le silence ; on ne le supprime pas.
 
 Voici ce que la rythmique doit faire entendre, à chaque cycle :
 
-- l'alternance **« boum, tchak, boum, tchak »** : grosse caisse et caisse
-  claire ne jouent jamais en même temps ;
-- le charleston fermé en continu, huit coups par cycle ;
-- un **charleston ouvert** qui ferme chaque cycle, sur le dernier temps.
+- une **grosse caisse sur chaque temps** ;
+- un **clap** sur les temps 2 et 4 ;
+- le **charleston entre les temps** : il alterne avec la grosse caisse et ne
+  joue jamais en même temps qu'elle.
 
 La version ci-dessous contient **deux erreurs**. Elle se lance sans aucun message :
 c'est à vous de les trouver.
 
 <StrudelRepl
 	client:visible
-	code={'stack(\n  s("bd ~ bd ~"),\n  s("~ sd sd ~"),\n  s("hh*8"),\n  s("~ ~ ~ ohh")\n)'}
+	code={'setcpm(128 / 4)\n\nstack(\n  s("bd*4"),\n  s("~ cp ~ pc"),\n  s("hh ~ hh ~ hh ~ hh ~")\n).bank("RolandTR808")'}
 	label="À réparer : deux erreurs, aucun message"
 />
 
@@ -138,49 +138,49 @@ c'est à vous de les trouver.
 > 2. **Regardez le code** pendant la lecture. Un nom s'encadre-t-il sans que
 >    vous l'entendiez ? Deux noms qui ne devraient pas jouer ensemble
 >    s'encadrent-ils au même instant ?
-> 3. **Dessinez la grille** : une ligne par piste, quatre cases par ligne (pour
->    le charleston fermé, notez simplement qu'il joue partout). Posez-lui les
->    deux questions : deux marques dans la même colonne ? une colonne vide qui
->    ne devrait pas l'être ?
+> 3. **Dessinez la grille** : une ligne par piste, huit cases par ligne (deux
+>    par temps). Posez-lui les deux questions : deux marques dans la même
+>    colonne ? une colonne vide qui ne devrait pas l'être ?
 > 4. **Corrigez une erreur à la fois**, et réévaluez avec **Ctrl + Entrée**
 >    après chacune : vous saurez quel changement a réparé quoi.
-> 5. **Vérifiez** que chaque nom s'encadre et que l'alternance ne s'interrompt plus.
+> 5. **Vérifiez** que chaque nom s'encadre et s'entend, et que le charleston
+>    alterne avec la grosse caisse.
 
 <details>
   <summary>Voir le corrigé</summary>
 
-**Première erreur : la caisse claire est mal placée.** `"~ sd sd ~"` la fait
-jouer sur les cases 2 et **3**. Sur la case 3, elle s'encadre en même temps que
-la deuxième grosse caisse (deux marques dans la même colonne), et la case 4
-reste vide (une colonne vide). On entend « boum, tchak, boum+tchak, rien ».
-La correction est `"~ sd ~ sd"`.
+**Première erreur : le charleston est sur les temps.** `"hh ~ hh ~ hh ~ hh ~"`
+le fait jouer sur la **première** moitié de chaque temps. Il s'encadre en même
+temps que chaque grosse caisse (deux marques dans la même colonne), et les
+cases entre les temps restent vides. On entend un seul bloc par temps, au lieu
+d'une alternance. La correction est `"~ hh ~ hh ~ hh ~ hh"`.
 
-**Seconde erreur : `ohh` n'existe pas.** Le kit connaît `oh`, le charleston
-ouvert, mais pas `ohh`. Strudel n'affiche aucune erreur dans la page, et
-`ohh` s'encadre bien sur le dernier temps : le code le demande. Mais à cet
-instant, on n'entend que le charleston fermé. **Encadré mais muet** : c'est
-le signe d'une faute d'orthographe.
+**Seconde erreur : `pc` n'existe pas.** La TR-808 connaît `cp`, le clap, mais
+pas `pc`. Strudel n'affiche aucune erreur dans la page, et `pc` s'encadre bien
+sur le temps 4 : le code le demande. Mais à cet instant, on n'entend que la
+grosse caisse. **Encadré mais muet** : c'est le signe d'une faute de frappe.
 
 ```js
+setcpm(128 / 4)
+
 stack(
-  s("bd ~ bd ~"),
-  s("~ sd ~ sd"),
-  s("hh*8"),
-  s("~ ~ ~ oh")
-)
+  s("bd*4"),
+  s("~ cp ~ cp"),
+  s("~ hh ~ hh ~ hh ~ hh")
+).bank("RolandTR808")
 ```
 
-<PatternStrip label="grosse caisse" steps={["bd", "~", "bd", "~"]} />
-<PatternStrip label="caisse claire" steps={["~", "sd", "~", "sd"]} />
-<PatternStrip label="charleston ouvert" steps={["~", "~", "~", "oh"]} />
+<PatternStrip label="grosse caisse" steps={["bd", "~", "bd", "~", "bd", "~", "bd", "~"]} />
+<PatternStrip label="clap" steps={["~", "~", "cp", "~", "~", "~", "cp", "~"]} />
+<PatternStrip label="charleston" steps={["~", "hh", "~", "hh", "~", "hh", "~", "hh"]} />
 
-Les deux erreurs ne se trouvent pas de la même façon. La caisse claire mal
-placée **s'entend**, et la grille dit où. Le nom mal écrit, lui, ne se trouve
+Les deux erreurs ne se trouvent pas de la même façon. Le charleston mal placé
+**s'entend**, et la grille dit où. Le nom mal écrit, lui, ne se trouve
 qu'en **croisant** les deux : l'œil voit l'encadrement, l'oreille n'entend
 rien.
 
 </details>
 
-C'est la fin de la séquence 2. Vous avez une rythmique à plusieurs pistes, un
-kit choisi, et une méthode pour vérifier ce que vous écrivez. La séquence 3
+C'est la fin de la séquence 2. Vous avez la batterie du morceau, à 128 BPM sur
+une TR-808, et une méthode pour vérifier ce que vous écrivez. La séquence 3
 reprend ce motif tel quel et lui ajoute une mélodie.

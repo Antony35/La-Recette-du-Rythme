@@ -16,12 +16,13 @@ comme ça : la grosse caisse, la caisse claire et le charleston tournent **en m�
 temps**, chacune avec sa propre régularité.
 
 À la fin de ces **20 minutes**, vous aurez trois pistes qui tournent en
-parallèle, et vous saurez en modifier une sans toucher aux autres.
+parallèle, au tempo de votre choix, et vous aurez écrit la batterie du morceau
+que vous terminerez en séquence 3.
 
 ## Pourquoi empiler plutôt qu'enchaîner
 
 Essayez de décrire une batterie en une seule ligne et vous verrez le problème :
-le charleston joue huit fois pendant que la grosse caisse joue deux fois. Tout
+le charleston joue huit fois pendant que la grosse caisse joue quatre fois. Tout
 caser dans une même séquence oblige à calculer des subdivisions dans sa tête,
 et le moindre changement force à tout réécrire.
 
@@ -29,8 +30,8 @@ Avec des pistes séparées, chaque instrument garde **sa propre lecture du cycle
 Changer le charleston ne déplace plus la caisse claire. C'est la différence
 entre un rythme qu'on bricole et un rythme qu'on travaille.
 
-<PatternStrip label="grosse caisse" code={'s("bd*2")'} steps={["bd", "bd"]} />
-<PatternStrip label="caisse claire" code={'s("~ sd")'} steps={["~", "sd"]} />
+<PatternStrip label="grosse caisse" code={'s("bd*4")'} steps={["bd", "bd", "bd", "bd"]} />
+<PatternStrip label="caisse claire" code={'s("~ sd ~ sd")'} steps={["~", "sd", "~", "sd"]} />
 <PatternStrip
 	label="charleston"
 	code={'s("hh*8")'}
@@ -47,20 +48,25 @@ simultanément.
 
 <StrudelRepl
 	client:visible
-	code={'s("bd*2, ~ sd, hh*8")'}
+	code={'s("bd*4, ~ sd ~ sd, hh*8")'}
 	label="Trois pistes en parallèle"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
-		Une seule ligne, trois couches. Modifiez le
+		Une seule ligne, trois couches. Remplacez le
 		<code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">8</code>
-		du charleston et réévaluez : la grosse caisse et la caisse claire ne
-		bougent pas d'un pouce.
+		du charleston par <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">16</code>
+		et réévaluez : la grosse caisse et la caisse claire ne bougent pas d'un
+		pouce.
 	</p>
 </StrudelRepl>
 
-C'est ici que le `~` prend tout son sens. `"~ sd"` ne veut pas dire « un silence
-puis une caisse claire » au sens d'une attente : ça veut dire **la caisse claire
-tombe sur la seconde moitié du cycle**. Le silence sert à *placer*.
+Une grosse caisse sur chaque temps, la caisse claire sur les temps 2 et 4 :
+c'est le squelette de la **techno**. Pour donner de l'énergie, elle ne change
+pas de temps, elle serre le charleston : `*8`, puis `*16`.
+
+C'est ici que le `~` prend tout son sens. `"~ sd ~ sd"` ne veut pas dire
+« attendre, puis jouer » : ça veut dire **la caisse claire tombe sur les temps
+2 et 4**. Le silence sert à *placer*.
 
 ## La même chose, en plus lisible
 
@@ -69,8 +75,8 @@ prend les mêmes motifs, mais comme arguments séparés :
 
 ```js
 stack(
-  s("bd*2"),
-  s("~ sd"),
+  s("bd*4"),
+  s("~ sd ~ sd"),
   s("hh*8")
 )
 ```
@@ -82,7 +88,7 @@ fonctions** — par exemple un kit différent :
 
 <StrudelRepl
 	client:visible
-	code={'stack(\n  s("bd*2").bank("RolandTR909"),\n  s("~ sd").bank("RolandTR808"),\n  s("hh*8").bank("RolandTR909")\n)'}
+	code={'stack(\n  s("bd*4").bank("RolandTR909"),\n  s("~ sd ~ sd").bank("RolandTR808"),\n  s("hh*8").bank("RolandTR909")\n)'}
 	label="Une caisse claire venue d'ailleurs"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
@@ -93,49 +99,114 @@ fonctions** — par exemple un kit différent :
 	</p>
 </StrudelRepl>
 
+À l'inverse, un `.bank()` posé **après** `stack()` s'applique à toutes les
+pistes d'un coup. C'est ce qu'on fera pour jouer toute la batterie sur une
+seule machine.
+
+## Le tempo : `setcpm()`
+
+Le tempo se mesure en **BPM** (*beats per minute*, battements par minute) :
+le nombre de **temps** joués en une minute. À 120 BPM, on compte 120 temps
+par minute, soit deux par seconde.
+
+Strudel, lui, ne compte pas des temps mais des **cycles**. Par défaut, il en
+joue un toutes les deux secondes : 30 cycles par minute.
+
+Pour passer de l'un à l'autre, il suffit de savoir combien de temps tient un
+cycle. Dans ce cours, toujours **quatre** : `s("bd*4")` place une grosse caisse
+sur chacun.
+
+| | Cycles par minute | Temps par cycle | BPM |
+|---|---|---|---|
+| Par défaut | 30 | 4 | 30 × 4 = **120** |
+| Le morceau | 128 ÷ 4 = **32** | 4 | **128** |
+
+Pour changer de tempo, on écrit `setcpm()` (*set cycles per minute*, régler
+les cycles par minute) **en première ligne**, avant le motif. Elle attend des
+cycles, pas des BPM : on lui donne le tempo voulu, divisé par quatre.
+
+```js
+setcpm(128 / 4)   // 128 BPM, soit 32 cycles par minute
+```
+
+`setcpm(32)` donnerait le même résultat. Laisser la division écrite garde le
+tempo lisible : on voit « 128 » au premier coup d'œil.
+
+Le motif, lui, ne change pas : les coups restent dans les mêmes cases. C'est
+le cycle entier qui raccourcit, de 2 secondes à 1,875 seconde.
+La [documentation de Strudel sur les cycles](https://strudel.cc/understand/cycles/)
+détaille ce calcul.
+
+## La batterie du morceau
+
+Tout est là pour écrire la batterie du morceau de la séquence 3. Elle tourne
+à **128 BPM**, sur une **TR-808**, avec deux changements par rapport au
+squelette :
+
+- la caisse claire laisse sa place au **clap**, `cp`, un claquement de mains de
+  boîte à rythmes, sur les mêmes temps 2 et 4 ;
+- le charleston joue **entre les temps**, comme en partie 2.2 : il alterne
+  avec la grosse caisse au lieu de tomber avec elle.
+
+Voici ce qu'elle doit faire entendre, sur huit cases (deux par temps) :
+
+<PatternStrip label="grosse caisse" steps={["bd", "~", "bd", "~", "bd", "~", "bd", "~"]} />
+<PatternStrip label="clap" steps={["~", "~", "cp", "~", "~", "~", "cp", "~"]} />
+<PatternStrip label="charleston" steps={["~", "hh", "~", "hh", "~", "hh", "~", "hh"]} />
+
+C'est à vous de l'écrire, dans l'exercice ci-dessous.
+
 ## À vous
 
-> Partez de `s("bd*2, ~ sd, hh*8")` et construisez **votre** rythmique.
+<StrudelRepl client:visible code={'s("bd*4, ~ sd ~ sd, hh*8")'} label="Votre batterie, étape par étape" />
+
+> Partez de `s("bd*4, ~ sd ~ sd, hh*8")` et faites-le évoluer **sans arrêter
+> la lecture**.
 >
-> 1. Faites varier la densité du charleston : `*4`, `*8`, `*16`. Choisissez.
-> 2. Déplacez la caisse claire : `"~ sd"`, puis `"~ ~ sd ~"`, puis
->    `"~ sd ~ sd"`. Écoutez ce que chaque placement raconte.
-> 3. Ajoutez une **quatrième piste** avec un son que vous n'avez pas encore
->    utilisé — `cp`, `oh` ou `rim`. Gardez-la discrète : une couche qui sonne
->    tout le temps sature le rythme.
-> 4. Passez en `stack()` et donnez un kit différent à une seule des pistes.
-> 5. **Gardez ce motif.** C'est la rythmique que la séquence 3 reprendra pour y
->    poser une mélodie.
+> 1. Faites varier la densité du charleston : `*4`, `*8`, `*16`. Puis essayez
+>    `"~ hh ~ hh ~ hh ~ hh"` et écoutez la différence avec `*4`.
+> 2. Remplacez la caisse claire par un clap : `sd` devient `cp`.
+> 3. Passez en `stack()`, une piste par ligne, et donnez un kit différent à une
+>    seule des pistes.
+> 4. Ajoutez `setcpm()` en première ligne. Essayez `120 / 4`, `128 / 4`, puis
+>    `135 / 4`.
+> 5. **Terminez sur la batterie du morceau** : clap, charleston entre les
+>    temps, tout en TR-808, à 128 BPM. C'est d'elle que repart la séquence 3.
 
 <details>
   <summary>Voir le corrigé</summary>
 
-Pour l'étape 2, écoutez bien : `"~ sd"` et `"~ ~ sd ~"` **sonnent pareil**.
-Dans les deux cas, la caisse claire tombe au milieu du cycle, en même temps que
-le second coup de grosse caisse. Écrire un motif autrement ne change pas
-forcément l'endroit où tombent les sons.
+À l'étape 1, `hh*4` et `"~ hh ~ hh ~ hh ~ hh"` jouent le même nombre de coups.
+Mais le premier tombe **avec** la grosse caisse, le second **entre** ses coups :
+le rythme se met à rebondir.
 
-`"~ sd ~ sd"`, lui, place la caisse claire **entre** les grosses caisses :
-grosse caisse, caisse claire, grosse caisse, caisse claire. C'est l'alternance
-de très nombreux morceaux de pop et de rock.
-
-Une rythmique possible pour les étapes 3 et 4, avec un charleston ouvert discret
-en fin de cycle et une caisse claire de 808 :
+À l'étape 3, avec une caisse claire de 808 et le reste en kit par défaut :
 
 ```js
 stack(
-  s("bd*2"),
+  s("bd*4"),
   s("~ sd ~ sd").bank("RolandTR808"),
-  s("hh*8"),
-  s("~ ~ ~ oh")
+  s("hh*8")
 )
 ```
 
-Seule la caisse claire porte un `.bank()` : les trois autres pistes gardent le
-kit par défaut.
+À l'étape 4, le motif ne change pas, seul le tempo change : les coups restent
+aux mêmes places dans le cycle, le cycle passe juste plus vite.
+
+À l'étape 5, la batterie du morceau :
+
+```js
+setcpm(128 / 4)
+
+stack(
+  s("bd*4"),
+  s("~ cp ~ cp"),
+  s("~ hh ~ hh ~ hh ~ hh")
+).bank("RolandTR808")
+```
 
 </details>
 
-Une virgule oubliée ne provoque pas d'erreur : `s("bd*2 ~ sd")` reste un motif
+Une virgule oubliée ne provoque pas d'erreur : `s("bd*4 ~ sd")` reste un motif
 valide, simplement les sons s'enchaînent au lieu de se superposer. Si votre
 rythme s'est « aplati », comptez vos virgules avant de chercher ailleurs.

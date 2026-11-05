@@ -38,12 +38,12 @@ On accroche `.bank()` à la fin du motif, avec le nom de la machine :
 
 <StrudelRepl
 	client:visible
-	code={'s("bd hh sd hh").bank("RolandTR909")'}
-	label="Le même rythme, en 909"
+	code={'s("bd hh sd hh").bank("RolandTR808")'}
+	label="Le même rythme, en 808"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
-		Remplacez <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">RolandTR909</code>
-		par <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">RolandTR808</code>,
+		Remplacez <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">RolandTR808</code>
+		par <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">RolandTR909</code>,
 		puis par <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">LinnDrum</code>,
 		en réévaluant à chaque fois. Le code ne change pas, la musique si.
 	</p>
@@ -105,7 +105,9 @@ de gauche : `RolandTR909`, pas `Roland TR-909`.
 
 ## À vous
 
-> Reprenez le bloc ci-dessus avec **votre** motif de la partie 2.2.
+<StrudelRepl client:visible code={'s("bd hh*2 sd hh*2")'} label="Votre motif, kit par kit" />
+
+> Remplacez le code du bloc par **votre** motif de la partie 2.2.
 >
 > 1. Jouez-le sans `.bank()` et écoutez-le une fois. C'est votre référence.
 > 2. Ajoutez `.bank("RolandTR808")`, réévaluez, laissez tourner deux ou trois
@@ -114,8 +116,8 @@ de gauche : `RolandTR909`, pas `Roland TR-909`.
 >    se juge sur plusieurs tours, pas sur un coup.
 > 4. Essayez une machine de la liste des 73 qui ne figure pas dans le tableau
 >    ci-dessus. Si un son disparaît, vous savez maintenant pourquoi.
-> 5. **Choisissez le kit que vous préférez et gardez-le.** Il accompagnera votre
->    rythmique jusqu'à la fin de la séquence 3.
+> 5. **Revenez à la TR-808.** C'est la machine du morceau que vous terminerez
+>    en séquence 3 : sa grosse caisse longue et son clap sec en sont la base.
 
 <details>
   <summary>Voir le corrigé</summary>
@@ -133,8 +135,10 @@ grosse caisse longue et grave ; la 909, des charlestons plus métalliques ; la
 LinnDrum, des sons proches d'une vraie batterie.
 
 À l'étape 4, si un son disparaît, la mini-notation n'y est pour rien : cette
-machine n'a simplement pas d'échantillon pour ce code. Il n'y a pas de bon kit
-à l'étape 5 ; gardez celui qui vous plaît.
+machine n'a simplement pas d'échantillon pour ce code. Il n'y a pas de meilleur
+kit dans l'absolu : la TR-808 de l'étape 5 est simplement celle du morceau de la
+séquence 3. Vos essais avec les autres machines resteront utiles pour varier
+plus tard.
 
 </details>
 

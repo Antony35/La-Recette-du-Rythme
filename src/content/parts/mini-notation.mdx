@@ -46,11 +46,11 @@ plus vite, mais n'empiète pas sur ses voisins.
 	code={'s("bd hh*2 sd hh*2")'}
 	steps={["bd", ["hh", "hh"], "sd", ["hh", "hh"]]}
 >
-	Le charleston est joué deux fois dans le même quart. Les trois autres cases
-	n'ont pas bougé.
+	Chaque charleston est joué deux fois dans son propre quart. La grosse caisse
+	et la caisse claire n'ont pas bougé.
 </PatternStrip>
 
-<StrudelRepl client:visible code={'s("bd hh*2 sd hh*2")'} label="Doubler le charleston">
+<StrudelRepl client:visible code={'s("bd hh*2 sd hh*2")'} label="Doubler les charlestons">
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
 		Essayez <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">hh*4</code>,
 		puis <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">hh*8</code>.
@@ -82,6 +82,28 @@ silencieux, qui prend sa part du cycle comme les autres. On peut aussi écrire
 	</p>
 </StrudelRepl>
 
+Le silence sert aussi à **placer** un son. Avec huit cases, chaque temps est
+coupé en deux : un `~` sur la première moitié, et le charleston tombe
+**entre** les temps.
+
+<PatternStrip
+	code={'s("~ hh ~ hh ~ hh ~ hh")'}
+	steps={["~", "hh", "~", "hh", "~", "hh", "~", "hh"]}
+>
+	Huit cases, quatre coups : le charleston joue sur la seconde moitié de
+	chaque temps.
+</PatternStrip>
+
+<StrudelRepl client:visible code={'s("~ hh ~ hh ~ hh ~ hh")'} label="Le charleston entre les temps">
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Seul, on l'entend comme un simple
+		<code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">hh*4</code> :
+		rien n'indique encore où sont les temps. La différence s'entendra en partie 2.4, quand une grosse caisse jouera
+		sur chaque temps : les deux sons alterneront au lieu de tomber ensemble.
+		C'est le charleston de la techno.
+	</p>
+</StrudelRepl>
+
 Le silence est un outil de composition, pas un trou. Un rythme où tout sonne est
 fatigant ; c'est souvent en retirant qu'on l'améliore.
 
@@ -109,8 +131,8 @@ recense tous les symboles ; on y reviendra au fil du cours.
 > Partez du motif à quatre temps et transformez-le **sans jamais arrêter la
 > lecture**.
 >
-> 1. Doublez le charleston avec `*2`, puis quadruplez-le. Arrêtez-vous à la
->    densité qui vous plaît.
+> 1. Doublez les deux charlestons avec `*2`, puis quadruplez-les. Arrêtez-vous
+>    à la densité qui vous plaît.
 > 2. Remplacez un des quatre événements par un `~`. Écoutez le vide qui apparaît.
 > 3. Déplacez ce silence : mettez-le avant la caisse claire, puis après.
 > 4. Faites tenir deux sons dans une seule case avec `[ ]`.
@@ -120,7 +142,7 @@ recense tous les symboles ; on y reviendra au fil du cours.
 <details>
   <summary>Voir le corrigé</summary>
 
-Le charleston doublé, puis quadruplé :
+Les deux charlestons doublés, puis quadruplés :
 
 ```js
 s("bd hh*2 sd hh*2")

@@ -25,10 +25,14 @@
 	},
 	"accord": {
 		"label": "accord",
-		"definition": "Plusieurs notes jouées en même temps. Dans Strudel, elles s’écrivent entre crochets, séparées par des virgules : [a2,c3,e3]."
+		"definition": "Plusieurs notes jouées en même temps. Dans Strudel, elles s’écrivent entre crochets, séparées par des virgules : [d4,f4,a4]."
 	},
 	"pad": {
 		"label": "pad",
 		"definition": "Nappe d’accords tenus, jouée doucement en fond. Elle remplit l’espace entre les sons courts de la batterie."
+	},
+	"pluck": {
+		"label": "pluck",
+		"definition": "De l’anglais to pluck, pincer : une ligne de notes courtes et détachées, comme une corde pincée, qui rebondit par-dessus la batterie."
 	}
 }

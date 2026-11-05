@@ -15,8 +15,8 @@ Une grosse caisse fait « boum », mais on ne peut pas la chanter. Une note, si 
 elle a une **hauteur**. C'est ce qui sépare un rythme d'une mélodie.
 
 À la fin de ces **20 minutes**, vous saurez écrire une suite de notes dans
-l'octave de votre choix, et la déplacer d'une octave entière, vers l'aigu ou
-vers le grave.
+l'octave de votre choix, la déplacer d'une octave entière, et vous aurez écrit
+la première ligne mélodique du morceau.
 
 ## Pourquoi passer à `note()`
 
@@ -29,7 +29,7 @@ note : il dit dans quel registre la jouer.
 
 ## Le chiffre, c'est l'octave
 
-<StrudelRepl client:visible code={'note("a3 c4 e4 g4")'} label="Quatre notes qui montent" />
+<StrudelRepl client:visible code={'note("d4 e4 f4 a4")'} label="Quatre notes qui montent" />
 
 Le chiffre désigne l'<CourseTerm term="octave" /> : `c3` est un do grave,
 `c4` le do au-dessus, `c5` encore au-dessus. Sans chiffre, Strudel joue dans
@@ -42,9 +42,9 @@ l'octave 3, comme en séquence 1.
 |---|---|---|---|---|---|---|---|
 | `c3` | `d3` | `e3` | `f3` | `g3` | `a3` | `b3` | `c4` … |
 
-Dans le bloc ci-dessus, `a3 c4` ne saute donc pas d'une octave : `c4` n'est
-que **deux notes** au-dessus de `a3` : la, si, do. La suite monte doucement, sans grand
-écart.
+Les quatre notes du bloc ci-dessus sont toutes dans l'octave 4 : ré, mi, fa,
+la. Mais `b3 c4` ne saute pas d'une octave : ce sont deux notes **voisines**,
+si puis do, même si le chiffre change entre elles.
 
 ## Déplacer une mélodie d'une octave
 
@@ -52,22 +52,37 @@ Pour jouer la **même** mélodie plus aiguë, ajoutez 1 à chaque chiffre. Pour 
 jouer plus grave, retirez 1. Les lettres ne changent pas.
 
 ```js
-note("a3 c4 e4 g4")   // la mélodie de départ
-note("a4 c5 e5 g5")   // une octave plus haut
-note("a2 c3 e3 g3")   // une octave plus bas
+note("d4 e4 f4 a4")   // la mélodie de départ
+note("d5 e5 f5 a5")   // une octave plus haut
+note("d3 e3 f3 a3")   // une octave plus bas
 ```
 
 Vous entendez la même ligne, mais d'une autre couleur : plus légère dans
 l'aigu, plus sombre dans le grave. C'est ce qu'on appelle **transposer**.
 
 Pour les touches noires du piano, ajoutez `#` (dièse) ou `b` (bémol) après la
-lettre : `c#4` est un peu plus haut que `c4`, `eb3` un peu plus bas que `e3`.
-Cette séquence n'en a pas besoin : la gamme choisie en 3.4 n'utilise que des
-touches blanches.
+lettre : `c#4` est un peu plus haut que `c4`, `bb4` un peu plus bas que `b4`.
+Le morceau en utilise une, `bb4` (si bémol) : en 3.4, une autre écriture
+nous évitera de la noter.
+
+## Placer les notes dans le temps
+
+`note()` lit la mini-notation, exactement comme `s()` : l'espace, `~`, `*` et
+les crochets fonctionnent de la même façon. Un `~` après chaque note lui prend
+la moitié de sa place : la note devient **courte et détachée**, un silence la
+sépare de la suivante.
+
+<StrudelRepl client:visible code={'note("d4 ~ e4 ~ f4 ~ a4 ~")'} label="Quatre notes détachées" />
+
+C'est la première ligne mélodique du morceau, et elle a un nom : un **pluck**,
+de l'anglais *to pluck*, pincer. Des notes courtes, pincées comme une corde,
+qui rebondissent par-dessus la batterie.
 
 ## À vous
 
-> Dans le bloc « Quatre notes qui montent », gardez la lecture en cours :
+<StrudelRepl client:visible code={'note("d4 e4 f4 a4")'} label="Vos quatre notes" />
+
+> Dans le bloc ci-dessus, gardez la lecture en cours :
 >
 > 1. **Écrivez votre suite** de quatre notes, toutes dans l'octave 4. Elle peut
 >    monter, descendre ou faire des allers-retours.
@@ -77,16 +92,18 @@ touches blanches.
 >    caractère change dans le grave.
 > 4. **Ajoutez une note qui passe d'une octave à l'autre**, par exemple `b3`
 >    puis `c4`, et vérifiez à l'oreille que l'écart reste petit.
+> 5. **Revenez au pluck** `note("d4 ~ e4 ~ f4 ~ a4 ~")` et gardez-le : la
+>    3.3 lui choisit un son.
 
 <details>
   <summary>Voir le corrigé</summary>
 
-Avec, par exemple, la suite `e4 g4 a4 g4` :
+Avec, par exemple, la suite `a4 f4 e4 d4` :
 
 ```js
-note("e4 g4 a4 g4")   // étape 1
-note("e5 g5 a5 g5")   // étape 2 : une octave plus haut
-note("e3 g3 a3 g3")   // étape 3 : deux octaves sous l'étape 2
+note("a4 f4 e4 d4")   // étape 1
+note("a5 f5 e5 d5")   // étape 2 : une octave plus haut
+note("a3 f3 e3 d3")   // étape 3 : deux octaves sous l'étape 2
 ```
 
 Seuls les chiffres changent, et **tous** d'autant. Si une seule note garde son

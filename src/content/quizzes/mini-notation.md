@@ -29,6 +29,20 @@ questions:
       sonner les mêmes coups aux mêmes instants, mais le premier garde quatre
       cases, donc de la place pour y poser autre chose. Le silence est une place
       réservée.
+  - question: "Dans `s(\"~ hh ~ hh ~ hh ~ hh\")`, où tombe le charleston ?"
+    options:
+      [
+        "Entre les temps : chaque temps est coupé en deux cases, et le charleston joue sur la seconde",
+        "Sur chaque temps, comme une grosse caisse",
+        "Sur les temps 2 et 4 seulement",
+        "Nulle part : un motif qui commence par `~` ne joue pas",
+      ]
+    answer: 0
+    explanation: >-
+      Huit cases dans un cycle de quatre temps, c'est deux cases par temps. Le
+      `~` occupe la première, le charleston la seconde : il tombe toujours entre
+      deux temps. Sous une grosse caisse sur chaque temps, les deux sons
+      alternent au lieu de se superposer.
   - question: "Vous ajoutez un son dans un motif. Que devient la durée du cycle ?"
     options:
       [

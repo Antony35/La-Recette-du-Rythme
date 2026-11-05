@@ -26,7 +26,8 @@ questions:
     answer: 0
     explanation: >-
       Superposer deux sons peut renforcer un accent : dans le bloc « Trois
-      pistes à l'œil », la caisse claire tombe avec la deuxième grosse caisse.
+      pistes à l'œil », la caisse claire tombe avec la grosse caisse sur les
+      temps 2 et 4.
       L'encadrement montre leur simultanéité ; c'est le résultat recherché qui
       permet de dire si leur placement convient.
   - question: "Les deux questions à se poser devant la grille d'un cycle sont…"

@@ -16,8 +16,8 @@ une façon d'écrire où **aucune note ne peut sonner faux** : on ne choisit plu
 les notes, on choisit leur numéro dans une gamme.
 
 À la fin de ces **20 minutes**, vous saurez improviser une mélodie en ne
-changeant que des numéros, et changer l'ambiance d'un morceau en changeant un
-seul mot.
+changeant que des numéros, changer l'ambiance d'un morceau en changeant un
+seul mot, et vous aurez écrit le pluck complet du morceau.
 
 ## Pourquoi une gamme évite les fausses notes
 
@@ -32,31 +32,46 @@ Strudel fait ce tri à votre place. Vous donnez des **numéros** avec `n()`, et
 
 <StrudelRepl
 	client:visible
-	code={'n("0 1 2 3 4 5 6 7").scale("A:minor")'}
-	label="La gamme de la mineur, numéro par numéro"
+	code={'n("0 1 2 3 4 5 6 7").scale("D:minor")'}
+	label="La gamme de ré mineur, numéro par numéro"
 />
 
-`"A:minor"` signifie **gamme de la mineur** : la tonalité de ce morceau.
+`"D:minor"` signifie **gamme de ré mineur** : la tonalité du morceau.
 Les numéros se lisent comme des marches :
 
 | `n` | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
 |---|---|---|---|---|---|---|---|---|
-| note jouée | la | si | do | ré | mi | fa | sol | la (aigu) |
+| note jouée | ré | mi | fa | sol | la | si bémol | do | ré (aigu) |
 
-- **0 est la note de départ** de la gamme, celle qui lui donne son nom : la.
+- **0 est la note de départ** de la gamme, celle qui lui donne son nom : ré.
 - **7 revient à la même note, une octave plus haut** : une gamme a sept notes,
   la huitième marche recommence le cycle.
 - **Les numéros négatifs descendent** sous la note de départ : `-1` joue le
-  sol juste en dessous.
+  do juste en dessous.
 
-Strudel joue la gamme dans l'octave 3. Pour une mélodie plus aiguë, ajoutez
-l'octave au nom : `"A4:minor"`.
+Le si bémol de la 3.2 est là, au numéro 5 : avec une gamme, plus besoin de
+savoir l'écrire. Strudel joue la gamme dans l'octave 3. Pour une mélodie plus
+aiguë, ajoutez l'octave au nom : `"D4:minor"`.
+
+## Le pluck en numéros
+
+Le pluck de la 3.2, `d4 ~ e4 ~ f4 ~ a4 ~`, se lit dans la gamme : ré, mi, fa,
+la, c'est-à-dire les marches **0, 1, 2 et 4**.
+
+<StrudelRepl
+	client:visible
+	code={'n("0 ~ 1 ~ 2 ~ 4 ~")\n  .scale("D4:minor")\n  .s("sawtooth")'}
+	label="Le pluck, écrit en numéros"
+/>
+
+Mêmes notes, même son : seule l'écriture a changé. Mais les numéros vont
+permettre d'improviser sans fausse note.
 
 ## Improviser sans risque
 
 <StrudelRepl
 	client:visible
-	code={'n("0 2 4 2 3 2 1 ~")\n  .scale("A4:minor")\n  .s("square")'}
+	code={'n("0 2 4 2 3 2 1 ~")\n  .scale("D4:minor")\n  .s("sawtooth")'}
 	label="Une mélodie en numéros"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
@@ -76,7 +91,7 @@ Remplacez `minor` par `major` dans le bloc précédent, sans toucher aux
 numéros. La même mélodie devient plus lumineuse : la **gamme majeure** sonne
 plus gaie, la **gamme mineure** plus sombre ou plus mélancolique.
 
-Une troisième gamme est très pratique pour débuter : `"A4:minor:pentatonic"`,
+Une troisième gamme est très pratique pour débuter : `"D4:minor:pentatonic"`,
 la **pentatonique**. Elle n'a que cinq notes, et toutes vont bien ensemble,
 même jouées en même temps. Avec elle, l'index 5 revient déjà à la note de
 départ, une octave plus haut.
@@ -84,19 +99,43 @@ départ, une octave plus haut.
 La [documentation des fonctions de gamme de Strudel](https://strudel.cc/learn/tonal/)
 liste tous les noms de gammes disponibles.
 
+## Le pluck complet : une question, une réponse
+
+Le pluck du morceau dure **deux cycles**. Sa première moitié ne change jamais ;
+sa seconde moitié alterne entre deux fins. Les crochets de la séquence 2
+découpent le cycle, les chevrons de la 3.3 font alterner :
+
+<StrudelRepl
+	client:visible
+	code={'n("[0 ~ 1 ~ 2 ~ 4 ~] <[0 ~ 1 ~ 2 ~ 4 ~] [0 ~ 5 ~ 0 ~ 4 ~]>")\n  .scale("D4:minor")\n  .s("sawtooth")'}
+	label="Le pluck du morceau"
+/>
+
+- `[0 ~ 1 ~ 2 ~ 4 ~]` occupe la **première moitié** du cycle : les quatre
+  notes du pluck, deux fois plus serrées qu'en 3.2.
+- `< … >` occupe la **seconde moitié**, et change à chaque cycle : d'abord la
+  même phrase, puis une variante qui monte sur `5`, le si bémol.
+
+On dirait une question, puis sa réponse. C'est une façon simple de faire
+durer une mélodie sur plusieurs cycles sans la réécrire en entier.
+
 ## À vous
 
-> Dans le bloc « Une mélodie en numéros », gardez la gamme `"A4:minor"` et
-> ne changez **que les numéros** :
+<StrudelRepl client:visible code={'n("0 2 4 2 3 2 1 ~")\n  .scale("D4:minor")\n  .s("sawtooth")'} label="Votre mélodie en numéros" />
+
+> Dans le bloc ci-dessus, gardez la gamme `"D4:minor"` et ne changez
+> **que les numéros** :
 >
 > 1. **Écrivez une mélodie de huit cases** qui commence sur `0` et finit sur
 >    `0`. Gardez au moins un `~`.
 > 2. **Ajoutez un grand saut** (par exemple de `0` à `5`) et écoutez l'effet.
 > 3. **Passez une note sous la tonique** avec un numéro négatif.
-> 4. **Essayez `"A4:minor:pentatonic"`** avec les mêmes numéros. Ce qui change,
+> 4. **Essayez `"D4:minor:pentatonic"`** avec les mêmes numéros. Ce qui change,
 >    c'est l'ensemble des notes disponibles : certains numéros tombent plus haut.
-> 5. **Gardez la version que vous préférez** : c'est la mélodie du morceau de
->    la 3.6.
+> 5. **Remplacez votre mélodie par le pluck du morceau**, `"[0 ~ 1 ~ 2 ~ 4 ~]
+>    <[0 ~ 1 ~ 2 ~ 4 ~] [0 ~ 5 ~ 0 ~ 4 ~]>"`. Changez un seul numéro de la
+>    variante, puis revenez à `0 ~ 5 ~ 0 ~ 4 ~`. C'est ce pluck que la 3.6
+>    assemblera.
 
 <details>
   <summary>Voir le corrigé</summary>
@@ -106,13 +145,13 @@ revient au départ :
 
 ```js
 n("0 2 5 4 2 -1 0 ~")
-  .scale("A4:minor")
-  .s("square")
+  .scale("D4:minor")
+  .s("sawtooth")
 ```
 
-Avec `"A4:minor:pentatonic"`, les mêmes numéros ne désignent plus les mêmes
+Avec `"D4:minor:pentatonic"`, les mêmes numéros ne désignent plus les mêmes
 notes : la pentatonique n'a que cinq notes par octave, donc `5` y joue déjà le
-la aigu, et `4` le sol. La mélodie garde sa forme générale (elle monte et
+ré aigu, et `4` le do. La mélodie garde sa forme générale (elle monte et
 descend aux mêmes endroits), mais avec des écarts plus grands.
 
 Aucune version n'est fausse : tant que les numéros passent par `.scale()`,

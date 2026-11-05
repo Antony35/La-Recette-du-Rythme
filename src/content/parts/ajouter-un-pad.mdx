@@ -15,8 +15,8 @@ Une rythmique seule laisse un grand vide entre les coups. Un **pad** le
 remplit : une nappe d'accords tenus, discrète, qui donne au morceau son
 épaisseur et sa couleur.
 
-À la fin de ces **20 minutes**, vous saurez écrire un <CourseTerm term="accord" />,
-en faire alterner deux, et poser cette nappe sous votre rythmique.
+À la fin de ces **20 minutes**, vous saurez écrire un <CourseTerm term="accord" />
+en numéros, en faire alterner deux, et poser cette nappe sous votre batterie.
 
 ## Pourquoi un pad
 
@@ -25,20 +25,24 @@ est leur contraire : des sons **longs**, qui tiennent d'un bout à l'autre du
 cycle.
 
 Ce contraste fait le morceau. La batterie donne le mouvement, le
-<CourseTerm term="pad" /> donne l'ambiance. Sans lui, la mélodie de la 3.6
+<CourseTerm term="pad" /> donne l'ambiance. Sans lui, le pluck de la 3.4
 flotterait dans le vide.
 
 ## Un accord : plusieurs notes en même temps
 
 En séquence 2, la virgule superposait des pistes. Entre crochets, elle
-superpose des notes : `[a2,c3,e3]` joue ces trois notes **ensemble**. C'est un
+superpose des notes : `[d4,f4,a4]` joue ces trois notes **ensemble**. C'est un
 accord.
 
-<StrudelRepl client:visible code={'note("[a2,c3,e3]")'} label="Un accord de la mineur" />
+<StrudelRepl client:visible code={'note("[d4,f4,a4]").s("sine")'} label="Un accord de ré mineur" />
 
 Cet accord est construit sur la gamme de la 3.4 : on prend une note, on saute
-la suivante, on prend la d'après. **La, (si), do, (ré), mi** : trois notes de
-la gamme de la mineur, une sur deux.
+la suivante, on prend celle d'après. **Ré, (mi), fa, (sol), la** : une marche
+sur deux. En numéros, c'est encore plus lisible : `[0,2,4]`.
+
+```js
+n("[0,2,4]").scale("D4:minor")   // le même accord, en numéros
+```
 
 ## Deux accords qui alternent
 
@@ -47,82 +51,105 @@ alterner plusieurs : **un par cycle**.
 
 <StrudelRepl
 	client:visible
-	code={'note("<[a2,c3,e3] [f2,a2,c3]>")\n  .s("triangle")\n  .gain(0.5)'}
-	label="La mineur, puis fa majeur"
+	code={'n("<[0,2,4] [0,2,5]>")\n  .scale("D4:minor")\n  .s("sine")\n  .gain(0.3)'}
+	label="Deux accords en alternance"
 >
 	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
-		Chaque accord dure un cycle entier, puis laisse la place au suivant. Les
-		deux partagent deux notes, la et do : le passage de l'un à l'autre se fait
-		en douceur.
+		Le second accord ne change qu'une note : la note du haut monte d'une
+		marche, de <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">4</code>
+		(la) à <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">5</code>
+		(si bémol). Le passage de l'un à l'autre se fait en douceur.
 	</p>
 </StrudelRepl>
 
-Trois choix rendent ce pad **doux** plutôt qu'envahissant :
+Deux choix rendent ce pad **doux** plutôt qu'envahissant :
 
-- **le registre grave** (octaves 2 et 3) : il reste sous la mélodie, qui
-  jouera dans l'octave 4 ;
-- **un synthé rond**, `triangle` ou `sine`, plutôt que `sawtooth` ;
+- **un synthé rond**, `sine`, plutôt que `sawtooth` : le pluck garde le
+  brillant pour lui ;
 - **un volume réduit** avec `.gain()` : `1` est le volume normal, `0.5` la
   moitié. Une nappe se sent plus qu'elle ne s'entend.
 
 Pour l'adoucir encore, avec une attaque progressive et un son qui s'éteint
 lentement, il faudra l'**enveloppe** de la séquence 4.
 
-## Poser le pad sous la rythmique
+## Le pad du morceau
 
-Le pad devient une piste de plus dans le `stack()` de la 3.1 :
+Dans le morceau, le pad fait un peu plus que tenir deux accords. Au second
+cycle, il joue d'abord les quatre notes du pluck, puis tient le second accord
+sur la seconde moitié du cycle :
+
+<StrudelRepl
+	client:visible
+	code={'n("<[0,2,4] [[0 ~ 1 ~ 2 ~ 4 ~] [0,2,5]]>")\n  .scale("D4:minor")\n  .s("sine")\n  .gain(0.16)'}
+	label="Le pad du morceau"
+/>
+
+Rien de nouveau dans l'écriture : les chevrons alternent entre deux éléments,
+et le second est découpé en deux moitiés par les crochets, comme le pluck en
+3.4. Le premier cycle tient `[0,2,4]` tout du long ; le second enchaîne
+`[0 ~ 1 ~ 2 ~ 4 ~]`, puis `[0,2,5]`.
+
+## Poser le pad sous la batterie
+
+Le pad devient une piste de plus. Mais attention au `.bank("RolandTR808")`
+posé à la fin de la batterie : il ajoute le nom de la machine devant **tous**
+les sons du `stack()`. Le pad deviendrait `RolandTR808_sine`, un son qui
+n'existe pas : il se tairait, sans aucun message.
+
+La solution : garder la batterie dans **son propre** `stack()`, avec son
+`.bank()`, et la placer dans le grand `stack()` du morceau.
 
 ```js
+setcpm(128 / 4)
+
 stack(
-  s("bd ~ bd ~"),
-  s("~ sd ~ sd"),
-  s("hh*8"),
-  note("<[a2,c3,e3] [f2,a2,c3]>")
-    .s("triangle").gain(0.5)
+  stack(
+    s("bd*4"),
+    s("~ cp ~ cp"),
+    s("~ hh ~ hh ~ hh ~ hh")
+  ).bank("RolandTR808"),
+  n("<[0,2,4] [[0 ~ 1 ~ 2 ~ 4 ~] [0,2,5]]>")
+    .scale("D4:minor").s("sine").gain(0.16)
 )
 ```
 
 ## À vous
 
-> Reprenez votre rythmique de la 3.1 dans le bloc « La mineur, puis fa
-> majeur », en remplaçant son code :
+<StrudelRepl client:visible code={'n("<[0,2,4] [0,2,5]>")\n  .scale("D4:minor")\n  .s("sine")\n  .gain(0.3)'} label="Votre pad" />
+
+> Dans le bloc ci-dessus :
 >
-> 1. **Ajoutez le pad** comme dernière piste du `stack()`, avec deux accords
->    en alternance.
-> 2. **Comparez `triangle` et `sawtooth`** pour le pad. Lequel laisse le mieux
->    entendre la batterie ?
-> 3. **Réglez son volume** avec `.gain()` entre `0.3` et `0.7` : le pad doit
->    se remarquer quand on le coupe, sans couvrir la caisse claire quand il joue.
-> 4. **Remplacez le second accord** par `[c3,e3,g3]` (do majeur), puis par
->    `[g2,b2,d3]` (sol majeur). Gardez la paire que vous préférez.
+> 1. **Comparez `sine` et `sawtooth`** pour le pad. Lequel laissera le mieux
+>    entendre le pluck ?
+> 2. **Réglez son volume** avec `.gain()` entre `0.1` et `0.5` : le pad doit
+>    se remarquer quand on le coupe, sans couvrir la batterie quand il joue.
+> 3. **Remplacez le second accord** par `[1,3,5]`, puis par `[-1,1,3]`.
+>    Écoutez, puis revenez à `[0,2,5]`.
+> 4. **Posez le pad du morceau sous votre batterie**, dans un grand `stack()`,
+>    la batterie gardant son propre `stack()` et son `.bank()`.
 
 <details>
   <summary>Voir le corrigé</summary>
 
-```js
-stack(
-  s("bd ~ bd ~"),
-  s("~ sd ~ sd"),
-  s("hh*8"),
-  s("~ ~ ~ oh"),
-  note("<[a2,c3,e3] [f2,a2,c3]>")
-    .s("triangle").gain(0.5)
-)
-```
+Avec `sawtooth`, le pad devient brillant et prend toute la place : le pluck,
+lui aussi en `sawtooth`, n'aurait plus d'espace. `sine` reste en retrait.
 
-Avec `sawtooth`, le pad devient brillant et prend toute la place : la caisse
-claire et le charleston s'y noient. `triangle` reste en retrait.
-
-Pour vérifier le volume (étape 3), commentez la ligne du pad avec `//`,
+Pour vérifier le volume (étape 2), commentez la ligne du pad avec `//`,
 réévaluez, puis retirez les `//`. Si le morceau paraît soudain vide sans
-lui, mais que la batterie reste nette avec lui, le réglage est bon.
+lui, mais que la batterie reste nette avec lui, le réglage est bon. Le
+morceau utilise `0.16` : trois notes `sine` ensemble s'additionnent vite.
 
-Les accords de do majeur et de sol majeur sont, eux aussi, faits de notes de
-la gamme de la mineur : ils s'enchaînent sans fausse note avec le premier.
+À l'étape 3, `[1,3,5]` et `[-1,1,3]` suivent la même règle, une marche sur
+deux, à partir d'une autre note : ils restent dans la gamme et s'enchaînent
+sans fausse note avec le premier.
+
+L'étape 4 donne le code de la section précédente. Si le pad se tait alors
+que la batterie joue, vérifiez où est le `.bank()` : il doit fermer le petit
+`stack()` de la batterie, pas le grand.
 
 </details>
 
 Si votre pad ne semble plus changer d'un cycle à l'autre, vérifiez les
-crochets. Sans eux, `<a2,c3,e3 f2,a2,c3>` ne produit aucune erreur, mais les
+crochets. Sans eux, `<0,2,4 0,2,5>` ne produit aucune erreur, mais les
 virgules découpent tout le motif au lieu de chaque accord : les notes des deux
 accords se mélangent à chaque cycle.

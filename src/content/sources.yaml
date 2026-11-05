@@ -33,6 +33,13 @@
   note: "Espace, *, ~ et [ ] : la syntaxe du temps utilisée en partie 2.2."
   checkedAt: 2026-11-05
 
+- id: strudel-cycles
+  title: "Understanding Cycles"
+  url: "https://strudel.cc/understand/cycles/"
+  category: documentation
+  note: "Tempo par défaut (0,5 cycle par seconde, soit 120 BPM en quatre temps) et setcpm(bpm / temps par cycle), utilisés en partie 2.4."
+  checkedAt: 2026-11-05
+
 - id: strudel-repl
   title: "REPL"
   url: "https://strudel.cc/technical-manual/repl/"

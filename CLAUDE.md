@@ -729,12 +729,12 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 - **Séquences 1 à 3 rédigées** (1.1 à 1.5, 2.1 à 2.5, 3.1 à 3.6), chacune
   partie avec son quiz. Les cinq autres séquences ont titre, objectif, niveau,
   durée et équipement, **sans corps**.
-- **La séquence 3 est entièrement en la mineur** : mélodie en
-  `n(…).scale("A4:minor")`, pad `<[a2,c3,e3] [f2,a2,c3]>`. Les chevrons `< >`
-  y sont introduits (3.3) ; le morceau de la 3.6 est le point de départ de la
-  séquence 4. Tout son code a été évalué dans le REPL du site (notes produites
-  vérifiées une à une) ; les volumes du corrigé de la 3.6 sont des valeurs de
-  départ, **pas encore réglées à l'oreille**.
+- **La séquence 3 est entièrement en ré mineur** et construit le morceau fil
+  rouge (voir plus bas) : *pluck* `note("d4 ~ e4 ~ f4 ~ a4 ~")` en 3.2, réécrit
+  en numéros avec `.scale("D4:minor")` en 3.4, pad en 3.5, assemblage en 3.6.
+  Les chevrons `< >` y sont introduits (3.3) ; le morceau de la 3.6 est le
+  point de départ de la séquence 4. Tout son code a été évalué dans le REPL du
+  site (notes produites vérifiées une à une) ; les volumes sont ceux de l'équipe.
 - `components/ImagePlaceholder.astro` n'est plus utilisé (la photo de la 2.3
   est arrivée) ; gardé pour les prochaines images manquantes.
 - **Deux copies de Strudel par page** (voir « Les sons de batterie… ») : le
@@ -799,6 +799,30 @@ de la séquence 2 à la fin. La vidéo 2.1 le promet aux apprenants (« pour la
 suite du cours… ») ; la valse (`s("bd hh hh")`) n'y apparaît qu'une fois,
 comme contre-exemple. `*8` et `*16` ne sont pas des « temps » mais des coups
 plus serrés **dans** les quatre temps (le charleston de la techno).
+
+### Le morceau fil rouge
+
+Les séquences 2 et 3 mènent à un morceau composé par l'équipe. La S2 en
+construit la batterie : `~ hh ~ hh ~ hh ~ hh` (charleston entre les temps) en
+2.2, la TR-808 en 2.3, puis en 2.4 `setcpm(128 / 4)` et :
+
+```js
+stack(s("bd*4"), s("~ cp ~ cp"), s("~ hh ~ hh ~ hh ~ hh")).bank("RolandTR808")
+```
+
+La 2.5 fait réparer cette batterie. Chaque bloc `StrudelRepl` a son propre
+tempo : un `setcpm()` ne déborde pas sur les autres blocs de la page (vérifié).
+La S3 y ajoute, **en ré mineur**, le *pluck* (`sawtooth`) et le pad (`sine`).
+Le code d'origine de l'équipe utilisait `$:`, `@`, `.slow(2)` et `bb4` ; le
+cours n'en garde aucun. `[première moitié] <[fin A] [fin B]>` remplace
+`.slow(2)` (un motif sur deux cycles), les numéros de `.scale()` évitent
+d'écrire le bémol, et `stack()` reste l'écriture du cours (`$:` en S4).
+
+**Piège : un `.bank()` posé sur le grand `stack()` rend les synthés muets.**
+Il préfixe aussi `sine` (`RolandTR808_sine`, introuvable, sans erreur dans
+l'éditeur). La batterie garde donc son propre `stack()` et son `.bank()`.
+Vérifié dans le REPL du site : seul « sound RolandTR808_sine not found » en
+console.
 
 ### Gabarit d'une partie
 

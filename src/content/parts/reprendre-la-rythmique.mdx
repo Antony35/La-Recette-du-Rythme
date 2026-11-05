@@ -8,41 +8,41 @@ durationMinutes: 15
 import PatternStrip from "@/components/PatternStrip.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 
-Dans cette séquence, on ne repart pas de zéro : la rythmique construite en
+Dans cette séquence, on ne repart pas de zéro : la batterie construite en
 séquence 2 devient la base d'un vrai morceau, auquel on ajoutera une mélodie
 puis des accords.
 
-À la fin de ces **15 minutes**, votre rythmique tournera de nouveau, vous
+À la fin de ces **15 minutes**, votre batterie tournera de nouveau, vous
 l'aurez vérifiée piste par piste, et vous saurez couper une piste sans
 l'effacer.
 
 ## Pourquoi vérifier avant d'ajouter
 
-Chaque couche ajoutée rend le motif plus difficile à écouter. Une caisse claire
-mal placée s'entend tout de suite quand elle joue seule, mais beaucoup moins
-sous une mélodie et des accords.
+Chaque couche ajoutée rend le motif plus difficile à écouter. Un clap mal
+placé s'entend tout de suite quand il joue seul, mais beaucoup moins sous une
+mélodie et des accords.
 
 On vérifie donc la fondation **maintenant**, tant qu'elle est encore simple.
-Une erreur laissée ici se cherchera plus tard au milieu de six pistes.
+Une erreur laissée ici se cherchera plus tard au milieu de cinq pistes.
 
 ## Le motif de départ
 
-Si vous avez gardé votre rythmique de la séquence 2, collez-la dans le bloc
-ci-dessous à la place du code proposé. Sinon, partez de celui-ci : c'est le
-motif réparé à la fin de la séquence 2.
+Si vous avez gardé votre batterie de la séquence 2, collez-la dans le bloc
+ci-dessous à la place du code proposé. Sinon, partez de celle-ci : c'est la
+batterie réparée à la fin de la séquence 2.
 
 <StrudelRepl
 	client:visible
-	code={'stack(\n  s("bd ~ bd ~"),\n  s("~ sd ~ sd"),\n  s("hh*8"),\n  s("~ ~ ~ oh")\n)'}
-	label="La rythmique de la séquence 2"
+	code={'setcpm(128 / 4)\n\nstack(\n  s("bd*4"),\n  s("~ cp ~ cp"),\n  s("~ hh ~ hh ~ hh ~ hh")\n).bank("RolandTR808")'}
+	label="La batterie de la séquence 2"
 />
 
-<PatternStrip label="grosse caisse" steps={["bd", "~", "bd", "~"]} />
-<PatternStrip label="caisse claire" steps={["~", "sd", "~", "sd"]} />
-<PatternStrip label="charleston ouvert" steps={["~", "~", "~", "oh"]} />
+<PatternStrip label="grosse caisse" steps={["bd", "~", "bd", "~", "bd", "~", "bd", "~"]} />
+<PatternStrip label="clap" steps={["~", "~", "cp", "~", "~", "~", "cp", "~"]} />
+<PatternStrip label="charleston" steps={["~", "hh", "~", "hh", "~", "hh", "~", "hh"]} />
 
-Le charleston fermé, `hh*8`, joue sur les huit demi-cases du cycle : il n'est
-pas dessiné, il sonne partout.
+Huit cases, deux par temps : la grosse caisse sur chaque temps, le clap avec
+elle sur les temps 2 et 4, le charleston entre les deux.
 
 ## Vérifier piste par piste
 
@@ -55,52 +55,58 @@ commentaire**. Deux barres obliques `//` en début de ligne, et Strudel ignore
 la ligne.
 
 ```js
+setcpm(128 / 4)
+
 stack(
-  s("bd ~ bd ~"),
-  // s("~ sd ~ sd"),
-  s("hh*8"),
-  s("~ ~ ~ oh")
-)
+  s("bd*4"),
+  // s("~ cp ~ cp"),
+  s("~ hh ~ hh ~ hh ~ hh")
+).bank("RolandTR808")
 ```
 
-Après réévaluation, la caisse claire se tait. Retirez les `//`, réévaluez :
-elle revient, exactement comme avant. C'est le geste qui servira tout au long
-de la séquence, pour écouter une couche à la fois.
+Après réévaluation, le clap se tait. Retirez les `//`, réévaluez : il revient,
+exactement comme avant. C'est le geste qui servira tout au long de la
+séquence, pour écouter une couche à la fois.
 
 ## À vous
 
-> Relancez votre rythmique, puis vérifiez-la sans arrêter la lecture :
+<StrudelRepl client:visible code={'setcpm(128 / 4)\n\nstack(\n  s("bd*4"),\n  s("~ cp ~ cp"),\n  s("~ hh ~ hh ~ hh ~ hh")\n).bank("RolandTR808")'} label="Votre batterie, piste par piste" />
+
+> Relancez votre batterie dans le bloc ci-dessus, puis vérifiez-la sans
+> arrêter la lecture :
 >
 > 1. **Coupez toutes les pistes sauf la grosse caisse** avec `//`, réévaluez,
->    et comptez « 1, 2, 3, 4 ». Les coups tombent-ils sur 1 et 3 ?
+>    et comptez « 1, 2, 3, 4 ». Un coup doit tomber sur chaque chiffre.
 > 2. **Réactivez les pistes une par une**, en réévaluant à chaque fois. Chacune
 >    doit s'encadrer et s'entendre.
-> 3. **Ajustez si besoin** : un charleston trop chargé (`hh*16`) laissera peu de
->    place à la mélodie. Revenez à `hh*8` ou essayez `hh*4`.
+> 3. **Commentez la ligne `setcpm()`**, réévaluez, puis rétablissez-la. Vous
+>    entendez la différence entre 120 et 128 BPM.
 > 4. **Copiez votre motif final** dans un fichier texte. Vous le reprendrez au
 >    début de chaque partie de cette séquence.
 
 <details>
   <summary>Voir le corrigé</summary>
 
-Avec seulement la grosse caisse active, on entend deux coups par cycle, sur
-les temps **1 et 3** :
+Avec seulement la grosse caisse active, on entend quatre coups par cycle, un
+sur chaque temps :
 
 ```js
+setcpm(128 / 4)
+
 stack(
-  s("bd ~ bd ~"),
-  // s("~ sd ~ sd"),
-  // s("hh*8"),
-  // s("~ ~ ~ oh")
-)
+  s("bd*4"),
+  // s("~ cp ~ cp"),
+  // s("~ hh ~ hh ~ hh ~ hh"),
+).bank("RolandTR808")
 ```
 
-En réactivant la caisse claire, elle doit tomber **entre** les grosses caisses,
-sur les temps 2 et 4. Si vous l'entendez en même temps qu'une grosse caisse,
-vérifiez l'ordre des `~` : c'est l'erreur corrigée en 2.5.
+En réactivant le clap, il doit tomber **avec** la grosse caisse, sur les temps
+2 et 4. Le charleston, lui, ne doit jamais tomber avec elle : s'il s'encadre
+en même temps qu'un `bd`, vérifiez l'ordre des `~`. C'est l'erreur corrigée
+en 2.5.
 
-Un motif plus léger laisse plus de place à ce qui va venir. Avec `hh*4`, le
-charleston ne joue plus que sur les quatre temps.
+Sans `setcpm()`, Strudel revient à sa vitesse par défaut, 120 BPM : le motif
+est le même, il tourne un peu moins vite.
 
 </details>
 

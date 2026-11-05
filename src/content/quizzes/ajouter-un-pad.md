@@ -1,7 +1,7 @@
 ---
 part: "ajouter-un-pad"
 questions:
-  - question: "Que joue `note(\"[a2,c3,e3]\")` ?"
+  - question: "Que joue `note(\"[d4,f4,a4]\")` ?"
     options:
       [
         "Les trois notes en même temps : un accord",
@@ -13,7 +13,7 @@ questions:
     explanation: >-
       Entre crochets, la virgule superpose les notes, comme elle superposait
       les pistes en séquence 2. Trois notes jouées ensemble forment un accord.
-  - question: "Dans `note(\"<[a2,c3,e3] [f2,a2,c3]>\")`, combien de temps dure chaque accord ?"
+  - question: "Dans `n(\"<[0,2,4] [0,2,5]>\")`, combien de temps dure chaque accord ?"
     options:
       [
         "Un cycle entier : les chevrons en jouent un par cycle",
@@ -25,29 +25,30 @@ questions:
     explanation: >-
       Les chevrons avancent d'un élément à chaque tour. Le premier accord
       remplit le premier cycle, le second le cycle suivant, puis on recommence.
-  - question: "Lequel de ces choix rend un pad plus discret sous la rythmique ?"
+  - question: "Vous ajoutez le pad dans le `stack()` de la batterie, qui se termine par `.bank(\"RolandTR808\")`. Le pad se tait, sans message. Pourquoi ?"
     options:
       [
-        "Un synthé rond (`triangle`), un registre grave et un `.gain()` réduit",
-        "Le synthé `sawtooth` dans l'octave 5",
-        "Un `.gain(2)` pour qu'il s'entende bien",
-        "Des accords qui changent à chaque note de charleston",
+        "`.bank()` préfixe tous les sons du `stack()` : le pad devient `RolandTR808_sine`, qui n'existe pas",
+        "Un `stack()` ne peut pas mélanger `s()` et `n()`",
+        "Le pad est trop grave pour être entendu sous la batterie",
+        "`setcpm()` ne s'applique pas aux synthés",
       ]
     answer: 0
     explanation: >-
-      Un pad remplit l'espace sans attirer l'attention. Un synthé doux, dans le
-      grave et à volume réduit, reste en fond ; un `sawtooth` aigu et fort
-      prendrait toute la place.
-  - question: "Pourquoi l'accord `[a2,c3,e3]` sonne-t-il juste avec une mélodie en gamme de la mineur ?"
+      Comme en 2.3, `.bank()` colle le nom de la machine devant le nom du son.
+      Sur un synthé, ça donne un son introuvable, donc un silence. La batterie
+      garde son propre `stack()` et son `.bank()`, à l'intérieur du grand.
+  - question: "Pourquoi l'accord `[0,2,4]` sonne-t-il juste avec le pluck, en gamme de ré mineur ?"
     options:
       [
-        "Ses trois notes appartiennent à la gamme de la mineur",
-        "Parce qu'il est joué dans le grave",
+        "Ses trois notes appartiennent à la gamme de ré mineur, comme celles du pluck",
+        "Parce qu'il est joué en `sine`",
         "Parce que tout accord de trois notes sonne juste avec n'importe quelle mélodie",
         "Parce que Strudel accorde automatiquement le pad sur la mélodie",
       ]
     answer: 0
     explanation: >-
-      La, do, mi : une note sur deux de la gamme de la mineur. Comme la mélodie
-      puise dans la même gamme, accord et mélodie partagent les mêmes notes.
+      Ré, fa, la : une marche sur deux de la gamme de ré mineur. Comme le
+      pluck puise dans la même gamme, accord et mélodie partagent les mêmes
+      notes.
 ---
