@@ -52,12 +52,28 @@ il passe en qualité téléphone.
 
 ### Ranger le dossier
 
+Tout vit dans `~/Documents/FYC`, une séquence par dossier, une vidéo par
+sous-dossier, et toujours les mêmes cinq sous-dossiers, dans l'ordre du travail :
+
 ```
-S1.2/
-├── images/   les photos et la frise
-├── voix/     les enregistrements bruts et la voix nettoyée
-└── projet/   le fichier Kdenlive et l'export final
+FYC/
+├── _commun/sons-batterie/            les sons du site, pour toutes les vidéos
+└── S2-rythme/
+    └── 2.1-premiers-sons/
+        ├── 1-voix/       projet Audacity (.aup3) et voix exportée (voix.wav)
+        ├── 2-captures/   enregistrements OBS de Strudel
+        ├── 3-images/     images à monter (source/ : de quoi les refaire)
+        ├── 4-montage/    le projet Kdenlive, au nom de la vidéo
+        └── 5-export/     la vidéo finale, au même nom que sur le site
 ```
+
+**Enregistrez le projet Kdenlive (`Ctrl + S`) dès qu'il est créé**, dans
+`4-montage/`, avant de poser le premier clip. Kdenlive ne fait de copies de
+secours que d'un projet déjà enregistré : les montages de la 1.3 et de la 1.4,
+jamais enregistrés, sont perdus.
+
+Kdenlive retient le chemin complet de chaque fichier : ne déplacez plus rien
+une fois le montage commencé.
 
 ### Exporter la frise depuis Excalidraw
 

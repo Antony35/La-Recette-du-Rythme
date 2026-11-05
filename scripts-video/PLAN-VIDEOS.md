@@ -57,11 +57,11 @@ comparer des sons à l'oreille, **8 min** pour un sujet complexe ou une correcti
 
 | Sous-séance | Ce que la vidéo montre | Durée | Statut |
 |---|---|---|---|
-| 2.1 Premiers sons | pourquoi `bd`, `sd`, `hh` (grave, milieu, aigu), le cycle se partage en 2, 4, 3 | 2 min 25 | script prêt |
+| 2.1 Premiers sons | pourquoi `bd`, `sd`, `hh` (grave, milieu, aigu), le cycle se partage en 2 puis 4, valse en 3 temps, techno en 4 | 1 min 55 | ✅ tournée |
 | 2.2 Mini-notation | `*`, `~`, `[ ]` sur un même motif ; erreur de syntaxe contre son inconnu | 2 min | script prêt |
 | 2.3 Changer de drum kit | le même motif sur 808, 909 et LinnDrum | 2 min | script prêt |
-| 2.4 Superposer des pistes | la virgule, puis `stack()` | 2 min | script prêt |
-| 2.5 Les aides visuelles | réparer deux erreurs en direct, à l'oreille et à l'œil | 3 min | script prêt |
+| 2.4 Superposer des pistes | la virgule, puis `stack()` | 2 min 10 | script prêt |
+| 2.5 Les aides visuelles | réparer deux erreurs en direct, à l'oreille et à l'œil | 2 min 45 | script prêt |
 
 ### S3 — Harmonie de base
 
@@ -144,8 +144,8 @@ Pas de vidéo dans 8.2 à 8.4 : elles donneraient la solution du cas pratique.
 
 | | Vidéos | Durée prévue |
 |---|---|---|
-| Déjà tournées | 6 | ~10 min 30 |
-| S1 et S2 (à tourner) | 5 | ~11 min |
+| Déjà tournées | 7 | ~12 min 30 |
+| S1 et S2 (à tourner) | 4 | ~9 min |
 | S3 à S5 | 15 | ~47 min |
 | S6 à S8 | 16 | ~60 min |
 | **Total** | **42** | **~2 h 10** |
@@ -153,7 +153,7 @@ Pas de vidéo dans 8.2 à 8.4 : elles donneraient la solution du cas pratique.
 Si toutes les vidéos sortent 25 % plus courtes que prévu, il reste environ
 1 h 40 : le minimum est tenu.
 
-**Pour le 4 décembre (S1 à S5) : 20 vidéos à tourner**, environ 58 min.
+**Pour le 4 décembre (S1 à S5) : 19 vidéos à tourner**, environ 56 min.
 
 ## Pour plus tard, si on est dans les temps
 

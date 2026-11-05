@@ -69,7 +69,7 @@ huit temps : ne pas dire « huit temps ».
 ## Vidéo 1.4 — Notes anglaises et drum kit (2 min 25)
 
 Même structure que la 1.3 : on explique le titre, puis on montre. Chaque code
-est dit avec son nom anglais complet. Images dans `FYC/S1.4/images/`.
+est dit avec son nom anglais complet. Images dans `FYC/S1-prerequis-et-decouverte/1.4-notes-anglaises-et-drum-kit/3-images/`.
 
 **Avant d'enregistrer** : police de l'éditeur Strudel vers 40–48 (onglet
 *settings*), sinon le code est illisible dans le lecteur du site (632 px de large).
@@ -94,7 +94,7 @@ Crédit à l'écran sur l'image de batterie (déjà gravé dans l'image) :
 Trois idées seulement, sans solfège : la gamme monte, le chiffre change la
 **hauteur**, le dièse est un demi-ton au-dessus. Ne jamais dire « ton » pour
 parler de hauteur (le mot désigne un écart, deux demi-tons). Images dans
-`FYC/S1.5/images/`. Police de l'éditeur Strudel vers 40–48.
+`FYC/S1-prerequis-et-decouverte/1.5-une-gamme-complete/3-images/`. Police de l'éditeur Strudel vers 40–48.
 
 | Temps | Écran | Voix |
 |---|---|---|

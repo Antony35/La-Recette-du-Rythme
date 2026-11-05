@@ -433,12 +433,13 @@ même dossier.
   l'écran), notes anglaises et drum kit (1.4,
   `notes-anglaises-et-drum-kit.mp4`, 1 min 15, lettres une à une et une fiche
   par son), une gamme complète (1.5, `une-gamme-complete.mp4`, 1 min 30, claviers
-  des hauteurs et des dièses, piano roll sur strudel.cc),
+  des hauteurs et des dièses, piano roll sur strudel.cc), premiers sons (2.1,
+  `premiers-sons.mp4`, 1 min 55, sous-titres sur boîte noire),
   via `components/Video.astro`.
 - **À tourner** : `components/VideoPlaceholder.astro` en occupe exactement la
   place (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
-  format. La séquence 1 n'en a plus ; il servira aux séquences suivantes. Le jour
-  du tournage, on le remplace par `<Video>` au même endroit.
+  format. Présent de 2.2 à 3.6, sauf en 3.1. Le jour du tournage, on le remplace par
+  `<Video>` au même endroit.
 - **La vidéo montre, elle ne résume pas la page** : le cahier des charges veut
   un contenu vidéo différent du texte. Seule exception : la 1.2 (histoire,
   images d'archives).
@@ -658,6 +659,20 @@ pour `s("bd")`. `loadDrumKit(samples)` (`lib/strudel-sound.ts`) l'enregistre.
   qui n'a ni `rim`, ni `oh`, ni `rd` : trois boutons muets, **aucune erreur**.
   Un nom absent de la banque ne lève rien ; seule une écoute (ou la liste des
   requêtes `.wav` dans un navigateur) le révèle.
+- **Un nom inconnu s'encadre quand même.** Le surlignage suit les événements
+  du motif, pas les sons trouvés : `ohh` s'encadre à son temps, muet, avec
+  seulement « sound ohh not found » en console. Le cours (2.5) affirmait le
+  contraire ; vérifié par captures d'écran pendant la lecture. Attention :
+  compter les `[style*="outline"]` par sondage en JavaScript a donné un faux
+  « jamais encadré » — se fier à l'image. Même piège avec les synthés :
+  `s("sinus")` (au lieu de `sine`) se tait, sans erreur.
+- **Les virgules d'un accord ont besoin de crochets.** Dans
+  `note("<a2,c3,e3 f2,a2,c3>")`, les virgules découpent tout le motif : les
+  notes des deux accords se mélangent à chaque cycle, sans erreur. La bonne
+  écriture est `<[a2,c3,e3] [f2,a2,c3]>`.
+- **Pour vérifier un motif sans l'écouter**, interroger le motif évalué :
+  `editor.repl.state.pattern.queryArc(0, 2)` rend les événements (instant,
+  durée, note, son). C'est ce qui a servi à vérifier chaque note de la S3.
 
 ### Un seul moteur audio par page
 
@@ -711,9 +726,15 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 
 ## Écarts connus (état au 2026-10-31)
 
-- **Séquences 1 et 2 complètes** (1.1 à 1.5, 2.1 à 2.5), chacune avec son quiz.
-  Les six autres séquences ont titre, objectif, niveau, durée et équipement,
-  **sans corps**.
+- **Séquences 1 à 3 rédigées** (1.1 à 1.5, 2.1 à 2.5, 3.1 à 3.6), chacune
+  partie avec son quiz. Les cinq autres séquences ont titre, objectif, niveau,
+  durée et équipement, **sans corps**.
+- **La séquence 3 est entièrement en la mineur** : mélodie en
+  `n(…).scale("A4:minor")`, pad `<[a2,c3,e3] [f2,a2,c3]>`. Les chevrons `< >`
+  y sont introduits (3.3) ; le morceau de la 3.6 est le point de départ de la
+  séquence 4. Tout son code a été évalué dans le REPL du site (notes produites
+  vérifiées une à une) ; les volumes du corrigé de la 3.6 sont des valeurs de
+  départ, **pas encore réglées à l'oreille**.
 - `components/ImagePlaceholder.astro` n'est plus utilisé (la photo de la 2.3
   est arrivée) ; gardé pour les prochaines images manquantes.
 - **Deux copies de Strudel par page** (voir « Les sons de batterie… ») : le
@@ -723,9 +744,9 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h).
   Les états « à venir » et « contenu en cours de rédaction » restent visibles
   pour les séquences 4 à 8.
-- **Vidéos de sous-séance** : toute la séquence 1 est tournée ; les séquences
-  suivantes restent à tourner (voir « Vidéos »).
-- **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −23
+- **Vidéos de sous-séance pas encore tournées** : emplacements « Ici vidéo »
+  de 2.2 à 3.6, sauf la 3.1, qui n'a pas de vidéo (voir « Vidéos »).
+- **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −19 (2.1), −23
   (accueil). Viser −16 LUFS pour les suivantes.
 - Les **niveaux** (1 : S1–S3, 2 : S4–S5, 3 : S6–S8) sont une lecture de la
   vidéo de présentation, pas un découpage écrit dans la scénarisation : à valider.
@@ -770,6 +791,14 @@ utilisateur. La surface d'attaque tient en trois points, à garder en tête.
   ```bash
   grep -rnE "\b([Tt]u|[Tt]on|[Tt]a|[Tt]es|[Tt]oi|te)\b" src/content src/components src/layouts
   ```
+
+### Quatre temps, tout le cours
+
+Le cours fait de la **techno** : tous les motifs sont en **quatre temps**,
+de la séquence 2 à la fin. La vidéo 2.1 le promet aux apprenants (« pour la
+suite du cours… ») ; la valse (`s("bd hh hh")`) n'y apparaît qu'une fois,
+comme contre-exemple. `*8` et `*16` ne sont pas des « temps » mais des coups
+plus serrés **dans** les quatre temps (le charleston de la techno).
 
 ### Gabarit d'une partie
 
