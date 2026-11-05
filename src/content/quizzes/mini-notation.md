@@ -11,7 +11,7 @@ questions:
       ]
     answer: 0
     explanation: >-
-      L'espace **ajoute une case**, `*` **remplit une case**. Dans le premier
+      L'espace ajoute une case, `*` remplit une case. Dans le premier
       motif, chaque son occupe un quart de cycle. Dans le second, la caisse
       claire arrive au dernier tiers, pas au dernier quart : les coups ne tombent
       pas du tout aux mêmes endroits.

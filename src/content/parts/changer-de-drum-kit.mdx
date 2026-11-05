@@ -10,6 +10,9 @@ durationMinutes: 15
     rien à gagner à la redimensionner. */}
 import tr909 from "@/assets/Roland_TR-909.jpg";
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Changer de drum kit" duration="2 min" format="live coding à l'écran, en voix off" />
 
 Votre motif est écrit. Il n'a pourtant encore aucun caractère : `bd` ne dit pas
 *quelle* grosse caisse. Une seule fonction change ça — et elle change plus de
@@ -113,6 +116,27 @@ de gauche : `RolandTR909`, pas `Roland TR-909`.
 >    ci-dessus. Si un son disparaît, vous savez maintenant pourquoi.
 > 5. **Choisissez le kit que vous préférez et gardez-le.** Il accompagnera votre
 >    rythmique jusqu'à la fin de la séquence 3.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Avec le motif `s("bd hh*2 sd hh*2")`, les trois versions s'écrivent :
+
+```js
+s("bd hh*2 sd hh*2").bank("RolandTR808")
+s("bd hh*2 sd hh*2").bank("RolandTR909")
+s("bd hh*2 sd hh*2").bank("LinnDrum")
+```
+
+Le motif ne change jamais, seul le nom de la machine change. La 808 donne une
+grosse caisse longue et grave ; la 909, des charlestons plus métalliques ; la
+LinnDrum, des sons proches d'une vraie batterie.
+
+À l'étape 4, si un son disparaît, la mini-notation n'y est pour rien : cette
+machine n'a simplement pas d'échantillon pour ce code. Il n'y a pas de bon kit
+à l'étape 5 ; gardez celui qui vous plaît.
+
+</details>
 
 Dans la prochaine partie, on arrête de jouer une ligne : on en empile trois qui
 tournent en même temps.

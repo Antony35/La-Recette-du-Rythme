@@ -11,7 +11,7 @@ questions:
       ]
     answer: 0
     explanation: >-
-      L'espace met les sons **à la suite** dans un même cycle, et ils se
+      L'espace met les sons à la suite dans un même cycle, et ils se
       partagent sa durée en parts égales. Pour les faire sonner ensemble, il
       faudra un autre symbole — c'est l'objet de la partie 2.4.
   - question: "Pourquoi commencer par ces trois sons plutôt que par cinq ou six ?"

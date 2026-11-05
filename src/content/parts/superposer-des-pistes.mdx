@@ -7,6 +7,9 @@ durationMinutes: 20
 
 import PatternStrip from "@/components/PatternStrip.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Superposer des pistes" duration="2 min" format="live coding à l'écran, en voix off" />
 
 Jusqu'ici, tous vos sons se suivaient. Une vraie rythmique ne fonctionne pas
 comme ça : la grosse caisse, la caisse claire et le charleston tournent **en même
@@ -103,6 +106,35 @@ fonctions** — par exemple un kit différent :
 > 4. Passez en `stack()` et donnez un kit différent à une seule des pistes.
 > 5. **Gardez ce motif.** C'est la rythmique que la séquence 3 reprendra pour y
 >    poser une mélodie.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Pour l'étape 2, écoutez bien : `"~ sd"` et `"~ ~ sd ~"` **sonnent pareil**.
+Dans les deux cas, la caisse claire tombe au milieu du cycle, en même temps que
+le second coup de grosse caisse. Écrire un motif autrement ne change pas
+forcément l'endroit où tombent les sons.
+
+`"~ sd ~ sd"`, lui, place la caisse claire **entre** les grosses caisses :
+grosse caisse, caisse claire, grosse caisse, caisse claire. C'est l'alternance
+de très nombreux morceaux de pop et de rock.
+
+Une rythmique possible pour les étapes 3 et 4, avec un charleston ouvert discret
+en fin de cycle et une caisse claire de 808 :
+
+```js
+stack(
+  s("bd*2"),
+  s("~ sd ~ sd").bank("RolandTR808"),
+  s("hh*8"),
+  s("~ ~ ~ oh")
+)
+```
+
+Seule la caisse claire porte un `.bank()` : les trois autres pistes gardent le
+kit par défaut.
+
+</details>
 
 Une virgule oubliée ne provoque pas d'erreur : `s("bd*2 ~ sd")` reste un motif
 valide, simplement les sons s'enchaînent au lieu de se superposer. Si votre

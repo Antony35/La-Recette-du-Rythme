@@ -1,19 +1,20 @@
 ---
 part: "aides-visuelles"
 questions:
-  - question: "Pendant la lecture, un des noms de votre motif ne s'encadre jamais. Qu'est-ce que ça vous apprend ?"
+  - question: "Pendant la lecture, un nom de votre motif s'encadre à chaque cycle, mais vous n'entendez rien à ce moment-là. Qu'est-ce que ça vous apprend ?"
     options:
       [
-        "Qu'il n'est jamais joué — le plus souvent parce qu'il est mal orthographié",
-        "Qu'il est joué trop doucement pour être entendu",
-        "Qu'il est joué, mais en dehors du cycle visible",
-        "Que l'éditeur n'a pas fini de charger",
+        "Que ce nom n'existe pas dans le kit — le plus souvent, il est mal orthographié",
+        "Que le son est joué trop doucement pour être entendu",
+        "Que le motif contient une erreur de syntaxe",
+        "Que le son est joué en dehors du cycle",
       ]
     answer: 0
     explanation: >-
-      L'encadrement suit les événements réellement joués. Un nom qui ne s'allume
-      jamais ne produit rien : c'est le diagnostic le plus rapide pour une faute
-      de frappe, bien plus sûr que de tendre l'oreille.
+      L'encadrement montre ce que le code demande, pas ce qui sonne : un nom
+      inconnu s'encadre comme les autres, sans produire de son ni de message.
+      Une erreur de syntaxe, elle, affiche un message et empêche la lecture.
+      Encadré mais muet : vérifiez l'orthographe.
   - question: "Deux noms s'encadrent exactement en même temps. Qu'est-ce que ça veut dire ?"
     options:
       [

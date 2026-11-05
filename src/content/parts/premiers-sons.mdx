@@ -6,6 +6,9 @@ durationMinutes: 15
 ---
 
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import Video from "@/components/Video.astro";
+
+<Video title="Premiers sons" src="/videos/premiers-sons.mp4" />
 
 Trois sons suffisent à faire un rythme. Pas trois instruments, pas trois pistes :
 trois codes, `bd`, `sd` et `hh`, qu'on a nommés en séquence 1 et qu'on va
@@ -87,6 +90,31 @@ tout de suite comme une valse plutôt que comme un morceau de club.
 >    séquence 1 (`oh`, `cp`, `rim`, `lt`…). Écoutez comment le cycle se resserre.
 > 5. Gardez le motif à quatre temps : c'est la base qu'on enrichira jusqu'à la
 >    fin de la séquence.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Les étapes, dans l'ordre :
+
+```js
+s("bd")
+s("sd")
+s("hh")
+s("bd sd hh")
+s("bd hh sd hh")
+```
+
+Pour l'étape 4, avec le clap par exemple :
+
+```js
+s("bd hh sd hh cp")
+```
+
+Cinq sons se partagent le cycle : chacun en occupe un cinquième. Le motif se
+resserre, et le compte passe à « 1, 2, 3, 4, 5 ». Revenez ensuite à
+`s("bd hh sd hh")` : c'est ce motif qu'on garde.
+
+</details>
 
 Si vous n'entendez rien, vérifiez l'orthographe du code : Strudel ne signale pas
 un son inconnu, il laisse un blanc.

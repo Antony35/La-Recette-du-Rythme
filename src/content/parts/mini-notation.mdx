@@ -7,6 +7,9 @@ durationMinutes: 20
 
 import PatternStrip from "@/components/PatternStrip.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Mini-notation" duration="2 min" format="live coding à l'écran, en voix off" />
 
 Ce qui est entre guillemets dans `s("…")` n'est pas une simple liste de noms.
 C'est un petit langage à part entière — la **mini-notation** — et son sujet
@@ -113,6 +116,34 @@ recense tous les symboles ; on y reviendra au fil du cours.
 > 4. Faites tenir deux sons dans une seule case avec `[ ]`.
 > 5. **Gardez votre motif.** Il sert de point de départ à la partie suivante, où
 >    on va lui changer de kit.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Le charleston doublé, puis quadruplé :
+
+```js
+s("bd hh*2 sd hh*2")
+s("bd hh*4 sd hh*4")
+```
+
+Le silence placé avant la caisse claire, puis après :
+
+```js
+s("bd ~ sd hh")
+s("bd hh sd ~")
+```
+
+Deux sons dans une seule case, par exemple deux caisses claires :
+
+```js
+s("bd hh [sd sd] hh")
+```
+
+Les deux `sd` se partagent la troisième case : chacun dure un demi-temps. Le
+motif compte toujours quatre cases ; seule la troisième est découpée.
+
+</details>
 
 Quand plus rien ne sort, deux pannes très différentes sont possibles, et les
 distinguer fait gagner beaucoup de temps :

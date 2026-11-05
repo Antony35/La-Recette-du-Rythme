@@ -25,7 +25,7 @@ questions:
     answer: 0
     explanation: >-
       Dans une couche superposée, le silence ne fait pas patienter : il
-      **positionne**. C'est la façon d'écrire « ce son tombe là », sans avoir à
+      positionne. C'est la façon d'écrire « ce son tombe là », sans avoir à
       calculer de décalage.
   - question: "Pourquoi préférer `stack()` à la virgule quand les pistes se multiplient ?"
     options:
