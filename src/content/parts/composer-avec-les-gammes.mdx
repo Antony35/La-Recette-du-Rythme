@@ -1,0 +1,125 @@
+---
+title: "Composer juste avec les gammes — des numéros plutôt que des notes"
+sequence: "harmonie-de-base"
+order: 4
+durationMinutes: 20
+---
+
+import CourseTerm from "@/components/CourseTerm.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Composer avec les gammes" duration="3 min" format="live coding à l'écran, en voix off" />
+
+Choisir des notes au hasard, c'est risquer qu'une d'elles sonne faux. Il existe
+une façon d'écrire où **aucune note ne peut sonner faux** : on ne choisit plus
+les notes, on choisit leur numéro dans une gamme.
+
+À la fin de ces **20 minutes**, vous saurez improviser une mélodie en ne
+changeant que des numéros, et changer l'ambiance d'un morceau en changeant un
+seul mot.
+
+## Pourquoi une gamme évite les fausses notes
+
+Une <CourseTerm term="gamme" /> est une sélection de notes qui sonnent bien
+ensemble. Tant qu'une mélodie reste dans la même gamme, elle peut monter,
+descendre ou sauter : rien ne « détonne ».
+
+Strudel fait ce tri à votre place. Vous donnez des **numéros** avec `n()`, et
+`.scale()` les transforme en notes de la gamme choisie.
+
+## Les numéros d'une gamme
+
+<StrudelRepl
+	client:visible
+	code={'n("0 1 2 3 4 5 6 7").scale("A:minor")'}
+	label="La gamme de la mineur, numéro par numéro"
+/>
+
+`"A:minor"` signifie **gamme de la mineur** : la tonalité de ce morceau.
+Les numéros se lisent comme des marches :
+
+| `n` | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|---|
+| note jouée | la | si | do | ré | mi | fa | sol | la (aigu) |
+
+- **0 est la note de départ** de la gamme, celle qui lui donne son nom : la.
+- **7 revient à la même note, une octave plus haut** : une gamme a sept notes,
+  la huitième marche recommence le cycle.
+- **Les numéros négatifs descendent** sous la note de départ : `-1` joue le
+  sol juste en dessous.
+
+Strudel joue la gamme dans l'octave 3. Pour une mélodie plus aiguë, ajoutez
+l'octave au nom : `"A4:minor"`.
+
+## Improviser sans risque
+
+<StrudelRepl
+	client:visible
+	code={'n("0 2 4 2 3 2 1 ~")\n  .scale("A4:minor")\n  .s("square")'}
+	label="Une mélodie en numéros"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Changez n'importe quel chiffre entre 0 et 7, réévaluez : la mélodie change,
+		mais elle reste dans la gamme. Le <code class="rounded-md bg-ground px-1 py-0.5 font-mono text-xs">~</code>
+		laisse respirer la fin du cycle.
+	</p>
+</StrudelRepl>
+
+C'est tout l'intérêt : vous pouvez **essayer sans réfléchir à la théorie**.
+Une suite qui monte (`0 1 2`) donne de l'élan, un retour sur `0` donne une
+impression de fin, un grand saut (`0 5`) attire l'attention.
+
+## Un mot change l'ambiance
+
+Remplacez `minor` par `major` dans le bloc précédent, sans toucher aux
+numéros. La même mélodie devient plus lumineuse : la **gamme majeure** sonne
+plus gaie, la **gamme mineure** plus sombre ou plus mélancolique.
+
+Une troisième gamme est très pratique pour débuter : `"A4:minor:pentatonic"`,
+la **pentatonique**. Elle n'a que cinq notes, et toutes vont bien ensemble,
+même jouées en même temps. Avec elle, l'index 5 revient déjà à la note de
+départ, une octave plus haut.
+
+La [documentation des fonctions de gamme de Strudel](https://strudel.cc/learn/tonal/)
+liste tous les noms de gammes disponibles.
+
+## À vous
+
+> Dans le bloc « Une mélodie en numéros », gardez la gamme `"A4:minor"` et
+> ne changez **que les numéros** :
+>
+> 1. **Écrivez une mélodie de huit cases** qui commence sur `0` et finit sur
+>    `0`. Gardez au moins un `~`.
+> 2. **Ajoutez un grand saut** (par exemple de `0` à `5`) et écoutez l'effet.
+> 3. **Passez une note sous la tonique** avec un numéro négatif.
+> 4. **Essayez `"A4:minor:pentatonic"`** avec les mêmes numéros. Ce qui change,
+>    c'est l'ensemble des notes disponibles : certains numéros tombent plus haut.
+> 5. **Gardez la version que vous préférez** : c'est la mélodie du morceau de
+>    la 3.6.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Une mélodie possible, qui part de la tonique, saute, descend sous elle et
+revient au départ :
+
+```js
+n("0 2 5 4 2 -1 0 ~")
+  .scale("A4:minor")
+  .s("square")
+```
+
+Avec `"A4:minor:pentatonic"`, les mêmes numéros ne désignent plus les mêmes
+notes : la pentatonique n'a que cinq notes par octave, donc `5` y joue déjà le
+la aigu, et `4` le sol. La mélodie garde sa forme générale (elle monte et
+descend aux mêmes endroits), mais avec des écarts plus grands.
+
+Aucune version n'est fausse : tant que les numéros passent par `.scale()`,
+toutes les notes appartiennent à la gamme.
+
+</details>
+
+`n()` ne choisit une note que s'il est suivi de `.scale()`. Si vous oubliez
+`.scale()`, les numéros ne correspondent plus à la gamme : vérifiez qu'elle
+est bien écrite après `n("…")`.

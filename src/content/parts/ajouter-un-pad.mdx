@@ -1,0 +1,128 @@
+---
+title: "Ajouter un pad — des accords tenus sous la rythmique"
+sequence: "harmonie-de-base"
+order: 5
+durationMinutes: 20
+---
+
+import CourseTerm from "@/components/CourseTerm.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Ajouter un pad" duration="2 min" format="live coding à l'écran, en voix off" />
+
+Une rythmique seule laisse un grand vide entre les coups. Un **pad** le
+remplit : une nappe d'accords tenus, discrète, qui donne au morceau son
+épaisseur et sa couleur.
+
+À la fin de ces **20 minutes**, vous saurez écrire un <CourseTerm term="accord" />,
+en faire alterner deux, et poser cette nappe sous votre rythmique.
+
+## Pourquoi un pad
+
+La batterie est faite de sons **courts** : ils frappent et s'éteignent. Le pad
+est leur contraire : des sons **longs**, qui tiennent d'un bout à l'autre du
+cycle.
+
+Ce contraste fait le morceau. La batterie donne le mouvement, le
+<CourseTerm term="pad" /> donne l'ambiance. Sans lui, la mélodie de la 3.6
+flotterait dans le vide.
+
+## Un accord : plusieurs notes en même temps
+
+En séquence 2, la virgule superposait des pistes. Entre crochets, elle
+superpose des notes : `[a2,c3,e3]` joue ces trois notes **ensemble**. C'est un
+accord.
+
+<StrudelRepl client:visible code={'note("[a2,c3,e3]")'} label="Un accord de la mineur" />
+
+Cet accord est construit sur la gamme de la 3.4 : on prend une note, on saute
+la suivante, on prend la d'après. **La, (si), do, (ré), mi** : trois notes de
+la gamme de la mineur, une sur deux.
+
+## Deux accords qui alternent
+
+Un seul accord finit par lasser. Les chevrons `< >`, vus en 3.3, en font
+alterner plusieurs : **un par cycle**.
+
+<StrudelRepl
+	client:visible
+	code={'note("<[a2,c3,e3] [f2,a2,c3]>")\n  .s("triangle")\n  .gain(0.5)'}
+	label="La mineur, puis fa majeur"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Chaque accord dure un cycle entier, puis laisse la place au suivant. Les
+		deux partagent deux notes, la et do : le passage de l'un à l'autre se fait
+		en douceur.
+	</p>
+</StrudelRepl>
+
+Trois choix rendent ce pad **doux** plutôt qu'envahissant :
+
+- **le registre grave** (octaves 2 et 3) : il reste sous la mélodie, qui
+  jouera dans l'octave 4 ;
+- **un synthé rond**, `triangle` ou `sine`, plutôt que `sawtooth` ;
+- **un volume réduit** avec `.gain()` : `1` est le volume normal, `0.5` la
+  moitié. Une nappe se sent plus qu'elle ne s'entend.
+
+Pour l'adoucir encore, avec une attaque progressive et un son qui s'éteint
+lentement, il faudra l'**enveloppe** de la séquence 4.
+
+## Poser le pad sous la rythmique
+
+Le pad devient une piste de plus dans le `stack()` de la 3.1 :
+
+```js
+stack(
+  s("bd ~ bd ~"),
+  s("~ sd ~ sd"),
+  s("hh*8"),
+  note("<[a2,c3,e3] [f2,a2,c3]>")
+    .s("triangle").gain(0.5)
+)
+```
+
+## À vous
+
+> Reprenez votre rythmique de la 3.1 dans le bloc « La mineur, puis fa
+> majeur », en remplaçant son code :
+>
+> 1. **Ajoutez le pad** comme dernière piste du `stack()`, avec deux accords
+>    en alternance.
+> 2. **Comparez `triangle` et `sawtooth`** pour le pad. Lequel laisse le mieux
+>    entendre la batterie ?
+> 3. **Réglez son volume** avec `.gain()` entre `0.3` et `0.7` : le pad doit
+>    se remarquer quand on le coupe, sans couvrir la caisse claire quand il joue.
+> 4. **Remplacez le second accord** par `[c3,e3,g3]` (do majeur), puis par
+>    `[g2,b2,d3]` (sol majeur). Gardez la paire que vous préférez.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+```js
+stack(
+  s("bd ~ bd ~"),
+  s("~ sd ~ sd"),
+  s("hh*8"),
+  s("~ ~ ~ oh"),
+  note("<[a2,c3,e3] [f2,a2,c3]>")
+    .s("triangle").gain(0.5)
+)
+```
+
+Avec `sawtooth`, le pad devient brillant et prend toute la place : la caisse
+claire et le charleston s'y noient. `triangle` reste en retrait.
+
+Pour vérifier le volume (étape 3), commentez la ligne du pad avec `//`,
+réévaluez, puis retirez les `//`. Si le morceau paraît soudain vide sans
+lui, mais que la batterie reste nette avec lui, le réglage est bon.
+
+Les accords de do majeur et de sol majeur sont, eux aussi, faits de notes de
+la gamme de la mineur : ils s'enchaînent sans fausse note avec le premier.
+
+</details>
+
+Si votre pad ne semble plus changer d'un cycle à l'autre, vérifiez les
+crochets. Sans eux, `<a2,c3,e3 f2,a2,c3>` ne produit aucune erreur, mais les
+virgules découpent tout le motif au lieu de chaque accord : les notes des deux
+accords se mélangent à chaque cycle.

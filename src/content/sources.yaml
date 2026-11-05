@@ -26,6 +26,13 @@
   category: documentation
   checkedAt: 2026-09-27
 
+- id: strudel-mini-notation
+  title: "Mini-notation"
+  url: "https://strudel.cc/learn/mini-notation/"
+  category: documentation
+  note: "Espace, *, ~ et [ ] : la syntaxe du temps utilisée en partie 2.2."
+  checkedAt: 2026-11-05
+
 - id: strudel-repl
   title: "REPL"
   url: "https://strudel.cc/technical-manual/repl/"
@@ -53,6 +60,28 @@
   url: "https://strudel.cc/workshop/first-notes/"
   category: documentation
   checkedAt: 2026-10-07
+
+- id: strudel-synths
+  title: "Synths"
+  url: "https://strudel.cc/learn/synths/"
+  category: documentation
+  note: "Les quatre formes d'onde de base (sine, sawtooth, square, triangle) ; triangle est le son par défaut d'un note() sans s()."
+  checkedAt: 2026-10-31
+
+- id: strudel-tonal
+  title: "Tonal functions"
+  url: "https://strudel.cc/learn/tonal/"
+  category: documentation
+  note: "scale() : transformer des numéros en notes d'une gamme, liste des noms de gammes."
+  checkedAt: 2026-10-31
+
+- id: wikipedia-ricoh-2a03
+  title: "Ricoh 2A03"
+  url: "https://en.wikipedia.org/wiki/Ricoh_2A03"
+  category: articles
+  author: "Wikipédia (en anglais)"
+  note: "Puce sonore de la NES : cinq voies, dont deux ondes carrées et une onde triangulaire (anecdote de la 3.3)."
+  checkedAt: 2026-10-31
 
 - id: strudel-effects
   title: "Audio effects"

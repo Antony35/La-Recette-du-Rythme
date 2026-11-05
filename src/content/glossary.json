@@ -14,5 +14,21 @@
 	"repl": {
 		"label": "REPL",
 		"definition": "Read, Evaluate, Print, Loop : lire, évaluer, afficher, recommencer. Dans Strudel, l’éditeur permet d’écrire du code, de l’évaluer et d’en écouter le résultat."
+	},
+	"forme-d-onde": {
+		"label": "forme d’onde",
+		"definition": "Forme de la vibration qu’un synthétiseur répète très vite pour produire un son. Lisse (sine), elle donne un son rond ; anguleuse (square, sawtooth), un son riche et brillant."
+	},
+	"gamme": {
+		"label": "gamme",
+		"definition": "Sélection de notes qui sonnent bien ensemble, rangées de la plus grave à la plus aiguë. Dans Strudel, scale() transforme des numéros en notes d’une gamme."
+	},
+	"accord": {
+		"label": "accord",
+		"definition": "Plusieurs notes jouées en même temps. Dans Strudel, elles s’écrivent entre crochets, séparées par des virgules : [a2,c3,e3]."
+	},
+	"pad": {
+		"label": "pad",
+		"definition": "Nappe d’accords tenus, jouée doucement en fond. Elle remplit l’espace entre les sons courts de la batterie."
 	}
 }

@@ -1,0 +1,141 @@
+---
+title: "Assembler rythmique, mélodie et pad — le premier morceau complet"
+sequence: "harmonie-de-base"
+order: 6
+durationMinutes: 25
+---
+
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Assembler les trois couches" duration="3 min" format="live coding à l'écran, en voix off" />
+
+Vous avez une rythmique, une mélodie et un pad. Joués ensemble sans réglage,
+ils se marchent dessus : la mélodie disparaît sous les accords, ou la batterie
+couvre tout.
+
+À la fin de ces **25 minutes**, vous aurez assemblé votre **premier morceau
+complet**, et chaque couche y restera audible.
+
+## Pourquoi équilibrer
+
+Additionner des couches additionne aussi leurs volumes. Sans réglage, la
+couche la plus brillante prend toute la place, et les autres ne s'entendent
+plus, même si elles jouent.
+
+**Équilibrer** (on dit aussi **mixer**), c'est donner à chaque couche le
+volume de son rôle. La batterie porte le rythme, la mélodie doit ressortir, le
+pad doit rester en fond.
+
+## Le morceau, couche par couche
+
+Les trois couches tiennent dans un seul `stack()`. Des commentaires `//`
+séparent les familles : Strudel les ignore, mais ils rendent le code lisible
+d'un coup d'œil.
+
+```js
+stack(
+  // rythmique
+  s("bd ~ bd ~"),
+  s("~ sd ~ sd"),
+  s("hh*8").gain(0.6),
+  s("~ ~ ~ oh").gain(0.6),
+  // mélodie
+  n("0 2 4 2 <3 5> 2 1 ~")
+    .scale("A4:minor").s("square").gain(0.3),
+  // pad
+  note("<[a2,c3,e3] [f2,a2,c3]>")
+    .s("triangle").gain(0.5)
+)
+```
+
+Dans la mélodie, `<3 5>` change une seule note à chaque cycle : la mélodie
+varie légèrement d'un tour à l'autre, comme le pad.
+
+## La méthode pour mixer
+
+**On ne règle jamais tout en même temps.** On part de la batterie, puis on
+ajoute une couche à la fois :
+
+1. **La batterie seule**, mélodie et pad commentés. C'est la référence : on
+   ne touche plus à son volume.
+2. **On ajoute le pad** et on règle son `.gain()` pour qu'il remplisse sans
+   couvrir la caisse claire.
+3. **On ajoute la mélodie** et on règle son `.gain()` pour qu'elle passe
+   **au-dessus** de tout le reste, sans agresser.
+
+`.gain()` va de `0` (muet) à `1` (volume normal). Au-delà de `1`, le son peut
+saturer : on baisse les autres couches plutôt que de pousser celle-ci.
+
+Écoutez aussi **à faible volume** : un mix déséquilibré s'entend mieux
+doucement. Si la mélodie disparaît quand vous baissez le son de l'ordinateur,
+elle est trop faible.
+
+## À vous
+
+> Assemblez **votre** morceau dans le bloc ci-dessous, avec vos choix des
+> parties précédentes : votre rythmique (3.1), votre mélodie et son synthé
+> (3.3 et 3.4), votre pad (3.5).
+>
+> 1. **Collez les trois couches** dans un seul `stack()`, séparées par des
+>    commentaires.
+> 2. **Mixez dans l'ordre** : batterie seule, puis le pad, puis la mélodie, en
+>    commentant les couches que vous ne réglez pas encore.
+> 3. **Vérifiez à faible volume** que chaque couche s'entend.
+> 4. **Enregistrez votre morceau** dans un fichier texte. La séquence 4 le
+>    reprendra pour le sculpter.
+
+<StrudelRepl
+	client:visible
+	code={'stack(\n  // rythmique\n  s("bd ~ bd ~"),\n  s("~ sd ~ sd"),\n  s("hh*8"),\n  // mélodie\n  // pad\n)'}
+	label="Votre morceau"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Un réglage de départ, à ajuster à l'oreille sur votre matériel :
+
+```js
+stack(
+  // rythmique
+  s("bd ~ bd ~"),
+  s("~ sd ~ sd"),
+  s("hh*8").gain(0.6),
+  s("~ ~ ~ oh").gain(0.6),
+  // mélodie
+  n("0 2 4 2 <3 5> 2 1 ~")
+    .scale("A4:minor").s("square").gain(0.3),
+  // pad
+  note("<[a2,c3,e3] [f2,a2,c3]>")
+    .s("triangle").gain(0.5)
+)
+```
+
+Le charleston est baissé à `0.6` : ses huit coups par cycle, tous dans l'aigu,
+couvriraient la mélodie. La mélodie en `square` est très présente par nature :
+`0.3` suffit à la faire ressortir. Le pad en `triangle` est plus discret :
+il supporte `0.5`.
+
+Les chiffres exacts dépendent de vos synthés et de vos haut-parleurs. Ce qui
+compte, c'est la méthode : une couche à la fois, en partant de la batterie.
+
+</details>
+
+<details>
+  <summary>Bloqué ? Le morceau de secours</summary>
+
+Si votre assemblage ne fonctionne pas, lancez celui-ci, puis remplacez une
+couche à la fois par la vôtre.
+
+<StrudelRepl
+	client:visible
+	code={'stack(\n  // rythmique\n  s("bd ~ bd ~"),\n  s("~ sd ~ sd"),\n  s("hh*8").gain(0.6),\n  s("~ ~ ~ oh").gain(0.6),\n  // mélodie\n  n("0 2 4 2 <3 5> 2 1 ~")\n    .scale("A4:minor").s("square").gain(0.3),\n  // pad\n  note("<[a2,c3,e3] [f2,a2,c3]>")\n    .s("triangle").gain(0.5)\n)'}
+	label="Le morceau de secours"
+/>
+
+</details>
+
+C'est la fin de la séquence 3. Vous avez un morceau complet : une rythmique,
+une mélodie qui ne peut pas sonner faux et une nappe d'accords. En séquence 4,
+on ne change plus les notes : on **sculpte le son** de chaque couche.

@@ -1,0 +1,109 @@
+---
+title: "Reprendre la rythmique — repartir du motif de la séquence 2"
+sequence: "harmonie-de-base"
+order: 1
+durationMinutes: 15
+---
+
+import PatternStrip from "@/components/PatternStrip.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+
+Dans cette séquence, on ne repart pas de zéro : la rythmique construite en
+séquence 2 devient la base d'un vrai morceau, auquel on ajoutera une mélodie
+puis des accords.
+
+À la fin de ces **15 minutes**, votre rythmique tournera de nouveau, vous
+l'aurez vérifiée piste par piste, et vous saurez couper une piste sans
+l'effacer.
+
+## Pourquoi vérifier avant d'ajouter
+
+Chaque couche ajoutée rend le motif plus difficile à écouter. Une caisse claire
+mal placée s'entend tout de suite quand elle joue seule, mais beaucoup moins
+sous une mélodie et des accords.
+
+On vérifie donc la fondation **maintenant**, tant qu'elle est encore simple.
+Une erreur laissée ici se cherchera plus tard au milieu de six pistes.
+
+## Le motif de départ
+
+Si vous avez gardé votre rythmique de la séquence 2, collez-la dans le bloc
+ci-dessous à la place du code proposé. Sinon, partez de celui-ci : c'est le
+motif réparé à la fin de la séquence 2.
+
+<StrudelRepl
+	client:visible
+	code={'stack(\n  s("bd ~ bd ~"),\n  s("~ sd ~ sd"),\n  s("hh*8"),\n  s("~ ~ ~ oh")\n)'}
+	label="La rythmique de la séquence 2"
+/>
+
+<PatternStrip label="grosse caisse" steps={["bd", "~", "bd", "~"]} />
+<PatternStrip label="caisse claire" steps={["~", "sd", "~", "sd"]} />
+<PatternStrip label="charleston ouvert" steps={["~", "~", "~", "oh"]} />
+
+Le charleston fermé, `hh*8`, joue sur les huit demi-cases du cycle : il n'est
+pas dessiné, il sonne partout.
+
+## Vérifier piste par piste
+
+Reprenez la méthode de la séquence 2 : **écouter, regarder, corriger**.
+Pendant la lecture, chaque nom de son doit s'encadrer **et** s'entendre.
+Un nom encadré mais muet est mal orthographié.
+
+Pour écouter une piste à part, il ne faut pas l'effacer : on la **met en
+commentaire**. Deux barres obliques `//` en début de ligne, et Strudel ignore
+la ligne.
+
+```js
+stack(
+  s("bd ~ bd ~"),
+  // s("~ sd ~ sd"),
+  s("hh*8"),
+  s("~ ~ ~ oh")
+)
+```
+
+Après réévaluation, la caisse claire se tait. Retirez les `//`, réévaluez :
+elle revient, exactement comme avant. C'est le geste qui servira tout au long
+de la séquence, pour écouter une couche à la fois.
+
+## À vous
+
+> Relancez votre rythmique, puis vérifiez-la sans arrêter la lecture :
+>
+> 1. **Coupez toutes les pistes sauf la grosse caisse** avec `//`, réévaluez,
+>    et comptez « 1, 2, 3, 4 ». Les coups tombent-ils sur 1 et 3 ?
+> 2. **Réactivez les pistes une par une**, en réévaluant à chaque fois. Chacune
+>    doit s'encadrer et s'entendre.
+> 3. **Ajustez si besoin** : un charleston trop chargé (`hh*16`) laissera peu de
+>    place à la mélodie. Revenez à `hh*8` ou essayez `hh*4`.
+> 4. **Copiez votre motif final** dans un fichier texte. Vous le reprendrez au
+>    début de chaque partie de cette séquence.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Avec seulement la grosse caisse active, on entend deux coups par cycle, sur
+les temps **1 et 3** :
+
+```js
+stack(
+  s("bd ~ bd ~"),
+  // s("~ sd ~ sd"),
+  // s("hh*8"),
+  // s("~ ~ ~ oh")
+)
+```
+
+En réactivant la caisse claire, elle doit tomber **entre** les grosses caisses,
+sur les temps 2 et 4. Si vous l'entendez en même temps qu'une grosse caisse,
+vérifiez l'ordre des `~` : c'est l'erreur corrigée en 2.5.
+
+Un motif plus léger laisse plus de place à ce qui va venir. Avec `hh*4`, le
+charleston ne joue plus que sur les quatre temps.
+
+</details>
+
+Une ligne commentée garde sa virgule : laissez-la telle quelle. Strudel
+accepte une virgule après la dernière piste, ce qui permet de commenter
+n'importe quelle ligne sans retoucher les autres.

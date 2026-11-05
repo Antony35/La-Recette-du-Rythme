@@ -1,0 +1,108 @@
+---
+title: "Les synthés natifs — quatre formes d'onde"
+sequence: "harmonie-de-base"
+order: 3
+durationMinutes: 20
+---
+
+import CourseTerm from "@/components/CourseTerm.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Les synthés natifs" duration="3 min" format="live coding à l'écran, en voix off" />
+
+Une même mélodie peut sonner douce comme une flûte ou criarde comme une alarme.
+Les notes ne changent pas : c'est le **timbre** qui change, et dans Strudel,
+il se choisit en un mot.
+
+À la fin de ces **20 minutes**, vous aurez entendu les quatre synthés de base
+de Strudel sur la même mélodie, et vous saurez lequel choisir selon le rôle
+de la couche.
+
+## Pourquoi le timbre compte
+
+Un synthétiseur fabrique le son à partir d'une <CourseTerm term="forme-d-onde" />
+qui se répète très vite. Sa forme décide du caractère du son : une onde lisse
+donne un son rond, une onde anguleuse un son riche et brillant.
+
+En séquence 2, `.bank()` changeait le caractère d'une batterie sans toucher au
+rythme. Ici, c'est pareil pour une mélodie : on garde les notes, on change le
+synthé.
+
+## Quatre synthés, une mélodie
+
+Le synthé se choisit avec `s()`, comme un son de batterie. Le bloc ci-dessous
+change de synthé **à chaque cycle**, grâce aux chevrons `< >` : ils prennent un
+élément différent à chaque tour.
+
+<StrudelRepl
+	client:visible
+	code={'note("a3 c4 e4 g4")\n  .s("<sine triangle square sawtooth>")'}
+	label="Un synthé par cycle"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Regardez le nom qui s'encadre : il vous dit quel synthé vous entendez.
+		Écoutez quatre cycles, puis recommencez en vous concentrant sur un seul
+		synthé.
+	</p>
+</StrudelRepl>
+
+| Synthé | Ce qu'on entend | Quand l'utiliser |
+|---|---|---|
+| `sine` (sinusoïde) | le son le plus pur, rond, presque sans relief | une couche discrète, une basse douce |
+| `triangle` | doux, mais plus présent que `sine` | un pad, une mélodie calme |
+| `square` (carrée) | creux, un peu nasillard, « jeu vidéo » | une mélodie qui doit ressortir |
+| `sawtooth` (dents de scie) | brillant, riche, agressif | une mélodie très présente ; à adoucir en séquence 4 |
+
+`triangle` est aussi le synthé **par défaut** : un `note()` sans `s()` est joué
+avec lui. C'est ce que vous entendiez en 3.2.
+
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>La musique des jeux de la console <strong>NES</strong> de Nintendo sortait d'une puce à cinq voies, dont <strong>deux ondes carrées</strong> et <strong>une onde triangulaire</strong>. Les mélodies de ces jeux sont faites des mêmes formes d'onde que <code>square</code> et <code>triangle</code> : d'où le côté « jeu vidéo » de la carrée.</p>
+  <a href="https://en.wikipedia.org/wiki/Ricoh_2A03">La puce sonore de la NES sur Wikipédia ↗</a>
+</aside>
+
+## Un piège : les noms sont en anglais
+
+`s("sinus")` ne produit aucune erreur et aucun son : Strudel cherche un son
+nommé `sinus`, ne le trouve pas, et se tait. C'est le même piège que `ohh` en
+2.5 : le nom s'encadre, mais rien ne sonne. Les quatre noms à retenir sont
+`sine`, `triangle`, `square` et `sawtooth`.
+
+La [documentation des synthés de Strudel](https://strudel.cc/learn/synths/)
+fait entendre chaque forme d'onde et en dessine la courbe.
+
+## À vous
+
+> Reprenez votre mélodie de la partie 3.2, ou `note("a3 c4 e4 g4")` :
+>
+> 1. **Jouez-la avec trois synthés différents**, l'un après l'autre, en
+>    réévaluant à chaque changement : `.s("sine")`, `.s("square")`,
+>    `.s("sawtooth")`.
+> 2. **Transposez-la d'une octave vers le grave**, puis rejouez les trois
+>    synthés. Lequel reste le plus lisible dans le grave ?
+> 3. **Choisissez le synthé de votre mélodie** pour le morceau de la 3.6, et
+>    notez votre choix avec la mélodie.
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Les trois versions de l'étape 1 :
+
+```js
+note("a3 c4 e4 g4").s("sine")
+note("a3 c4 e4 g4").s("square")
+note("a3 c4 e4 g4").s("sawtooth")
+```
+
+Dans le grave (`a2 c3 e3 g3`), `sine` devient très sourd : on le sent plus
+qu'on ne l'entend, surtout sur des haut-parleurs de portable. `square` et
+`sawtooth` restent lisibles, parce que leur son contient beaucoup de
+fréquences aiguës en plus de la note jouée.
+
+Pour l'étape 3, il n'y a pas de mauvaise réponse. Retenez seulement qu'une
+mélodie doit **ressortir** au-dessus de la rythmique et des accords :
+`square` ou `sawtooth` s'en chargent mieux que `sine`.
+
+</details>
