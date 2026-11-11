@@ -80,20 +80,23 @@ et la LinnDrum ont toutes `bd`, `sd` et `hh`. La TR-909 n'a pas `cb`
 | 1:10 → 1:40 | `kit-1-bank.png` | Côté code, `.bank()` ne fait que **préfixer** le nom du son : `bd` devient `RolandTR909_bd`. D'où le piège : si une machine n'a pas ce son, il disparaît, sans aucune erreur. La 909, par exemple, n'a pas de ***cowbell***, la cloche : `cb` se tait. |
 | 1:40 → 2:00 | Remettre `RolandTR808`, puis le bloc de la page 2.3 | À vous : rejouez votre rythme sur trois kits, puis revenez à la 808. C'est la machine de notre morceau. |
 
-## Vidéo 2.4 — Superposer des pistes (2 min 45)
+## Vidéo 2.4 — Superposer des pistes (3 min 20)
 
 La démo est en **techno**, comme promis en 2.1, et se termine sur la
 **batterie du morceau** que la séquence 3 complète : TR-808, 128 BPM, clap sur
-les temps 2 et 4, *hi-hat* entre les temps.
+les temps 2 et 4, *hi-hat* entre les temps. Images dans
+`FYC/S2-rythme/2.4-superposer-des-pistes/3-images/` (`bpm-1`, `bpm-2`).
 
 | Temps | Écran | Voix |
 |---|---|---|
-| 0:00 → 0:35 | Nouvelle ligne : `s("bd*4, ~ sd ~ sd, hh*8")`, `Ctrl + Entrée` | Jusqu'ici, les sons se suivaient. Sur une vraie batterie, on joue le plus souvent plusieurs sons en même temps. Dans Strudel, on utilise la **virgule** pour superposer les motifs. Dans cet exemple, on se retrouve avec trois pistes, chacune avec son propre rythme. *(laisser entendre)* Une *bass drum* sur chaque temps, la *snare drum* sur les temps 2 et 4 : c'est le squelette de la **techno**. |
+| 0:00 → 0:35 | `pistes-0-titre.png`, puis nouvelle ligne : `s("bd*4, ~ sd ~ sd, hh*8")`, `Ctrl + Entrée` | Jusqu'ici, les sons se suivaient. Sur une vraie batterie, on joue le plus souvent plusieurs sons en même temps. Dans Strudel, on utilise la **virgule** pour superposer les motifs. Dans cet exemple, on se retrouve avec trois pistes, chacune avec son propre rythme. *(laisser entendre)* Une *bass drum* sur chaque temps, la *snare drum* sur les temps 2 et 4 : c'est le squelette de la **techno**. |
 | 0:35 → 1:00 | Remplacer `hh*8` par `hh*16`, `Ctrl + Entrée`, puis revenir à `hh*8` | Pour donner de l'énergie, la techno ne change pas de temps : elle serre le *hi-hat*. Huit coups… *(laisser entendre)* puis seize. *(laisser entendre)* La *bass drum* et la *snare drum*, elles, n'ont pas bougé : chaque piste vit sa vie. |
 | 1:00 → 1:40 | Réécrire avec `stack()`, une piste par ligne (code 1 ci-dessous) | Quand les pistes s'accumulent, on utilise la fonction **`stack()`**, « pile » en anglais, qui permet d'écrire une piste par ligne. Le résultat est le même, mais la lecture est plus simple, et on peut modifier une piste sans toucher aux autres. *(laisser entendre)* |
-| 1:40 → 2:10 | Ajouter `setcpm(128 / 4)` en première ligne, `Ctrl + Entrée` | Jusqu'ici, Strudel jouait à 120 ***BPM***, *beats per minute* : 120 temps par minute. Pour changer de tempo, on écrit **`setcpm()`** en première ligne. Elle compte en cycles par minute : on divise donc le tempo par nos quatre temps. 128 divisé par 4. *(laisser entendre)* |
-| 2:10 → 2:30 | `sd` → `cp`, puis `hh*8` → `~ hh ~ hh ~ hh ~ hh`, puis `.bank("RolandTR808")` après la parenthèse du `stack()` (code 2) | Dernière touche : un ***clap*** à la place de la *snare drum*, le *hi-hat* entre les temps, et toute la batterie sur la 808. *(laisser entendre)* Voilà la batterie de notre morceau. |
-| 2:30 → 2:45 | Bloc de la page 2.4 | À vous : construisez-la piste par piste, puis gardez-la. La séquence 3 repart de là. |
+| 1:40 → 2:05 | `bpm-1-temps-par-minute.png` | Le tempo se mesure en ***BPM***, *beats per minute* : le nombre de temps joués en une minute. Strudel, lui, compte des cycles. Par défaut, 30 cycles par minute. Et comme chaque cycle contient nos 4 temps, ça fait 120 BPM. |
+| 2:05 → 2:30 | `bpm-2-setcpm.png` | Pour aller plus vite, on écrit **`setcpm()`** en première ligne. Elle attend des cycles par minute : on lui donne le tempo voulu, 128, divisé par nos 4 temps. Le motif ne change pas : c'est le cycle entier qui raccourcit. |
+| 2:30 → 2:45 | Strudel : ajouter `setcpm(128 / 4)` en première ligne, `Ctrl + Entrée` | *(laisser entendre)* 128 BPM, le tempo de notre morceau. |
+| 2:45 → 3:05 | `sd` → `cp`, puis `hh*8` → `~ hh ~ hh ~ hh ~ hh`, puis `.bank("RolandTR808")` après la parenthèse du `stack()` (code 2) | Dernière touche : un ***clap*** à la place de la *snare drum*, le *hi-hat* entre les temps, et toute la batterie sur la 808. *(laisser entendre)* Voilà la batterie de notre morceau. |
+| 3:05 → 3:20 | Bloc de la page 2.4 | À vous : construisez-la piste par piste, puis gardez-la. La séquence 3 repart de là. |
 
 Code 1, à taper en direct :
 
@@ -142,6 +145,15 @@ seule ligne modifiée à la fois :
    fautive dans le presse-papiers et la coller), puis retour à `hh` ;
 2. `bd*4` → `bd bd bd`, puis `bd bd ~ bd`.
 
+**La voix est enregistrée et ne sera pas refaite** : c'est la capture qui s'y
+cale. « Le rythme boite » est une impression d'écoute, pas un diagnostic :
+`bd bd bd` n'est ni un bug ni une faute de syntaxe. Strudel joue trois coups
+réguliers, un par tiers de cycle, contre le *clap* et le *hi-hat* restés en
+quatre (trois contre quatre). L'erreur est un écart entre l'intention (retirer
+un coup) et ce qui est écrit. La phrase de 1:40 et `aides-1-efface.png` donnent
+l'explication exacte ; la nuance « Strudel joue ce qu'on écrit » ira dans le
+texte de la page 2.5.
+
 Images dans `FYC/S2-rythme/2.5-aides-visuelles/3-images/`.
 
 | Temps | Écran | Voix |
@@ -150,9 +162,9 @@ Images dans `FYC/S2-rythme/2.5-aides-visuelles/3-images/`.
 | 0:20 → 0:40 | Zoom sur le code qui s'allume | Pendant que ça joue, la *bass drum* s'allume sur chaque temps, le *clap* sur le 2 et le 4, le *hi-hat* entre les deux. Le code bat au rythme de la musique. |
 | 0:40 → 1:00 | `hh` → `hj` sur la ligne du *hi-hat*, `Ctrl + Entrée` | Et si je fais une faute de frappe ? J'écris `hj` au lieu de `hh`. *(laisser entendre)* Le *hi-hat* a disparu, et Strudel n'affiche aucune erreur. |
 | 1:00 → 1:20 | Zoom : `hj` s'encadre. Puis corriger en `hh` | Pourtant, `hj` continue de s'encadrer, quatre fois par cycle. Strudel joue bien le motif, mais il ne trouve aucun son à ce nom. D'où une règle simple : **encadré mais muet, c'est l'orthographe**. |
-| 1:20 → 1:40 | `bd*4` → `bd bd bd`, `Ctrl + Entrée` | Autre cas : je veux retirer le troisième coup de *bass drum*, alors j'efface un `bd`. *(laisser entendre)* Le rythme boite. |
-| 1:40 → 2:05 | `aides-1-efface.png`, puis zoom sur les encadrements | Les encadrements le montrent : la *bass drum* ne s'allume plus en même temps que le *clap*. Il ne reste que trois sons, alors ils se partagent tout le cycle : chacun prend un tiers, comme la valse de la 2.1. |
-| 2:05 → 2:25 | `aides-2-silence.png`, puis `bd bd bd` → `bd bd ~ bd`, `Ctrl + Entrée` | Pour retirer un coup, on ne l'efface pas : on le **remplace par un silence**. Le tilde garde la case, et tout se réaligne. *(laisser entendre)* |
+| 1:20 → 1:40 | `bd*4` → `bd bd bd`, `Ctrl + Entrée`. Laisser jouer **au moins 2 cycles** : il faut ce temps pour entendre que ça ne se cale plus | Autre cas : je veux retirer le troisième coup de *bass drum*, alors j'efface un `bd`. *(laisser entendre)* Le rythme boite. |
+| 1:40 → 2:05 | `aides-1-efface.png`, puis zoom sur le code qui joue : `bd` et `cp` s'encadrent **à tour de rôle, jamais ensemble** | Les encadrements le montrent : la *bass drum* ne s'allume plus en même temps que le *clap*. Il ne reste que trois sons, alors ils se partagent tout le cycle : chacun prend un tiers, comme la valse de la 2.1. |
+| 2:05 → 2:25 | `aides-2-silence.png`, puis `bd bd bd` → `bd bd ~ bd`, `Ctrl + Entrée`. Zoom : *bass drum* et *clap* se rallument **ensemble** sur les temps 2 et 4 | Pour retirer un coup, on ne l'efface pas : on le **remplace par un silence**. Le tilde garde la case, et tout se réaligne. *(laisser entendre)* |
 | 2:25 → 2:45 | Bloc « À réparer » de la page 2.5 | Écouter, regarder, corriger : c'est la méthode. Dans la page, une rythmique cache deux erreurs. À vous de les trouver. |
 
 ---

@@ -368,7 +368,7 @@ place exacte (16/9) avec titre, durée et format de tournage :
 ```
 
 Tournées : présentation du cours (accueil), prérequis (1.1), histoire du
-live coding (1.2), REPL (1.3), notes anglaises (1.4), gamme (1.5) et premiers sons (2.1). À tourner : de 2.2 à 3.6 (la 3.1 n'a pas de vidéo).
+live coding (1.2), REPL (1.3), notes anglaises (1.4), gamme (1.5) et toute la séquence 2 (2.1 à 2.5). À tourner : de 3.2 à 3.6 (la 3.1 n'a pas de vidéo).
 
 ## Images
 

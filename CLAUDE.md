@@ -433,12 +433,15 @@ même dossier.
   l'écran), notes anglaises et drum kit (1.4,
   `notes-anglaises-et-drum-kit.mp4`, 1 min 15, lettres une à une et une fiche
   par son), une gamme complète (1.5, `une-gamme-complete.mp4`, 1 min 30, claviers
-  des hauteurs et des dièses, piano roll sur strudel.cc), premiers sons (2.1,
-  `premiers-sons.mp4`, 1 min 55, sous-titres sur boîte noire),
+  des hauteurs et des dièses, piano roll sur strudel.cc), et toute la séquence 2 : premiers sons (2.1, `premiers-sons.mp4`,
+  1 min 50), mini-notation (2.2, `mini-notation.mp4`, 1 min 25), changer de
+  drum kit (2.3, `changer-de-drum-kit.mp4`, 1 min 15), superposer des pistes
+  (2.4, `superposer-des-pistes.mp4`, 2 min 20) et les aides visuelles (2.5,
+  `aides-visuelles.mp4`, 1 min 40), toutes sous-titrées sur boîte noire,
   via `components/Video.astro`.
 - **À tourner** : `components/VideoPlaceholder.astro` en occupe exactement la
   place (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
-  format. Présent de 2.2 à 3.6, sauf en 3.1. Le jour du tournage, on le remplace par
+  format. Présent de 3.2 à 3.6 (la 3.1 n'a pas de vidéo). Le jour du tournage, on le remplace par
   `<Video>` au même endroit.
 - **La vidéo montre, elle ne résume pas la page** : le cahier des charges veut
   un contenu vidéo différent du texte. Seule exception : la 1.2 (histoire,
@@ -745,9 +748,11 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
   Les états « à venir » et « contenu en cours de rédaction » restent visibles
   pour les séquences 4 à 8.
 - **Vidéos de sous-séance pas encore tournées** : emplacements « Ici vidéo »
-  de 2.2 à 3.6, sauf la 3.1, qui n'a pas de vidéo (voir « Vidéos »).
-- **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −19 (2.1), −23
-  (accueil). Viser −16 LUFS pour les suivantes.
+  de 3.2 à 3.6 ; la 3.1 n'a pas de vidéo (voir « Vidéos »).
+- **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −23
+  (accueil). Toute la S2 est à −16 LUFS, pics sous −1 dB, via
+  `~/Documents/FYC/normaliser-volume.sh` (hors dépôt, original gardé dans
+  `avant-volume/`). Viser −16 LUFS pour les suivantes.
 - Les **niveaux** (1 : S1–S3, 2 : S4–S5, 3 : S6–S8) sont une lecture de la
   vidéo de présentation, pas un découpage écrit dans la scénarisation : à valider.
 - Les références historiques de la scénarisation (Xenakis, George Lewis,

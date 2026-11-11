@@ -57,11 +57,11 @@ comparer des sons à l'oreille, **8 min** pour un sujet complexe ou une correcti
 
 | Sous-séance | Ce que la vidéo montre | Durée | Statut |
 |---|---|---|---|
-| 2.1 Premiers sons | pourquoi `bd`, `sd`, `hh` (grave, milieu, aigu), le cycle se partage en 2 puis 4, valse en 3 temps, techno en 4 | 1 min 55 | ✅ tournée |
-| 2.2 Mini-notation | `*`, `~`, `[ ]` sur un même motif ; erreur de syntaxe contre son inconnu | 2 min | script prêt |
-| 2.3 Changer de drum kit | le même motif sur 808, 909 et LinnDrum | 2 min | script prêt |
-| 2.4 Superposer des pistes | la virgule, puis `stack()` | 2 min 10 | script prêt |
-| 2.5 Les aides visuelles | réparer deux erreurs en direct, à l'oreille et à l'œil | 2 min 45 | script prêt |
+| 2.1 Premiers sons | pourquoi `bd`, `sd`, `hh` (grave, milieu, aigu), le cycle se partage en 2 puis 4, valse en 3 temps, techno en 4 | 1 min 50 | ✅ tournée |
+| 2.2 Mini-notation | `*`, `~`, `[ ]` sur un même motif ; erreur de syntaxe contre son inconnu | 1 min 25 | ✅ tournée |
+| 2.3 Changer de drum kit | le même motif sur 808, 909 et LinnDrum | 1 min 15 | ✅ tournée |
+| 2.4 Superposer des pistes | la virgule, `stack()`, puis le tempo avec `setcpm()` | 2 min 20 | ✅ tournée |
+| 2.5 Les aides visuelles | réparer deux erreurs en direct, à l'oreille et à l'œil | 1 min 40 | ✅ tournée |
 
 ### S3 — Harmonie de base
 
