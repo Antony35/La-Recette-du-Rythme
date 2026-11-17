@@ -131,20 +131,6 @@ méthode : une couche à la fois, en partant de la batterie.
 
 </details>
 
-<details>
-  <summary>Bloqué ? Le morceau de secours</summary>
-
-Si votre assemblage ne fonctionne pas, lancez celui-ci, puis remplacez une
-couche à la fois par la vôtre.
-
-<StrudelRepl
-	client:visible
-	code={'setcpm(128 / 4)\n\nstack(\n  // batterie\n  stack(\n    s("bd*4"),\n    s("~ cp ~ cp").gain(0.3),\n    s("~ hh ~ hh ~ hh ~ hh").gain(0.32)\n  ).bank("RolandTR808"),\n  // pad\n  n("<[0,2,4] [[0 ~ 1 ~ 2 ~ 4 ~] [0,2,5]]>")\n    .scale("D4:minor").s("sine").gain(0.16),\n  // pluck\n  n("[0 ~ 1 ~ 2 ~ 4 ~] <[0 ~ 1 ~ 2 ~ 4 ~] [0 ~ 5 ~ 0 ~ 4 ~]>")\n    .scale("D4:minor").s("sawtooth").gain(0.12)\n)'}
-	label="Le morceau de secours"
-/>
-
-</details>
-
 C'est la fin de la séquence 3. Vous avez un morceau complet : une batterie de
 TR-808 à 128 BPM, un pluck qui ne peut pas sonner faux et une nappe d'accords.
 En séquence 4, on ne change plus les notes : on **sculpte le son** de chaque

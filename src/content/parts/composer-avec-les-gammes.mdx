@@ -53,6 +53,18 @@ Le si bémol de la 3.2 est là, au numéro 5 : avec une gamme, plus besoin de
 savoir l'écrire. Strudel joue la gamme dans l'octave 3. Pour une mélodie plus
 aiguë, ajoutez l'octave au nom : `"D4:minor"`.
 
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>Écrire des notes avec des numéros n'a rien de neuf. En <strong>1742</strong>,
+  Jean-Jacques <strong>Rousseau</strong> présente à l'Académie des sciences une
+  notation où chaque note est un chiffre. Reprise au XIX<sup>e</sup> siècle par
+  Galin, Paris et Chevé, elle se répand en Chine à partir de <strong>1900</strong>,
+  sous le nom de <em>jianpu</em> : la plupart des recueils de chansons chinois
+  s'écrivent encore ainsi. Une différence : le <em>jianpu</em> compte à partir
+  de 1, Strudel à partir de <strong>0</strong>, comme en programmation.</p>
+  <a href="https://fr.wikipedia.org/wiki/Jianpu">Le jianpu sur Wikipédia ↗</a>
+</aside>
+
 ## Le pluck en numéros
 
 Le pluck de la 3.2, `d4 ~ e4 ~ f4 ~ a4 ~`, se lit dans la gamme : ré, mi, fa,
@@ -87,17 +99,39 @@ impression de fin, un grand saut (`0 5`) attire l'attention.
 
 ## Un mot change l'ambiance
 
-Remplacez `minor` par `major` dans le bloc précédent, sans toucher aux
-numéros. La même mélodie devient plus lumineuse : la **gamme majeure** sonne
-plus gaie, la **gamme mineure** plus sombre ou plus mélancolique.
+Un clavier a douze touches par octave. Une gamme en **choisit sept**. Changer
+de gamme, c'est changer ce choix, en gardant la même note de départ.
 
-Une troisième gamme est très pratique pour débuter : `"D4:minor:pentatonic"`,
-la **pentatonique**. Elle n'a que cinq notes, et toutes vont bien ensemble,
-même jouées en même temps. Avec elle, l'index 5 revient déjà à la note de
-départ, une octave plus haut.
+<StrudelRepl
+	client:visible
+	code={'n("0 1 2 3 4 5 6 7")\n  .scale("<D4:major D4:minor D4:minor:pentatonic>")'}
+	label="Trois gammes, une par cycle"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Mêmes numéros, trois gammes : majeure, mineure, puis pentatonique. Regardez
+		le nom qui s'encadre pour savoir laquelle vous entendez.
+	</p>
+</StrudelRepl>
 
-La [documentation des fonctions de gamme de Strudel](https://strudel.cc/learn/tonal/)
-liste tous les noms de gammes disponibles.
+| `n` | 0 | 1 | 2 | 3 | 4 | 5 | 6 | 7 |
+|---|---|---|---|---|---|---|---|---|
+| `major` | ré | mi | **fa dièse** | sol | la | **si** | **do dièse** | ré |
+| `minor` | ré | mi | fa | sol | la | si bémol | do | ré |
+| `minor:pentatonic` | ré | fa | sol | la | do | ré | fa | sol |
+
+- **Majeur et mineur ne changent que trois notes**, en gras dans le tableau.
+  Ça suffit : la **gamme majeure** sonne plus gaie, la **gamme mineure** plus
+  sombre ou plus mélancolique.
+- **La pentatonique ne garde que cinq notes** : elle retire le mi et le si bémol,
+  les deux qui « frottent » le plus. Toutes les autres vont bien ensemble,
+  même jouées en même temps : c'est la gamme idéale pour débuter.
+- Avec cinq notes, **le 5 revient déjà au ré**, une octave plus haut.
+
+Essayez-le sur votre propre mélodie : remplacez `minor` par `major` dans le
+bloc précédent, sans toucher aux numéros.
+
+La section [« Scales » de l'atelier de Strudel](https://strudel.cc/workshop/first-notes/#scales)
+fait entendre d'autres gammes à essayer.
 
 ## Le pluck complet : une question, une réponse
 

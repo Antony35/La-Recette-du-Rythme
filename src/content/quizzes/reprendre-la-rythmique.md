@@ -27,30 +27,31 @@ questions:
       Une ligne commentée n'est plus du code pour Strudel. Après réévaluation,
       la piste se tait ; il suffit de retirer les `//` et de réévaluer pour
       la retrouver telle quelle.
-  - question: "Pendant la lecture, un nom de son s'encadre, mais vous ne l'entendez pas. Que vérifier en premier ?"
+  - question: "Vous commentez la dernière piste du `stack()`. La ligne juste au-dessus se termine par une virgule. Que faut-il faire ?"
     options:
       [
-        "L'orthographe du nom : Strudel encadre aussi un son qu'il ne trouve pas",
-        "Le nombre de virgules du `stack()`",
-        "Le volume de la grosse caisse",
-        "Que la ligne n'est pas commentée",
+        "Rien : Strudel accepte une virgule après la dernière piste",
+        "Retirer la virgule, sinon Strudel affiche une erreur",
+        "Commenter aussi la ligne du dessus",
+        "Remplacer la virgule par un point-virgule",
       ]
     answer: 0
     explanation: >-
-      Le surlignage montre ce que le code demande, pas ce qui sonne. Un nom
-      inconnu s'encadre comme les autres, sans son ni message : c'est presque
-      toujours une faute de frappe. Une ligne commentée, elle, ne s'encadre plus.
-  - question: "Pourquoi un charleston plus léger (`hh*4` plutôt que `hh*16`) peut-il aider pour la suite ?"
+      Une virgule après la dernière piste est permise. C'est ce qui permet de
+      commenter n'importe quelle ligne du `stack()`, puis de la rétablir, sans
+      jamais retoucher les autres.
+  - question: "Le motif tourne à 128 BPM. Vous commentez la ligne `setcpm(128 / 4)` et réévaluez. À quelle vitesse joue-t-il ?"
     options:
       [
-        "Il laisse plus de place à la mélodie qui va venir dans l'aigu",
-        "Il accélère le tempo du morceau",
-        "Il est obligatoire pour ajouter un pad",
-        "Il évite une erreur de syntaxe dans le `stack()`",
+        "Toujours 128 BPM : le bloc garde le dernier tempo réglé",
+        "120 BPM, la vitesse par défaut de Strudel",
+        "Il s'arrête : `setcpm()` est obligatoire",
+        "Strudel affiche une erreur",
       ]
     answer: 0
     explanation: >-
-      Le charleston occupe l'aigu, là où jouera la mélodie. Plus il est
-      chargé, plus il entre en concurrence avec elle. Alléger une couche,
-      c'est préparer la place des suivantes.
+      Une ligne commentée ne s'exécute plus, mais elle ne défait pas ce
+      qu'elle avait réglé. Le tempo reste celui du dernier `setcpm()`, jusqu'au
+      rechargement de la page. Pour revenir à 120 BPM, on écrit
+      `setcpm(120 / 4)`.
 ---

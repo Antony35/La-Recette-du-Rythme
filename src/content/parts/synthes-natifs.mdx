@@ -5,6 +5,7 @@ order: 3
 durationMinutes: 20
 ---
 
+import waveforms from "@/assets/Waveforms.svg";
 import CourseTerm from "@/components/CourseTerm.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
 import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
@@ -47,6 +48,25 @@ change de synthé **à chaque cycle**, grâce aux chevrons `< >` : ils prennent 
 	</p>
 </StrudelRepl>
 
+Chaque synthé part d'une **forme d'onde** différente. Plus elle a d'angles,
+plus le son est brillant : la sinusoïde, toute ronde, donne le son le plus doux,
+la dent de scie le plus agressif.
+
+<figure>
+	<div class="rounded-xl bg-snow p-4">
+		<img
+			src={waveforms.src}
+			width={waveforms.width}
+			height={waveforms.height}
+			alt="Quatre courbes superposées : sine, une vague arrondie ; square, des créneaux ; triangle, des pointes régulières ; sawtooth, une montée en pente suivie d'une chute verticale."
+		/>
+	</div>
+	<figcaption>
+		Les quatre formes d'onde. Schéma <a href="https://commons.wikimedia.org/wiki/File:Waveforms.svg">Omegatron</a>,
+		Wikimedia Commons, licence CC BY-SA 3.0 (traductions des libellés retirées).
+	</figcaption>
+</figure>
+
 | Synthé | Ce qu'on entend | Quand l'utiliser |
 |---|---|---|
 | `sine` (sinusoïde) | le son le plus pur, rond, presque sans relief | une couche discrète : **le pad du morceau** (3.5) |
@@ -59,7 +79,7 @@ avec lui. C'est ce que vous entendiez en 3.2.
 
 <aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
   <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
-  <p>La musique des jeux de la console <strong>NES</strong> de Nintendo sortait d'une puce à cinq voies, dont <strong>deux ondes carrées</strong> et <strong>une onde triangulaire</strong>. Les mélodies de ces jeux sont faites des mêmes formes d'onde que <code>square</code> et <code>triangle</code> : d'où le côté « jeu vidéo » de la carrée.</p>
+  <p>Pourquoi <code>square</code> sonne-t-il « jeu vidéo » ? Sur la console <strong>NES</strong> de Nintendo (1983), toute la musique sortait d'une seule puce, capable de jouer cinq sons à la fois : <strong>deux ondes carrées</strong>, <strong>une onde triangulaire</strong>, un bruit pour les percussions et un canal pour de courts sons enregistrés. Les mélodies de ces jeux étaient donc jouées par des ondes carrées. En écoutant <code>square</code>, c'est ce son-là que vous reconnaissez.</p>
   <a href="https://en.wikipedia.org/wiki/Ricoh_2A03">La puce sonore de la NES sur Wikipédia ↗</a>
 </aside>
 

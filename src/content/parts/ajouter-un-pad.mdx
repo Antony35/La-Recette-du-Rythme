@@ -30,24 +30,25 @@ flotterait dans le vide.
 
 ## Un accord : plusieurs notes en même temps
 
-En séquence 2, la virgule superposait des pistes. Entre crochets, elle
-superpose des notes : `[d4,f4,a4]` joue ces trois notes **ensemble**. C'est un
-accord.
+En séquence 2, la virgule superposait des pistes. Elle superpose aussi des
+notes : `d4,f4,a4` joue ces trois notes **ensemble**. C'est un accord.
 
-<StrudelRepl client:visible code={'note("[d4,f4,a4]").s("sine")'} label="Un accord de ré mineur" />
+<StrudelRepl client:visible code={'note("d4,f4,a4").s("sine")'} label="Un accord de ré mineur" />
 
 Cet accord est construit sur la gamme de la 3.4 : on prend une note, on saute
 la suivante, on prend celle d'après. **Ré, (mi), fa, (sol), la** : une marche
-sur deux. En numéros, c'est encore plus lisible : `[0,2,4]`.
+sur deux. En numéros, c'est encore plus lisible : `0,2,4`.
 
 ```js
-n("[0,2,4]").scale("D4:minor")   // le même accord, en numéros
+n("0,2,4").scale("D4:minor")   // le même accord, en numéros
 ```
 
 ## Deux accords qui alternent
 
 Un seul accord finit par lasser. Les chevrons `< >`, vus en 3.3, en font
-alterner plusieurs : **un par cycle**.
+alterner plusieurs : **un par cycle**. Chaque accord s'y regroupe entre
+**crochets** : `[0,2,4]` forme un seul élément, que les chevrons peuvent
+alterner avec le suivant.
 
 <StrudelRepl
 	client:visible

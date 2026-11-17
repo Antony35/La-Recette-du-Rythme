@@ -441,7 +441,7 @@ même dossier.
   via `components/Video.astro`.
 - **À tourner** : `components/VideoPlaceholder.astro` en occupe exactement la
   place (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
-  format. Présent de 3.2 à 3.6 (la 3.1 n'a pas de vidéo). Le jour du tournage, on le remplace par
+  format. Présent de 3.1 à 3.6. Le jour du tournage, on le remplace par
   `<Video>` au même endroit.
 - **La vidéo montre, elle ne résume pas la page** : le cahier des charges veut
   un contenu vidéo différent du texte. Seule exception : la 1.2 (histoire,
@@ -672,7 +672,15 @@ pour `s("bd")`. `loadDrumKit(samples)` (`lib/strudel-sound.ts`) l'enregistre.
 - **Les virgules d'un accord ont besoin de crochets.** Dans
   `note("<a2,c3,e3 f2,a2,c3>")`, les virgules découpent tout le motif : les
   notes des deux accords se mélangent à chaque cycle, sans erreur. La bonne
-  écriture est `<[a2,c3,e3] [f2,a2,c3]>`.
+  écriture est `<[a2,c3,e3] [f2,a2,c3]>`. Hors chevrons, la virgule seule suffit :
+  `n("0,2,4")` et `n("[0,2,4]")` jouent le même accord (vérifié dans le REPL
+  du site) ; la 3.5 introduit donc l'accord sans crochets, et les crochets
+  avec les chevrons.
+- **Commenter `setcpm()` ne remet pas le tempo par défaut.** Le bloc garde
+  le dernier tempo réglé, même après Stop puis Play (`scheduler.cps` reste à
+  0,533 après `setcpm(128 / 4)`) ; seul un rechargement de la page revient à
+  120 BPM. Pour comparer deux tempos, changer le nombre. La 3.1 affirmait le
+  contraire ; vérifié dans le REPL du site.
 - **Pour vérifier un motif sans l'écouter**, interroger le motif évalué :
   `editor.repl.state.pattern.queryArc(0, 2)` rend les événements (instant,
   durée, note, son). C'est ce qui a servi à vérifier chaque note de la S3.
@@ -748,7 +756,8 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
   Les états « à venir » et « contenu en cours de rédaction » restent visibles
   pour les séquences 4 à 8.
 - **Vidéos de sous-séance pas encore tournées** : emplacements « Ici vidéo »
-  de 3.2 à 3.6 ; la 3.1 n'a pas de vidéo (voir « Vidéos »).
+  de 3.1 à 3.6 (voir « Vidéos »). Images et projets Kdenlive prêts
+  dans `FYC/S3-harmonie-de-base/`.
 - **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −23
   (accueil). Toute la S2 est à −16 LUFS, pics sous −1 dB, via
   `~/Documents/FYC/normaliser-volume.sh` (hors dépôt, original gardé dans

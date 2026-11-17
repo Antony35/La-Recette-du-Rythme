@@ -66,7 +66,8 @@
   title: "Workshop — First Notes"
   url: "https://strudel.cc/workshop/first-notes/"
   category: documentation
-  checkedAt: 2026-10-07
+  note: "La section « Scales » (#scales) fait entendre plusieurs gammes ; lien de la 3.4."
+  checkedAt: 2026-11-11
 
 - id: strudel-synths
   title: "Synths"
@@ -79,16 +80,16 @@
   title: "Tonal functions"
   url: "https://strudel.cc/learn/tonal/"
   category: documentation
-  note: "scale() : transformer des numéros en notes d'une gamme, liste des noms de gammes."
-  checkedAt: 2026-10-31
+  note: "scale() : transformer des numéros en notes d'une gamme, octave 3 par défaut. La page ne liste pas tous les noms de gammes."
+  checkedAt: 2026-11-11
 
 - id: wikipedia-ricoh-2a03
   title: "Ricoh 2A03"
   url: "https://en.wikipedia.org/wiki/Ricoh_2A03"
   category: articles
   author: "Wikipédia (en anglais)"
-  note: "Puce sonore de la NES : cinq voies, dont deux ondes carrées et une onde triangulaire (anecdote de la 3.3)."
-  checkedAt: 2026-10-31
+  note: "Puce sonore de la NES (1983) : cinq canaux, deux ondes carrées, une onde triangulaire, un bruit et un canal DPCM pour de courts sons enregistrés (anecdote de la 3.3)."
+  checkedAt: 2026-11-11
 
 - id: strudel-effects
   title: "Audio effects"
@@ -347,6 +348,19 @@
     pour lui donner un nom accessible et embarquer le crédit dans l'image.
   checkedAt: 2026-10-06
 
+- id: waveforms-svg
+  title: "Waveforms — sinusoïde, carrée, triangle et dent de scie"
+  url: "https://commons.wikimedia.org/wiki/File:Waveforms.svg"
+  category: illustrations
+  author: "Omegatron, Wikimedia Commons"
+  note: >-
+    Licence CC BY-SA 3.0. Utilisé en partie 3.3 (src/assets/Waveforms.svg),
+    empreinte SHA-1 identique à celle de l'API Commons. Modifications : les
+    traductions des libellés sont retirées (un navigateur français aurait
+    affiché « Sinusoïdale »… au lieu des noms du code), et un `title` et un
+    `desc` sont ajoutés pour le nom accessible et le crédit.
+  checkedAt: 2026-11-11
+
 - id: roland-tr-909-photo
   title: "Roland TR-909 — photo de face"
   url: "https://commons.wikimedia.org/wiki/File:Roland_TR-909.jpg"
@@ -357,6 +371,38 @@
     de créditer l'auteur. Utilisé en partie 2.3 (src/assets/Roland_TR-909.jpg),
     fichier identique à l'original (empreinte SHA-1 vérifiée).
   checkedAt: 2026-10-07
+
+- id: wikipedia-timbre
+  title: "Timbre (musique)"
+  url: "https://fr.wikipedia.org/wiki/Timbre_(musique)"
+  category: articles
+  author: "Wikipédia"
+  note: "« Couleur de son » : en allemand, Klangfarbe équivaut au français timbre (anecdote de la 3.2)."
+  checkedAt: 2026-11-11
+
+- id: wikipedia-messiaen
+  title: "Olivier Messiaen"
+  url: "https://fr.wikipedia.org/wiki/Olivier_Messiaen"
+  category: articles
+  author: "Wikipédia"
+  note: "Synesthésie entre accords et couleurs ; Traité de rythme, de couleur et d'ornithologie, 7 volumes (anecdote de la 3.2)."
+  checkedAt: 2026-11-11
+
+- id: wikipedia-jianpu
+  title: "Jianpu"
+  url: "https://fr.wikipedia.org/wiki/Jianpu"
+  category: articles
+  author: "Wikipédia"
+  note: "Notation chiffrée : mémoire de Rousseau (1742), système Galin-Paris-Chevé, répandu en Chine à partir de 1900 (anecdote de la 3.4)."
+  checkedAt: 2026-11-11
+
+- id: wikipedia-numbered-notation
+  title: "Numbered musical notation"
+  url: "https://en.wikipedia.org/wiki/Numbered_musical_notation"
+  category: articles
+  author: "Wikipédia (en anglais)"
+  note: "Rousseau devant l'Académie des sciences en 1742 ; recueils chinois publiés en jianpu, notes numérotées de 1 à 7 (anecdote de la 3.4)."
+  checkedAt: 2026-11-11
 
 - id: wikipedia-ut-queant-laxis
   title: "Ut queant laxis"

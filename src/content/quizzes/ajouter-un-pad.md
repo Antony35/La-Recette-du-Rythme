@@ -1,7 +1,7 @@
 ---
 part: "ajouter-un-pad"
 questions:
-  - question: "Que joue `note(\"[d4,f4,a4]\")` ?"
+  - question: "Que joue `note(\"d4,f4,a4\")` ?"
     options:
       [
         "Les trois notes en même temps : un accord",
@@ -11,8 +11,8 @@ questions:
       ]
     answer: 0
     explanation: >-
-      Entre crochets, la virgule superpose les notes, comme elle superposait
-      les pistes en séquence 2. Trois notes jouées ensemble forment un accord.
+      La virgule superpose les notes, comme elle superposait les pistes en
+      séquence 2. Trois notes jouées ensemble forment un accord.
   - question: "Dans `n(\"<[0,2,4] [0,2,5]>\")`, combien de temps dure chaque accord ?"
     options:
       [

@@ -1,0 +1,26 @@
+<?xml version="1.0"?>
+<svg xmlns="http://www.w3.org/2000/svg" xmlns:xlink="http://www.w3.org/1999/xlink" width="620" height="530" font-family="DejaVu Sans" font-size="16" font-stretch="condensed" text-anchor="middle">
+<title>Quatre formes d'onde : sine, square, triangle, sawtooth</title>
+<desc>Waveforms, par Omegatron (Wikimedia Commons), CC BY-SA 3.0. https://commons.wikimedia.org/wiki/File:Waveforms.svg. Modifié pour La Recette du Rythme : traductions des libellés retirées, seuls les noms anglais sont gardés. Ce fichier modifié reste sous CC BY-SA 3.0.</desc>
+
+<g transform="translate(560 38)"><text id="trsvg84"><tspan id="trsvg16">Sine</tspan></text></g>
+
+<g transform="translate(560 168)"><text id="trsvg100"><tspan id="trsvg32">Square</tspan></text></g>
+
+<g transform="translate(560 298)"><text id="trsvg116"><tspan id="trsvg49">Triangle</tspan></text></g>
+
+<g transform="translate(560 428)"><text id="trsvg132"><tspan id="trsvg68">Sawtooth</tspan></text></g>
+
+<g id="b" fill="none" stroke-linecap="round" stroke-linejoin="round"><g id="a">
+	<path stroke="#222" stroke-dasharray="2,4" stroke-width=".5" d="m10,30h501m99,40H10m0,40h600M110,10v120m100,0V10m100,0v120m100,0V10m100,0v120"/>
+	<rect x="10" y="10" width="600" height="120" stroke="#666" stroke-width="1.5"/>
+</g>
+<use transform="translate(0,130)" xlink:href="#a"/></g>
+<use transform="translate(0,260)" xlink:href="#b"/>
+<g fill="none" stroke-linecap="round" stroke-linejoin="round" stroke-width="2" stroke="#f00">
+	<path d="m10 70c15-20 30-40 50-40 40 0 60 80 100 80s60-80 100-80 60 80 100 80 60-80 100-80 60 80 100 80c20 0 35-20 50-40"/>
+	<path d="m10 160h100v80h100v-80h100v80h100v-80h100v80h100" stroke="#090"/>
+	<path d="m10 330 50-40 100 80 100-80 100 80 100-80 100 80 50-40" stroke="#33f"/>
+	<path d="m10 460 100-40v80l200-80v80l200-80v80l100-40" stroke="#c0c"/>
+</g>
+</svg>

@@ -24,16 +24,18 @@ Avec `s()`, vous choisissez **un son** : `bd`, `sd`, `hh`. Avec `note()`,
 vous choisissez **une hauteur**, et Strudel la joue avec un synthétiseur.
 
 Vous connaissez déjà la notation depuis la séquence 1 : `c` pour do, `d` pour
-ré, jusqu'à `b` pour si. Ce qui change ici, c'est le **chiffre** collé à la
-note : il dit dans quel registre la jouer.
+ré, jusqu'à `b` pour si, et le **chiffre** collé à la note pour l'octave.
+
+En 1.5, ce chiffre servait surtout à refermer la gamme avec `c4`. Ici, on va
+plus loin : il choisit le registre de toute une mélodie, puis la déplace.
 
 ## Le chiffre, c'est l'octave
 
 <StrudelRepl client:visible code={'note("d4 e4 f4 a4")'} label="Quatre notes qui montent" />
 
-Le chiffre désigne l'<CourseTerm term="octave" /> : `c3` est un do grave,
-`c4` le do au-dessus, `c5` encore au-dessus. Sans chiffre, Strudel joue dans
-l'octave 3, comme en séquence 1.
+Rappel de la séquence 1 : le chiffre désigne l'<CourseTerm term="octave" />.
+`c3` est un do grave, `c4` le do au-dessus, `c5` encore au-dessus. Sans
+chiffre, Strudel joue dans l'octave 3.
 
 **Le piège : le chiffre change sur le do, pas sur le la.** Une octave va de
 `c` à `b`, puis la suivante recommence à `c`.
@@ -59,6 +61,17 @@ note("d3 e3 f3 a3")   // une octave plus bas
 
 Vous entendez la même ligne, mais d'une autre couleur : plus légère dans
 l'aigu, plus sombre dans le grave. C'est ce qu'on appelle **transposer**.
+
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>Parler de <strong>couleur</strong> pour un son n'est pas qu'une image. En
+  allemand, le timbre se dit <em>Klangfarbe</em>, littéralement « couleur du
+  son ». Pour le compositeur <strong>Olivier Messiaen</strong>, c'était même au
+  sens propre : il percevait des couleurs en entendant certains accords, une
+  forme de <strong>synesthésie</strong>. Il en a tiré un traité en sept volumes,
+  le <em>Traité de rythme, de couleur et d'ornithologie</em>.</p>
+  <a href="https://fr.wikipedia.org/wiki/Olivier_Messiaen">Messiaen sur Wikipédia ↗</a>
+</aside>
 
 Pour les touches noires du piano, ajoutez `#` (dièse) ou `b` (bémol) après la
 lettre : `c#4` est un peu plus haut que `c4`, `bb4` un peu plus bas que `b4`.

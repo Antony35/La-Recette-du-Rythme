@@ -69,7 +69,7 @@ Scripts prêts : `S3-harmonie-de-base.md`.
 
 | Sous-séance | Ce que la vidéo montre | Durée |
 |---|---|---|
-| 3.1 Reprendre la rythmique | — (pas de vidéo : on relance le motif de la S2) | — |
+| 3.1 Reprendre la rythmique | le morceau final en ouverture, puis couper une piste avec `//` et Ctrl + / | 2 min |
 | 3.2 `note()` et les octaves | quatre notes, puis la même suite une octave plus haut | 2 min |
 | 3.3 Les synthés natifs | une mélodie, quatre formes d'onde, à l'oreille | 3 min |
 | 3.4 Composer juste avec les gammes | improviser en ne changeant que les index | 3 min |

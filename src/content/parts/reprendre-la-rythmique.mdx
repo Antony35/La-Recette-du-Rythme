@@ -7,6 +7,9 @@ durationMinutes: 15
 
 import PatternStrip from "@/components/PatternStrip.astro";
 import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder title="Reprendre la rythmique" duration="2 min" format="live coding à l'écran, en voix off" />
 
 Dans cette séquence, on ne repart pas de zéro : la batterie construite en
 séquence 2 devient la base d'un vrai morceau, auquel on ajoutera une mélodie
@@ -68,6 +71,10 @@ Après réévaluation, le clap se tait. Retirez les `//`, réévaluez : il revie
 exactement comme avant. C'est le geste qui servira tout au long de la
 séquence, pour écouter une couche à la fois.
 
+Pas besoin de taper les deux barres à la main : placez le curseur sur la ligne
+et faites **Ctrl + /** (Cmd + / sur Mac). Le même raccourci retire le
+commentaire. Sur un clavier AZERTY, utilisez le `/` du pavé numérique.
+
 ## À vous
 
 <StrudelRepl client:visible code={'setcpm(128 / 4)\n\nstack(\n  s("bd*4"),\n  s("~ cp ~ cp"),\n  s("~ hh ~ hh ~ hh ~ hh")\n).bank("RolandTR808")'} label="Votre batterie, piste par piste" />
@@ -75,12 +82,13 @@ séquence, pour écouter une couche à la fois.
 > Relancez votre batterie dans le bloc ci-dessus, puis vérifiez-la sans
 > arrêter la lecture :
 >
-> 1. **Coupez toutes les pistes sauf la grosse caisse** avec `//`, réévaluez,
+> 1. **Coupez toutes les pistes sauf la grosse caisse** avec `//` (ou
+>    Ctrl + /), réévaluez,
 >    et comptez « 1, 2, 3, 4 ». Un coup doit tomber sur chaque chiffre.
 > 2. **Réactivez les pistes une par une**, en réévaluant à chaque fois. Chacune
 >    doit s'encadrer et s'entendre.
-> 3. **Commentez la ligne `setcpm()`**, réévaluez, puis rétablissez-la. Vous
->    entendez la différence entre 120 et 128 BPM.
+> 3. **Remplacez `128` par `120`** dans `setcpm()`, réévaluez, puis revenez à
+>    `128`. Vous entendez la différence entre 120 et 128 BPM.
 > 4. **Copiez votre motif final** dans un fichier texte. Vous le reprendrez au
 >    début de chaque partie de cette séquence.
 
@@ -105,8 +113,13 @@ En réactivant le clap, il doit tomber **avec** la grosse caisse, sur les temps
 en même temps qu'un `bd`, vérifiez l'ordre des `~`. C'est l'erreur corrigée
 en 2.5.
 
-Sans `setcpm()`, Strudel revient à sa vitesse par défaut, 120 BPM : le motif
-est le même, il tourne un peu moins vite.
+Avec `setcpm(120 / 4)`, on retrouve la vitesse par défaut de Strudel : le
+motif est le même, il tourne un peu moins vite.
+
+Commenter la ligne `setcpm()` ne suffit pas à revenir à 120 BPM : le bloc
+garde le dernier tempo réglé, même après Stop puis Play. Seul un rechargement
+de la page le remet à sa vitesse par défaut. Pour changer de tempo, on change
+donc le nombre.
 
 </details>
 
