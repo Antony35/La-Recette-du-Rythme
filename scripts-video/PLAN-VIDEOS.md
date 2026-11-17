@@ -67,14 +67,14 @@ comparer des sons à l'oreille, **8 min** pour un sujet complexe ou une correcti
 
 Scripts prêts : `S3-harmonie-de-base.md`.
 
-| Sous-séance | Ce que la vidéo montre | Durée |
-|---|---|---|
-| 3.1 Reprendre la rythmique | le morceau final en ouverture, puis couper une piste avec `//` et Ctrl + / | 2 min |
-| 3.2 `note()` et les octaves | quatre notes, puis la même suite une octave plus haut | 2 min |
-| 3.3 Les synthés natifs | une mélodie, quatre formes d'onde, à l'oreille | 3 min |
-| 3.4 Composer juste avec les gammes | improviser en ne changeant que les index | 3 min |
-| 3.5 Ajouter un pad | deux accords tenus sous la rythmique | 2 min |
-| 3.6 Assembler les trois couches | équilibrer les volumes, couche par couche | 3 min |
+| Sous-séance | Ce que la vidéo montre | Durée | Statut |
+|---|---|---|---|
+| 3.1 Reprendre la rythmique | le morceau final en ouverture, puis couper une piste avec `//` et Ctrl + / | 1 min | ✅ tournée |
+| 3.2 `note()` et les octaves | quatre notes, puis la même suite une octave plus haut | 1 min 50 | ✅ tournée |
+| 3.3 Les synthés natifs | une mélodie, quatre formes d'onde, à l'oreille | 1 min 55 | ✅ tournée |
+| 3.4 Composer juste avec les gammes | improviser en ne changeant que les index | 2 min 20 | ✅ tournée |
+| 3.5 Ajouter un pad | deux accords tenus sous la rythmique | 1 min 55 | ✅ tournée |
+| 3.6 Assembler les trois couches | équilibrer les volumes, couche par couche | 1 min 45 | ✅ tournée |
 
 ### S4 — Sound design
 

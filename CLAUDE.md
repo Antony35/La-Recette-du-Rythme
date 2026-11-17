@@ -437,12 +437,23 @@ même dossier.
   1 min 50), mini-notation (2.2, `mini-notation.mp4`, 1 min 25), changer de
   drum kit (2.3, `changer-de-drum-kit.mp4`, 1 min 15), superposer des pistes
   (2.4, `superposer-des-pistes.mp4`, 2 min 20) et les aides visuelles (2.5,
-  `aides-visuelles.mp4`, 1 min 40), toutes sous-titrées sur boîte noire,
-  via `components/Video.astro`.
+  `aides-visuelles.mp4`, 1 min 40), et toute la séquence 3 : reprendre la
+  rythmique (3.1, `reprendre-la-rythmique.mp4`, 1 min), `note()` et les
+  octaves (3.2, `jouer-des-hauteurs.mp4`, 1 min 50), les synthés natifs (3.3,
+  `synthes-natifs.mp4`, 1 min 55), composer avec les gammes (3.4,
+  `composer-avec-les-gammes.mp4`, 2 min 20), ajouter un pad (3.5,
+  `ajouter-un-pad.mp4`, 1 min 55) et assembler les trois couches (3.6,
+  `assembler-les-couches.mp4`, 1 min 45). Toutes sous-titrées sur boîte
+  noire, via `components/Video.astro`.
 - **À tourner** : `components/VideoPlaceholder.astro` en occupe exactement la
   place (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
-  format. Présent de 3.1 à 3.6. Le jour du tournage, on le remplace par
-  `<Video>` au même endroit.
+  format. Plus utilisé depuis la S3 ; gardé pour les séquences suivantes. Le
+  jour du tournage, on le remplace par `<Video>` au même endroit.
+- **Le son de Strudel est capturé trop bas** par OBS (−31 à −44 LUFS quand il
+  joue seul, contre −19 pour la voix). Dans les projets 3.4, 3.5 et 3.6,
+  un effet Volume sur la piste audio des captures le remonte : +6 dB sous
+  la voix, +12 à +20 dB dans les silences de la voix. À prévoir dès le
+  montage pour les séquences suivantes.
 - **La vidéo montre, elle ne résume pas la page** : le cahier des charges veut
   un contenu vidéo différent du texte. Seule exception : la 1.2 (histoire,
   images d'archives).
@@ -755,11 +766,8 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 - **Contenu repris de zéro** d'après la scénarisation : 8 séquences (15 h).
   Les états « à venir » et « contenu en cours de rédaction » restent visibles
   pour les séquences 4 à 8.
-- **Vidéos de sous-séance pas encore tournées** : emplacements « Ici vidéo »
-  de 3.1 à 3.6 (voir « Vidéos »). Images et projets Kdenlive prêts
-  dans `FYC/S3-harmonie-de-base/`.
 - **Niveau sonore des vidéos inégal** : −13 LUFS (1.1), −19 (1.2), −18 (1.3), −19 (1.4), −20 (1.5), −23
-  (accueil). Toute la S2 est à −16 LUFS, pics sous −1 dB, via
+  (accueil). Toutes les vidéos des S2 et S3 sont à −16 LUFS, pics sous −1 dB, via
   `~/Documents/FYC/normaliser-volume.sh` (hors dépôt, original gardé dans
   `avant-volume/`). Viser −16 LUFS pour les suivantes.
 - Les **niveaux** (1 : S1–S3, 2 : S4–S5, 3 : S6–S8) sont une lecture de la
