@@ -1,0 +1,160 @@
+---
+title: "Filtres — passe-bas et passe-haut"
+sequence: "sound-design"
+order: 3
+durationMinutes: 20
+---
+
+import CourseTerm from "@/components/CourseTerm.astro";
+import FrequencyZones from "@/components/FrequencyZones.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder
+	title="Filtres passe-bas et passe-haut"
+	duration="3 min"
+	format="capture d'écran et voix off : balayer la fréquence de coupure pendant la lecture"
+/>
+
+L'enveloppe façonne le volume d'un son dans le temps. Un filtre, lui, agit sur
+ce qu'il contient : il retire une partie des fréquences, du côté grave ou du
+côté aigu.
+
+À la fin de ces **20 minutes**, vous saurez adoucir votre pad avec un
+**passe-bas**, alléger vos charlestons avec un **passe-haut**, et vous saurez
+pourquoi le pad change de synthé.
+
+## Pourquoi filtrer
+
+Chaque couche du morceau occupe une zone de fréquences : la grosse caisse et le
+sub dans le grave, le charleston tout en haut, le pluck et le pad au milieu.
+Quand deux couches occupent la même zone, elles se masquent. Filtrer, c'est
+**nettoyer** : retirer à chaque couche ce qui n'est pas son rôle.
+
+<figure>
+	<FrequencyZones />
+	<figcaption>
+		Où joue chaque couche du morceau, avec les réglages de la 4.6 : la zone
+		où chaque couche garde l'essentiel de son volume. La fréquence se compte en hertz (Hz) : plus le nombre est
+		petit, plus le son est grave. Le sub se loge dans la zone de la grosse
+		caisse, et le pad recouvre en grande partie le pluck : c'est là que
+		les couches risquent de se masquer.
+	</figcaption>
+</figure>
+
+Un filtre crée aussi du **mouvement**. Déplacer son réglage pendant que la
+musique joue ouvre ou ferme le son : c'est l'un des gestes les plus courants
+du live coding.
+
+## La fréquence de coupure
+
+Un filtre se règle par sa <CourseTerm term="frequence-de-coupure" />, en
+**hertz** (Hz). Plus le nombre est petit, plus on est dans le grave. Strudel
+accepte des valeurs de 0 à 20 000 Hz, à peu près l'étendue de l'oreille
+humaine.
+
+| Filtre | Fonction | Ce qu'il laisse passer | Ce qu'il coupe |
+|---|---|---|---|
+| passe-bas (*low-pass*) | `.lpf()` | les fréquences **sous** la coupure | les aigus : le son devient sourd, étouffé |
+| passe-haut (*high-pass*) | `.hpf()` | les fréquences **au-dessus** | les graves : le son devient fin, léger |
+
+Les noms disent ce qui **passe**, pas ce qui est coupé : un passe-bas laisse
+passer les basses.
+
+Les deux fonctions sont des abréviations anglaises : `lpf` pour *low-pass
+filter* (filtre passe-bas), `hpf` pour *high-pass filter* (filtre
+passe-haut). Le **f** est celui de *filter*, et non de « fréquence ».
+
+## Un filtre a besoin d'un son riche
+
+Le pad du morceau joue en `sine`. Or une sinusoïde ne contient **qu'une
+seule fréquence**, celle de la note. Il n'y a rien au-dessus à retirer : un
+passe-bas réglé à 8 000 ou à 1 000 Hz laisse le pad exactement pareil.
+
+On passe donc le pad en **`sawtooth`**. En 3.3, c'était le synthé le plus
+brillant : sa forme d'onde contient la note, plus une longue série de
+fréquences aiguës. Le passe-bas a de quoi travailler. Partir d'un son riche
+et en retirer une partie, c'est la **synthèse soustractive**, le principe des
+synthés analogiques.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n  .lpf(slider(2000, 150, 8000))\n  .gain(0.12)'}
+	label="Le pad, en sawtooth et filtré"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Baissez le volume, puis montez un instant le curseur jusqu'à 8000 : la
+		dent de scie devient brillante, presque agressive. Redescendez
+		lentement. Vers 1000, le pad devient une nappe chaude ; vers 150, il
+		devient sourd et lointain.
+	</p>
+</StrudelRepl>
+
+Les notes n'ont pas changé, l'enveloppe de la 4.2 non plus : seul le synthé
+change, puis le filtre en retire l'excès d'aigus.
+
+## Le passe-haut
+
+Le passe-haut fait l'inverse. Pour bien l'entendre, essayez-le d'abord sur le
+pluck : montez la coupure, et le pluck s'amincit jusqu'à sonner comme à
+travers un téléphone.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n  .s("sawtooth")\n  .attack(0.005).decay(0.282).sustain(0).release(0.12)\n  .hpf(slider(100, 100, 3000))\n  .gain(0.12)'}
+	label="Un passe-haut sur le pluck"
+/>
+
+Dans le morceau, le passe-haut va sur les **charlestons**. Le but n'est pas de
+les transformer, mais de leur retirer tout ce qui pourrait gêner la grosse
+caisse et le sub.
+
+Ceux de la TR-808 sont déjà très aigus : presque toute leur énergie se trouve
+au-dessus de 6 000 Hz. Un passe-haut ne s'y entend donc
+qu'en haut de sa course, vers 8 000 à 10 000 Hz, où il les rend plus fins. Sur
+des charlestons plus ronds, il servirait davantage.
+
+## À vous
+
+> Les deux blocs ci-dessous reprennent le pad et les charlestons.
+>
+> 1. **Appliquez un passe-bas sur le pad.** Descendez la coupure pendant la
+>    lecture, jusqu'à une nappe douce qui ne cache pas le reste. Notez la
+>    valeur.
+> 2. **Appliquez un passe-haut sur les charlestons.** Montez la coupure
+>    jusqu'au bout, puis redescendez à un réglage où ils restent présents.
+> 3. **Comparez** : sur lequel des deux le filtre s'entend-il le plus ?
+>    Pourquoi ?
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n  .lpf(slider(4000, 150, 8000))\n  .gain(0.12)'}
+	label="Votre pad"
+/>
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\ns("~ hh ~ hh ~ hh ~ hh").bank("RolandTR808")\n  .hpf(slider(100, 100, 10000))\n  .gain(0.33)'}
+	label="Vos charlestons"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+**Étape 1.** La bonne zone se situe **entre 700 et 1 500 Hz** environ : le
+pad garde ses notes mais perd son grain agressif, et il passe derrière le
+pluck au lieu de lutter avec lui. Sous 500 Hz, il s'efface ; au-dessus de
+2 000, il redevient brillant et prend toute la place. Pour le morceau de la
+séquence, nous avons retenu `1000`.
+
+**Étape 2.** Jusqu'à 6 000 Hz environ, les charlestons ne changent presque
+pas à l'oreille : le filtre retire seulement le peu de médium qu'ils
+contiennent. Vers 8 000 à 10 000 Hz, ils deviennent nettement plus fins. Un
+réglage **entre 3 000 et 6 000 Hz** nettoie sans les transformer ; pour le
+morceau, nous avons retenu `4500`.
+
+**Étape 3.** Le filtre s'entend bien plus sur le pad. Un filtre ne retire que
+ce qui existe : le pad en `sawtooth` a beaucoup d'aigus à perdre, alors que
+les charlestons de la 808 n'ont presque pas de graves.
+
+</details>

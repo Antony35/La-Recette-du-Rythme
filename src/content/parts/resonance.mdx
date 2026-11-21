@@ -1,0 +1,123 @@
+---
+title: "Résonance — le caractère du filtre"
+sequence: "sound-design"
+order: 4
+durationMinutes: 20
+---
+
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder
+	title="La résonance"
+	duration="2 min"
+	format="capture d'écran et voix off : pousser la résonance, puis revenir à un réglage musical"
+/>
+
+Un passe-bas seul est discret : il retire des aigus, sans rien ajouter. La
+**résonance** lui donne une voix. Elle fait chanter le son autour de la
+fréquence de coupure, jusqu'au sifflement si on la pousse.
+
+À la fin de ces **20 minutes**, vous saurez accentuer un filtre, reconnaître
+le moment où il devient trop marqué, et revenir à un réglage musical.
+
+## Pourquoi la résonance
+
+Sans résonance, le filtre est **neutre** : il atténue, c'est tout. Avec elle,
+il renforce les fréquences situées juste autour de la coupure. Le son prend
+un caractère : nasal, creusé, puis sifflant.
+
+C'est ce qui rend un filtre **expressif**. Déplacer la coupure d'un filtre
+résonant fait entendre la coupure elle-même, comme une voyelle qui change :
+c'est le son « acide » de beaucoup de morceaux de techno.
+
+## `lpq` : la résonance du passe-bas
+
+La résonance du passe-bas se règle avec **`.lpq()`**, écrit juste après le
+`.lpf()`. À `0`, pas d'accent ; plus le nombre monte, plus l'accent est
+marqué. La documentation de Strudel accepte des valeurs jusqu'à `50`.
+
+Le nom se lit en deux morceaux :
+
+- **`lp`** pour *low-pass*, passe-bas, comme dans `lpf` ;
+- **`q`** pour **facteur Q**, le nom technique de la résonance.
+
+```js
+.lpf(1000).lpq(4)   // coupure à 1000 Hz, légère résonance
+```
+
+Le passe-haut a la sienne : `.hpq()`, pour *high-pass Q*, sur le même
+principe.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n  .lpf(1000)\n  .lpq(slider(0, 0, 12))\n  .gain(0.12)'}
+	label="La résonance du pad"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Baissez le volume de l'ordinateur avant de commencer. Montez la
+		résonance par petits pas, en laissant passer un cycle entier à chaque
+		fois.
+	</p>
+</StrudelRepl>
+
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>Le <strong>Q</strong> vient de l'anglais <em>quality factor</em>, le facteur de qualité. En physique, il dit combien de temps un objet continue de vibrer une fois lancé. Un pendule qui se balance dans l'air a un Q élevé : il oscille longtemps. Le même pendule plongé dans l'huile a un Q faible : il s'arrête presque tout de suite. Un filtre à Q élevé fait pareil : il continue de « sonner » autour de sa fréquence de coupure.</p>
+  <a href="https://en.wikipedia.org/wiki/Q_factor">Le facteur Q sur Wikipédia ↗</a>
+</aside>
+
+## Un piège : la résonance fait monter le volume
+
+La résonance renforce des fréquences : elle **ajoute** du volume. Quand la
+coupure tombe près des notes jouées, ce renfort peut devenir brutal.
+
+C'est pour cela que le curseur du morceau s'arrête à `12`, loin du maximum de
+`50`. Si un réglage vous fait sursauter, ne compensez pas en baissant le
+`.gain()` : baissez d'abord la résonance.
+
+## Coupure et résonance ensemble
+
+La résonance s'entend surtout quand la coupure **bouge**. Avec deux curseurs,
+gardez la résonance haute et déplacez la coupure : le pad s'ouvre et se ferme
+comme une bouche.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n  .lpf(slider(1000, 150, 8000))\n  .lpq(slider(8, 0, 12))\n  .gain(0.12)'}
+	label="Balayer un filtre résonant"
+/>
+
+## À vous
+
+> Le bloc ci-dessous contient le pad filtré de la 4.3.
+>
+> 1. **Poussez la résonance jusqu'à obtenir un son marqué**, nettement
+>    nasal ou sifflant. Notez la valeur où le pad cesse d'être une nappe
+>    discrète.
+> 2. **Revenez à un réglage musical** : la résonance doit colorer le pad sans
+>    attirer l'attention.
+> 3. **Avec la résonance haute, déplacez la coupure** pendant deux cycles,
+>    puis revenez à `1000`.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n  .lpf(slider(1000, 150, 8000))\n  .lpq(slider(0, 0, 12))\n  .gain(0.12)'}
+	label="Votre pad résonant"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+**Étape 1.** Vers `8` à `10`, le pad devient nettement nasal : une fréquence
+ressort, et on l'entend par-dessus les accords. À `12`, il siffle.
+
+**Étape 2.** **Entre `2` et `6`**, la résonance donne au pad un léger relief,
+sans qu'on l'identifie comme un effet. C'est le bon dosage pour une couche de
+fond. Pour le morceau de la séquence, nous avons retenu `4`.
+
+**Étape 3.** Plus la résonance est haute, plus le déplacement de la coupure
+s'entend. Ce geste sert à faire monter la tension pendant un morceau ; la
+séquence 7 s'en servira en direct.
+
+</details>

@@ -1,0 +1,111 @@
+---
+// Zones de fréquences des couches du morceau, pour la partie 4.3.
+//
+// Les bornes ne sont pas des valeurs de manuel : elles ont été mesurées dans le
+// REPL du site, avec les réglages de la 4.6 (spectre moyen sur deux secondes,
+// en tiers d'octave, zone où la couche reste à moins de 10 dB de son maximum).
+// Même règle de couleurs que AdsrEnvelope : aplat `snow`, texte `night`, et des
+// pastels fixes pour les barres, donc lisible dans les deux thèmes.
+interface Layer {
+	label: string;
+	from: number;
+	to: number;
+	fill: string;
+}
+
+const layers: Layer[] = [
+	{ label: "grosse caisse", from: 40, to: 200, fill: "var(--color-peach)" },
+	{ label: "sub", from: 50, to: 65, fill: "var(--color-sky)" },
+	{ label: "pad", from: 200, to: 1300, fill: "var(--color-sky)" },
+	{ label: "pluck", from: 400, to: 1600, fill: "var(--color-sky)" },
+	{ label: "clap", from: 630, to: 6400, fill: "var(--color-peach)" },
+	{ label: "charleston", from: 6400, to: 16000, fill: "var(--color-peach)" },
+];
+
+// Échelle logarithmique de 20 Hz à 20 kHz : trois décades sur la largeur.
+const left = 96;
+const width = 368;
+const x = (hz: number) => left + (Math.log10(hz / 20) / 3) * width;
+
+const rowTop = 44;
+const rowHeight = 30;
+const axisY = rowTop + layers.length * rowHeight + 6;
+
+const ticks = [
+	{ hz: 20, label: "20" },
+	{ hz: 100, label: "100" },
+	{ hz: 1000, label: "1 000" },
+	{ hz: 10000, label: "10 000 Hz" },
+];
+
+const regions = [
+	{ label: "grave", from: 20, to: 250 },
+	{ label: "médium", from: 250, to: 4000 },
+	{ label: "aigu", from: 4000, to: 20000 },
+];
+---
+
+<div class="rounded-xl bg-snow p-4">
+	<svg
+		viewBox={`0 0 480 ${axisY + 34}`}
+		role="img"
+		aria-labelledby="zones-title zones-desc"
+		class="mx-auto w-full max-w-2xl text-night"
+	>
+		<title id="zones-title">Où joue chaque couche du morceau</title>
+		<desc id="zones-desc">
+			Zones de fréquences de chaque couche, du grave à l'aigu. Grosse caisse : 40 à
+			200 Hz. Sub : 50 à 65 Hz, à l'intérieur de la zone de la grosse
+			caisse. Pad : 200 à 1 300 Hz. Pluck : 400 à 1 600 Hz, qui recouvre
+			en grande partie celle du pad. Clap : 630 à 6 400 Hz. Charleston : 6 400 à 16 000 Hz.
+		</desc>
+
+		<g fill="currentColor" font-size="12" font-weight="700" text-anchor="middle">
+			{regions.map((region) => (
+				<text x={(x(region.from) + x(region.to)) / 2} y="20">{region.label}</text>
+			))}
+		</g>
+		<g stroke="currentColor" stroke-width="1" stroke-dasharray="3 4" opacity="0.5">
+			{regions.slice(1).map((region) => (
+				<path d={`M${x(region.from)} 28 V${axisY}`} />
+			))}
+		</g>
+
+		{layers.map((layer, index) => {
+			const y = rowTop + index * rowHeight;
+			return (
+				<g>
+					<text x={left - 8} y={y + 15} fill="currentColor" font-size="12" text-anchor="end">
+						{layer.label}
+					</text>
+					<rect
+						x={x(layer.from)}
+						y={y + 2}
+						width={x(layer.to) - x(layer.from)}
+						height="18"
+						rx="6"
+						fill={layer.fill}
+						stroke="currentColor"
+						stroke-width="1.5"
+					/>
+				</g>
+			);
+		})}
+
+		<path d={`M${left} ${axisY} H${left + width}`} stroke="currentColor" stroke-width="1.5" />
+		<g fill="currentColor" font-size="11">
+			{ticks.map((tick, index) => (
+				<g>
+					<path d={`M${x(tick.hz)} ${axisY} v5`} stroke="currentColor" stroke-width="1.5" />
+					<text
+						x={x(tick.hz)}
+						y={axisY + 20}
+						text-anchor={index === 0 ? "start" : "middle"}
+					>
+						{tick.label}
+					</text>
+				</g>
+			))}
+		</g>
+	</svg>
+</div>

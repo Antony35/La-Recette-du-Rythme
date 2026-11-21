@@ -58,7 +58,9 @@ pnpm test:coverage   # couverture de src/lib/
 src/
 ├── content.config.ts       schémas des collections — modèle de données du cours
 ├── components/
+│   ├── AdsrEnvelope.astro  schéma de l'enveloppe ADSR (4.1 et 4.2)
 │   ├── Breadcrumb.astro    fil d'ariane
+│   ├── FrequencyZones.astro  zones de fréquences mesurées des couches (4.3)
 │   ├── PartQuiz.vue        îlot interactif : l'auto-évaluation de fin de partie
 │   ├── PlacementTest.vue   îlot interactif : test de positionnement en trois axes
 │   ├── Steps.astro         rangée de pas — une pastille par partie réelle
@@ -184,6 +186,10 @@ Trois pièges, tous rencontrés :
 3. Les styles de l'éditeur ne peuvent pas être `scoped` — CodeMirror est inséré
    par l'élément personnalisé, pas par Vue, donc sans attribut de portée. Les
    règles d'encombrement vivent dans `global.css`.
+4. Les curseurs de `slider()` (séquence 4) s'accompagnent d'une
+   `<img class="cm-widgetBuffer">` vide. Le préflight de Tailwind et `prose` en
+   faisaient un bloc avec marges : chaque ligne à curseur triplait de hauteur.
+   `global.css` la remet en ligne, sans marge.
 
 ## Style
 
@@ -369,7 +375,7 @@ place exacte (16/9) avec titre, durée et format de tournage :
 
 Tournées : présentation du cours (accueil), prérequis (1.1), histoire du
 live coding (1.2), REPL (1.3), notes anglaises (1.4), gamme (1.5) et les séquences 2 et 3 en entier (2.1 à 2.5, 3.1 à 3.6). À tourner : à
-partir de la séquence 4.
+partir de la séquence 4, dont les pages portent déjà leurs emplacements.
 
 ## Images
 

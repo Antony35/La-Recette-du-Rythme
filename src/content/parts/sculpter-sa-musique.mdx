@@ -1,0 +1,175 @@
+---
+title: "Sculpter sa musique — le morceau complet"
+sequence: "sound-design"
+order: 6
+durationMinutes: 20
+---
+
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import { withBase } from "@/lib/url";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder
+	title="Sculpter sa musique"
+	duration="3 min"
+	format="capture d'écran et voix off : le morceau de la séquence, couche par couche"
+/>
+
+Vous avez réglé chaque outil séparément : l'enveloppe, les filtres, la
+résonance, les effets d'espace. Il reste à les réunir sur le morceau entier,
+pour que chaque réglage serve l'ensemble.
+
+À la fin de ces **20 minutes**, vous aurez livré une version **sculptée** du
+morceau, et vous saurez écrire un morceau en plusieurs **blocs nommés**.
+
+## Pourquoi tout reprendre ensemble
+
+Un réglage qui sonne bien en solo peut gêner dans le morceau. Un pad très
+brillant paraît superbe seul, mais couvre le pluck dès que les deux jouent. Un
+écho généreux sur le pluck brouille le rythme une fois la batterie lancée.
+
+On reprend donc chaque couche **dans le morceau**, l'une après l'autre, avec
+la même méthode qu'en 3.6 pour les volumes.
+
+## Un bloc nommé par couche
+
+Jusqu'ici, tout le morceau tenait dans un grand `stack()`. On peut aussi
+l'écrire en **blocs séparés** : chaque bloc commence par un **nom** suivi de
+deux-points, et Strudel joue tous les blocs en même temps.
+
+```js
+batterie: s("bd*4")
+pluck: note("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2).s("sawtooth")
+```
+
+Le nom est libre : `batterie`, `pluck`, `pad`… Il sert d'étiquette à la
+couche. Strudel accepte aussi `$:`, un bloc **sans nom** : vous le croiserez
+dans des exemples en ligne.
+
+Ce nom ressemble à une variable, mais **n'en est pas une**. C'est un *label*
+JavaScript, la syntaxe qu'on croise parfois avec `break` et `continue`, et que
+Strudel détourne pour déclarer un bloc. Le nom ne se réutilise donc pas
+ailleurs : `sub: pluck.gain(0.5)` déclenche l'erreur « pluck is not defined ».
+
+Trois avantages pour un morceau qui grandit :
+
+- chaque couche est un bloc séparé et **nommé**, lisible d'un coup d'œil ;
+- un `.bank()` posé sur la batterie ne touche plus les synthés : en 3.6, il
+  fallait un second `stack()` rien que pour l'éviter ;
+- une couche se **coupe** d'un seul caractère, sans commenter ses lignes une
+  à une (voir ci-dessous).
+
+**Couper une couche.** Ajoutez un tiret bas `_` juste devant son nom, puis
+réévaluez : tout le bloc se tait, comme si chacune de ses lignes était
+commentée avec `//`. Retirez le tiret bas pour le rallumer.
+
+```js
+pad: note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1")   // le pad joue
+_pad: note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1")  // le pad se tait
+```
+
+**Un piège : deux blocs du même nom.** Seul le dernier joue, et le premier
+disparaît sans la moindre erreur. Donnez un nom différent à chaque couche.
+
+## Deux nouveautés dans le morceau
+
+**Le sub** de la 4.2 rejoint le morceau, sur sa propre orbite.
+
+**Des accents** ponctuent la batterie, une mesure sur deux : un charleston
+ouvert (`oh`) puis un coup de bord de caisse (`rim`). La ligne se découpe en
+seize cases, plus serrées que le charleston :
+
+```js
+s("<[~ ~ ~ ~ ~ ~ ~ ~ ~ oh rim ~ ~ ~ ~ ~] ~>")
+```
+
+Les chevrons alternent ces seize cases avec un silence `~` : les accents
+sonnent au premier cycle, se taisent au second.
+
+## Le morceau sculpté
+
+Voici le morceau de la séquence 4 : ses notes, le sub, les accents, et
+tous les réglages de la séquence. Les curseurs restent dans le code, pour
+régler pendant la lecture.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nbatterie: stack(\n  s("bd*4").gain(0.82),\n  s("~ cp ~ cp").gain(0.5),\n  s("~ hh ~ hh ~ hh ~ hh")\n    .hpf(slider(4500, 100, 10000))\n    .gain(0.33),\n  s("<[~ ~ ~ ~ ~ ~ ~ ~ ~ oh rim ~ ~ ~ ~ ~] ~>").gain(0.22)\n).bank("RolandTR808")\n\nsub: note("g#1 ~ ~ c2 ~ ~ a1 ~").fast(2)\n  .s("sine")\n  .attack(0.005).decay(0.35).sustain(0.2).release(0.1)\n  .gain(0.5).orbit(2)\n\npluck: note("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n  .s("sawtooth")\n  .attack(slider(0.005, 0.005, 0.5))\n  .decay(slider(0.282, 0.1, 1.2))\n  .sustain(0).release(0.12)\n  .delay(slider(0.25, 0, 0.8))\n  .delaytime(60 / 128 / 2).delayfeedback(0.25)\n  .gain(0.12).orbit(3)\n\npad: note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(slider(0.35, 0.005, 1.5)).decay(0.4)\n  .sustain(slider(0.7, 0, 1))\n  .release(slider(0.8, 0, 3))\n  .lpf(slider(1000, 150, 8000))\n  .lpq(slider(4, 0, 12))\n  .room(slider(0.35, 0, 0.8))\n  .gain(0.1).orbit(4)'}
+	label="Le morceau sculpté"
+/>
+
+Le pad joue à `0.1`, plus bas qu'en 3.6 : en `sawtooth`, il est plus riche
+qu'en `sine`, et il lui faut moins de volume pour remplir.
+
+## La méthode pour sculpter
+
+1. **Une couche à la fois.** Coupez les autres avec un `_` devant leur nom,
+   réglez, puis rallumez-les pour vérifier dans le morceau.
+2. **Un seul curseur à la fois.** Si deux réglages bougent ensemble, on ne
+   sait plus lequel a produit l'effet.
+3. **Laissez passer quelques notes.** Un réglage d'enveloppe s'entend aux
+   notes **suivantes**, pas à celle qui sonne déjà.
+4. **Écoutez avec et sans.** Comme en 4.5 : ramenez le curseur à sa valeur
+   neutre, puis à votre réglage.
+
+## À vous
+
+> Le bloc ci-dessous contient le morceau **brut** : les notes, les volumes et
+> les orbites, mais aucune enveloppe, aucun filtre, aucun effet.
+>
+> 1. **Sculptez la batterie** : un passe-haut sur les charlestons.
+> 2. **Sculptez le sub** : son enveloppe complète, pour qu'il claque sans
+>    déborder.
+> 3. **Sculptez le pluck** : son enveloppe, puis son écho calé sur le tempo.
+> 4. **Sculptez le pad** : son enveloppe de nappe, son passe-bas, sa
+>    résonance, sa reverb.
+> 5. **Livrez votre version** : enregistrez le morceau sculpté dans votre
+>    fichier texte, à côté de celui de la séquence 3.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nbatterie: stack(\n  s("bd*4").gain(0.82),\n  s("~ cp ~ cp").gain(0.5),\n  s("~ hh ~ hh ~ hh ~ hh").gain(0.33),\n  s("<[~ ~ ~ ~ ~ ~ ~ ~ ~ oh rim ~ ~ ~ ~ ~] ~>").gain(0.22)\n).bank("RolandTR808")\n\nsub: note("g#1 ~ ~ c2 ~ ~ a1 ~").fast(2)\n  .s("sine")\n  .gain(0.5).orbit(2)\n\npluck: note("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n  .s("sawtooth")\n  .gain(0.12).orbit(3)\n\npad: note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .gain(0.1).orbit(4)'}
+	label="Votre morceau sculpté"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+Le corrigé est le morceau ci-dessus : chaque réglage y vient
+d'une partie de la séquence.
+
+```js
+// charlestons (4.3)
+.hpf(4500)
+
+// sub (4.2)
+.attack(0.005).decay(0.35).sustain(0.2).release(0.1)
+
+// pluck (4.1, 4.2 et 4.5)
+.attack(0.005).decay(0.282).sustain(0).release(0.12)
+.delay(0.25).delaytime(60 / 128 / 2).delayfeedback(0.25)
+
+// pad (4.1 à 4.5)
+.attack(0.35).decay(0.4).sustain(0.7).release(0.8)
+.lpf(1000).lpq(4)
+.room(0.35)
+```
+
+Écouté sans enveloppe, le morceau brut sonne plat : le sub bourdonne, le pluck
+et le pad démarrent tous d'un coup, et le pad en `sawtooth` crie par-dessus
+tout. Sculpté, chaque couche trouve sa place : la batterie et le sub devant
+et dans le grave, le pluck au milieu avec son écho, le pad au fond.
+
+Vos chiffres peuvent différer des nôtres. Ce qui compte, c'est que
+chaque couche reste audible et qu'aucune n'en écrase une autre.
+
+</details>
+
+C'est la fin de la séquence 4. Chaque couche du morceau a désormais sa forme,
+sa couleur et sa place dans l'espace.
+
+Tous les réglages de la séquence sont rassemblés dans un **aide-mémoire**, en
+haut de la <a href={withBase("/cours/sound-design")}>page de la séquence 4</a>.
+Gardez-le sous la main pour la suite.
+
+En séquence 5, vous repartirez de zéro avec vos propres sons.

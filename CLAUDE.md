@@ -447,8 +447,12 @@ même dossier.
   noire, via `components/Video.astro`.
 - **À tourner** : `components/VideoPlaceholder.astro` en occupe exactement la
   place (16/9, aplat `night`, « Ici vidéo » en `lemon`), avec titre, durée et
-  format. Plus utilisé depuis la S3 ; gardé pour les séquences suivantes. Le
-  jour du tournage, on le remplace par `<Video>` au même endroit.
+  format. Absent de la S3, il revient sur les six vidéos de la S4. L'ADSR,
+  d'abord prévue en une vidéo de 8 min placée en 4.1, est passée en deux
+  vidéos de 4 min, une par page (décision d'Antony, 2026-11-20 : **une vidéo
+  par sous-séance**). Le cahier des charges fixe 8 min **au maximum** et
+  « 1/3 vidéo » sur l'ensemble ; il n'impose aucune vidéo de 8 min. Le jour du
+  tournage, on remplace l'emplacement par `<Video>` au même endroit.
 - **Le son de Strudel est capturé trop bas** par OBS (−31 à −44 LUFS quand il
   joue seul, contre −19 pour la voix). Dans les projets 3.4, 3.5 et 3.6,
   un effet Volume sur la piste audio des captures le remonte : +6 dB sous
@@ -695,6 +699,79 @@ pour `s("bd")`. `loadDrumKit(samples)` (`lib/strudel-sound.ts`) l'enregistre.
 - **Pour vérifier un motif sans l'écouter**, interroger le motif évalué :
   `editor.repl.state.pattern.queryArc(0, 2)` rend les événements (instant,
   durée, note, son). C'est ce qui a servi à vérifier chaque note de la S3.
+- **Pour vérifier un réglage de son sans l'écouter**, mesurer la sortie : en
+  enveloppant `AudioNode.prototype.connect` *avant* le premier clic, chaque
+  connexion vers `ctx.destination` est doublée vers un `ScriptProcessor`
+  (niveau) et un `AnalyserNode` (spectre par bandes). Le serveur de dev
+  recharge la page à chaque fichier de contenu créé : mesurer après avoir
+  écrit, pas entre deux fichiers. C'est ce qui a servi pour la S4.
+
+### Sound design (S4) : ce que les mesures ont montré
+
+Chaque affirmation sonore de la S4 a été mesurée dans le REPL du site.
+
+- **Un filtre sur un `sine` ne fait rien d'audible.** Une sinusoïde n'a que
+  sa fréquence : de `lpf(8000)` à `lpf(1000)`, moins de 1 dB d'écart et aucun
+  changement de timbre. Le pad passe donc en `sawtooth` à partir de la 4.3
+  (synthèse soustractive) ; sur la dent de scie, la bande 3–6 kHz perd 24 dB.
+- **Les charlestons de la TR-808 n'ont presque rien sous 6 kHz** (−30 dB
+  sous 3 kHz). `hpf(4500)` ne s'y entend presque pas, l'effet n'apparaît que
+  vers 8 000–10 000. La 4.3 le dit, et fait d'abord entendre le passe-haut sur
+  le pluck.
+- **La grosse caisse 808 est déjà courte** (−40 dB en 85 ms). Une enveloppe
+  ne peut que raccourcir un sample : `.decay(0.1)` la rend à peine plus sèche.
+  L'exercice de la 4.2 était donc inaudible (retour d'Antony, 2026-11-20) : il
+  utilise **`bd:1`**, le « boum » long de la 808 (1,2 s seul, environ 1 s
+  avec `decay(1.2)` à 128 BPM, 0,34 s à `0.4`, 0,14 s à `0.15`). La 4.2
+  présente l'écriture `son:numéro` (enregistrements numérotés à partir de 0) ;
+  le morceau garde `bd`.
+- **Enveloppe par défaut d'un synthé** : `[0.001, 0.05, 0.6, 0.01]`. Un
+  `decay` écrit **sans** `sustain` met le sustain à ~0 : le son s'éteint.
+  Un sample sans enveloppe joue en entier.
+- **Une attaque plus longue que la note** l'empêche d'atteindre son maximum :
+  note de 0,125 s avec `attack(0.5)`, −13 dB.
+- **Une note du pluck dure 0,117 s**, pas 0,23 : `[0 ~ 1 ~ 2 ~ 4 ~]` occupe un
+  demi-cycle, donc une case = 1/16 de cycle (vérifié par `queryArc`). C'est
+  l'**écart entre deux notes** qui vaut 0,234 s, soit le `delaytime(60 / 128 / 2)`
+  de l'équipe : l'écho retombe sur la note suivante, pas dans les silences. La
+  première rédaction de la 4.1 et de la 4.5 affirmait le contraire.
+- **Le decay se fait entendre sur une note longue** (`note("d4")`, 1,875 s),
+  pas sur le pluck : avec `sustain(0)`, il reste `1 − 0,117 / decay` du volume
+  à la fin d'une note du pluck (60 % à `0.282`, 90 % à `1.2`). La 4.1 fait donc
+  entendre attack et decay sur une note longue en `triangle`, puis revient au
+  pluck (retour d'Antony, 2026-11-20).
+- **Un curseur d'enveloppe ne descend jamais à 0.** Antony a entendu un
+  grésillement au casque en 4.1 (2026-11-20) : le curseur `attack` démarrait à
+  `0.005` sur une course `0 → 0.5`, bouton collé au bord gauche, et le moindre
+  geste l'envoyait vers 0. Mesuré sur un `sine` (dérivée seconde rapportée au
+  pic, 0,0033 sans clic) : `attack(0)` 0,0218, `attack(0.005)` 0,0071,
+  `attack(0.02)` 0,0042. Le fondu de fin (release minimal 0,01 s) ne clique
+  pas, et déplacer un curseur ne retarde pas le séquenceur (aucune tâche
+  longue). Minimums retenus : `attack` 0,005, `decay` du pluck 0,1, `decay` de
+  la grosse caisse 0,05. **Non vérifié à l'oreille** : à confirmer au casque.
+- **Le schéma des zones de fréquences** (`components/FrequencyZones.astro`, 4.3)
+  est dessiné à partir de mesures, pas d'un manuel : spectre moyen de chaque
+  couche avec les réglages de la 4.6, en tiers d'octave, zone à moins de
+  10 dB du pic. Grosse caisse 40–200 Hz, sub 50–65, pad 200–1 300, pluck
+  400–1 600 (notes du code S4 de l'équipe, sans filtre, remesuré le
+  2026-11-20), clap 630–6 400, charleston 6 400–16 000. Aucune image libre de
+  Commons ne montrait ces couches. Si un réglage du morceau change, remesurer.
+- **`slider(valeur, min, max)`** : déplacer le curseur réécrit le premier
+  nombre dans le code et s'applique à l'événement suivant, sans réévaluer.
+  Le widget est `aria-hidden` : la page dit que taper le nombre puis
+  `Ctrl + Entrée` revient au même.
+- **`_nom:`** coupe un bloc nommé (et `_$:` un bloc `$:`) ; plusieurs blocs
+  cohabitent, et un `.bank()` posé sur le bloc de batterie ne touche pas les
+  synthés (vérifié avec `queryArc`).
+- **Un tableau dans un `<details>` débordait** à droite : `prose` le met à
+  `width: 100%`, et les marges latérales de 1,5 rem des encadrés s'y
+  ajoutaient. Corrigé dans `global.css` (`width: calc(100% - 3rem)`). Sur
+  mobile, garder ces tableaux à deux ou trois colonnes, sans long code :
+  à 375 px tout tient, à 320 px un tableau dépasse encore légèrement.
+- **Piège d'affichage** : chaque curseur s'accompagne d'une
+  `<img class="cm-widgetBuffer">` que le préflight de Tailwind et `prose`
+  transformaient en bloc avec marges (ligne de 94 px au lieu de 29).
+  Corrigé dans `global.css` ; contrôle : aucune `.cm-line` de plus de 40 px.
 
 ### Un seul moteur audio par page
 
@@ -746,11 +823,18 @@ Les trois paquets `@strudel/*` sont du JavaScript sans types. `src/types/strudel
 déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 (`setCps`, `pause`…) suppose de compléter ce fichier, pas de basculer en `any`.
 
-## Écarts connus (état au 2026-10-31)
+## Écarts connus (état au 2026-11-18)
 
-- **Séquences 1 à 3 rédigées** (1.1 à 1.5, 2.1 à 2.5, 3.1 à 3.6), chacune
-  partie avec son quiz. Les cinq autres séquences ont titre, objectif, niveau,
-  durée et équipement, **sans corps**.
+- **Séquences 1 à 4 rédigées** (1.1 à 1.5, 2.1 à 2.5, 3.1 à 3.6, 4.1 à
+  4.6), chacune partie avec son quiz. Les quatre autres séquences ont titre,
+  objectif, niveau, durée et équipement, **sans corps**. Les vidéos de la S4
+  sont à tourner ; leurs scripts sont prêts (`scripts-video/S4-sound-design.md`,
+  2026-11-21). Règle propre à la S4 : la voix annonce le geste, puis le
+  curseur bouge en silence.
+- **La S4 enseigne `slider()`**, sur décision d'Antony (2026-11-18), alors que
+  la scénarisation le réservait à la 7.1 (« Les sliders »). La 7.1 devra
+  repartir de l'acquis : piloter en direct, choisir ses bornes, plutôt que
+  découvrir la fonction.
 - **La séquence 3 est entièrement en ré mineur** et construit le morceau fil
   rouge (voir plus bas) : *pluck* `note("d4 ~ e4 ~ f4 ~ a4 ~")` en 3.2, réécrit
   en numéros avec `.scale("D4:minor")` en 3.4, pad en 3.5, assemblage en 3.6.
@@ -778,6 +862,27 @@ déclare **uniquement ce que le projet appelle vraiment**. En ajouter un usage
 - Il n'y a **pas de troisième état « système »** dans l'interrupteur de thème.
 - **Deux avis `pnpm audit` restent ouverts** (`js-yaml`, `nanoid`), transitifs et
   cantonnés au build — voir la section Sécurité ci-dessous.
+
+## Idées mises de côté
+
+À reprendre **si le cours est fini en avance** (décision d'Antony, 2026-11-20 :
+priorité à terminer les séquences).
+
+- **S4 : beaucoup de paramètres pour un débutant en musique** (attack, decay,
+  sustain, release, lpf, hpf, lpq, hpq, room, delay, delaytime,
+  delayfeedback, orbit). Trois pistes, de la moins chère à la plus chère :
+  1. ~~Un aide-mémoire~~ **fait le 2026-11-20** : dans le corps de
+     `sequences/sound-design.md`, replié dans un `<details>` (une ligne
+     au-dessus de la liste des parties), quatre tableaux par famille, et un
+     renvoi en fin de 4.6 (lien par `withBase()`). Pas dans les pages de
+     cours : en haut, il gênait la lecture ; en bas, il fallait le répéter.
+     Modèle à reprendre pour les séquences suivantes si besoin.
+  2. **Dans les vidéos, sans les allonger** : un « avant / après » de quelques
+     secondes par paramètre, la même boucle avec l'effet coupé puis réglé.
+  3. **Des exemples tirés de vraie musique**, de tous genres, pour chaque
+     effet. C'est le plus parlant, mais aussi le plus coûteux : chaque
+     référence doit être sourcée (voir « Page Sources »), et le cours ne doit
+     reproduire aucun extrait protégé.
 
 ## Sécurité
 
@@ -840,6 +945,49 @@ cours n'en garde aucun. `[première moitié] <[fin A] [fin B]>` remplace
 `.slow(2)` (un motif sur deux cycles), les numéros de `.scale()` évitent
 d'écrire le bémol, et `stack()` reste l'écriture du cours (`$:` en S4).
 
+La S4 joue **le code « S4 » de l'équipe, notes comprises** (décision
+d'Antony, 2026-11-20, après une première version sur les notes de la 3.6) :
+pluck `note("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)`, sub `note("g#1 ~ ~ c2 ~ ~ a1 ~").fast(2)`
+(mêmes notes, trois octaves plus bas), pad
+`note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)` (la bémol majeur un
+cycle, do majeur trois quarts, la mineur un quart ; vérifié avec `queryArc`).
+Conséquences :
+
+- **les notes restent en lettres** : ces six hauteurs (do, ré dièse, mi, sol,
+  sol dièse, la, dont trois demi-tons consécutifs) n'appartiennent à aucune
+  gamme de Strudel, donc `.scale()` ne peut pas les écrire sans changer de
+  notes ;
+- `.fast(2)` est expliqué en 4.1 (pluck), `@` et `.slow(2)` en 4.2 (pad) ;
+- les pages le présentent comme **« le morceau de la séquence 4 »**, jamais
+  comme « le morceau d'origine de l'équipe » (demande d'Antony, 2026-11-20).
+  La fin de la 3.6 annonce « un nouveau morceau, avec les mêmes couches et
+  d'autres notes ». La vidéo 3.6, déjà tournée, dit seulement « en séquence 4,
+  on va le sculpter » : à vérifier si cette phrase reste juste ;
+- le delay de l'équipe (`60 / 128 / 2`, deux cases) fait retomber l'écho deux
+  fois sur trois dans un silence du pluck ;
+- le **pad passe en `sawtooth`** en 4.3 (voir « Sound design (S4) ») ; son
+  `gain` tombe à `0.1`, valeur de l'équipe ;
+- la 4.6 écrit le morceau en **blocs nommés** (`batterie:`, `sub:`, `pluck:`,
+  `pad:`), un par couche, plutôt qu'en `$:` (idée d'Antony, 2026-11-20 : le
+  public est développeur). Le nom est un *label* JavaScript, pas une
+  variable : le transpileur réécrit `nom: expr` en `expr.p('nom')`. Vérifié
+  dans le REPL : `_nom:` et `nom_:` coupent le bloc ; **deux blocs du même nom
+  s'écrasent sans erreur** (seul le dernier joue, `$` est le seul nom rendu
+  unique) ; réutiliser le nom dans un autre bloc donne « … is not defined ».
+  La batterie y garde un `.bank()` commun sans rendre les synthés muets ;
+- **aucune dent de scie ne joue au-dessus de `.gain(0.12)` dans la S4** :
+  pluck à `0.12` (l'équipe avait `0.18`), pad en `sawtooth` à `0.12` en solo
+  et `0.1` dans le morceau, note longue `triangle` de la 4.1 à `0.12`. Les
+  `sine` (pad de la 4.2 à `0.3`, sub à `0.5`) et la batterie gardent leurs
+  valeurs. Origine : un « zzit » au casque d'Antony (2026-11-20). Il a semblé
+  disparaître à `0.12`, puis il est **revenu à `0.12`** : le seuil de volume
+  ne tient pas. Il est absent en 3.4 (pluck sans `.gain()`), et le timbre
+  mesuré est identique à tous ces volumes (même part d'aigus au-dessus de
+  8 kHz, à 2 dB près). **Cause inconnue, problème laissé ouvert** : piste de
+  la chaîne d'écoute (casque, Bluetooth) non vérifiée. Un premier correctif,
+  un passe-bas `lpf(2000)` sur le pluck, a été retiré. Les volumes à `0.12`
+  sont gardés, sans dommage.
+
 **Piège : un `.bank()` posé sur le grand `stack()` rend les synthés muets.**
 Il préfixe aussi `sine` (`RolandTR808_sine`, introuvable, sans erreur dans
 l'éditeur). La batterie garde donc son propre `stack()` et son `.bank()`.
@@ -864,6 +1012,21 @@ Et les règles de rédaction qui vont avec : une idée par paragraphe, trois lig
 au plus ; le gras sur le **mot** à retenir, jamais sur une phrase entière ; le
 « pourquoi » avant le « comment » ; aucune promesse de ce qui n'est pas sur la
 page.
+
+**Pas de « mesuré dans le site » dans les pages** (retour d'Antony,
+2026-11-20) : l'apprenant n'a aucun moyen de refaire la mesure. On mesure pour
+vérifier ce qu'on écrit, puis on énonce le fait tout simplement (« elle
+s'éteint en six centièmes de seconde »). Les mesures et leur méthode restent
+ici, dans CLAUDE.md.
+
+**Un réglage à l'oreille se corrige par une fourchette, pas par un chiffre**
+(retour d'Antony, 2026-11-20) : « entre 700 et 1 500 Hz », puis la valeur du
+morceau comme un exemple dans cette fourchette (« pour le morceau de la
+séquence, nous avons retenu `1000` »). **Jamais « l'équipe a retenu »** dans
+une page : le cours parle du morceau de la séquence, et à la première
+personne du pluriel quand il faut un auteur. Un chiffre unique laisse croire qu'il existe une seule bonne
+réponse, alors qu'elle dépend des haut-parleurs et de l'oreille. Les
+fourchettes de la S4 sont des estimations de rédaction, à valider à l'écoute.
 
 Séquence — `src/content/sequences/<slug>.md`, corps facultatif :
 

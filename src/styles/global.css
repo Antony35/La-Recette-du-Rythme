@@ -373,6 +373,14 @@
 	margin: 1rem 1.5rem;
 }
 
+/* `prose` met les tableaux à `width: 100%`, c'est-à-dire toute la largeur de
+   l'encadré. Avec les marges ci-dessus, un tableau dépassait donc d'une marge
+   à droite (vu dans l'aide-mémoire de la S4 et un corrigé de la 4.6). On lui
+   retire les deux marges latérales. */
+.prose-cours details > table {
+	width: calc(100% - 3rem);
+}
+
 /* ---------------------------------------------------------------------------
    L'éditeur Strudel (CodeMirror).
 
@@ -396,6 +404,16 @@
 .cm-editor .cm-scroller {
 	font-family: var(--font-mono);
 	line-height: 1.6;
+}
+
+/* Les curseurs de `slider()` (séquence 4) font insérer par CodeMirror une
+   `<img class="cm-widgetBuffer">` vide à côté de chaque widget. Le préflight
+   de Tailwind passe les `img` en `display: block`, et `prose` leur ajoute
+   2 em de marge : chaque ligne à curseur prenait la hauteur de trois lignes.
+   CodeMirror attend une image en ligne, sans marge. */
+.cm-editor img.cm-widgetBuffer {
+	display: inline;
+	margin: 0;
 }
 
 /* Le canvas des visualisations de Strudel ne s'affiche jamais.

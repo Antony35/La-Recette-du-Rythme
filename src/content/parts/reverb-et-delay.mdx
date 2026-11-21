@@ -1,0 +1,152 @@
+---
+title: "Effets d'espace — reverb et delay"
+sequence: "sound-design"
+order: 5
+durationMinutes: 20
+---
+
+import CourseTerm from "@/components/CourseTerm.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder
+	title="Reverb et delay"
+	duration="3 min"
+	format="capture d'écran et voix off : doser l'espace sans noyer le mix"
+/>
+
+Jusqu'ici, tous les sons du morceau sont collés contre l'oreille, comme joués
+dans une pièce sans murs. Deux effets leur donnent un **lieu** et une
+**profondeur** : la réverbération et l'écho.
+
+À la fin de ces **20 minutes**, vous saurez poser une reverb sur le pad, un
+écho calé sur le tempo sous le pluck, et doser les deux sans noyer le
+morceau.
+
+## Pourquoi des effets d'espace
+
+Dans une vraie salle, un son ne s'arrête pas net : il rebondit sur les murs
+et nous parvient encore un instant. L'oreille s'en sert pour juger la taille
+du lieu et la distance du son.
+
+Un son **avec** de l'espace paraît plus loin ; un son **sans** espace paraît
+tout près. En dosant les effets couche par couche, on place le pad au fond et
+le pluck devant, sans toucher aux volumes.
+
+## Reverb et delay : deux effets différents
+
+| Effet | Ce qu'il simule | Ce qu'on entend | Fonction |
+|---|---|---|---|
+| **reverb** (réverbération) | un lieu : une pièce, une salle, une église | un halo continu derrière le son | `.room()` |
+| **delay** (écho) | un mur lointain | des répétitions distinctes du son, de plus en plus faibles | `.delay()` |
+
+`.room()` règle la **quantité** de reverb, de `0` à `1`. `.roomsize()` règle
+la taille du lieu, de `0` à `10`, mais la documentation conseille d'y toucher
+rarement : chaque changement oblige Strudel à recalculer la reverb.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sawtooth")\n  .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n  .lpf(1000).lpq(4)\n  .room(slider(0, 0, 0.8))\n  .gain(0.12)'}
+	label="De la reverb sur le pad"
+/>
+
+## Un écho calé sur le tempo
+
+Le delay se règle avec trois fonctions :
+
+- **`.delay()`** : le volume de l'écho, de `0` à `1` ;
+- **`.delaytime()`** : le temps entre deux répétitions, **en secondes** ;
+- **`.delayfeedback()`** : la part de chaque écho renvoyée dans le suivant. Plus
+  elle est haute, plus les répétitions durent.
+
+Un écho au hasard brouille le rythme. On le cale donc sur le tempo, avec un
+calcul que JavaScript fait pour nous :
+
+```js
+.delaytime(60 / 128 / 2)
+```
+
+`60 / 128` est la durée d'un temps à 128 BPM, en secondes : 0,469. Divisée
+par 2, elle donne un **demi-temps**, 0,234 seconde : deux cases du pluck.
+Chaque écho retombe donc deux cases après sa note, **en rythme** : deux fois
+sur trois dans un silence, la troisième sur la note suivante. Il remplit le
+pluck sans casser la pulsation, là où un écho au hasard tomberait n'importe
+où entre les notes.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n  .s("sawtooth")\n  .attack(0.005).decay(0.282).sustain(0).release(0.12)\n  .delay(slider(0, 0, 0.8))\n  .delaytime(60 / 128 / 2)\n  .delayfeedback(0.25)\n  .gain(0.12)'}
+	label="Un écho sous le pluck"
+/>
+
+**Ne montez jamais `delayfeedback` à `1` ou au-delà.** Chaque écho serait
+alors aussi fort que le précédent, ou plus : le son s'accumule sans fin et
+devient de plus en plus fort. La documentation de Strudel le signale en
+toutes lettres.
+
+## Une orbite par couche
+
+Dans Strudel, une reverb et un delay ne sont pas attachés à un son, mais à une
+<CourseTerm term="orbite" />. Par défaut, tous les sons partagent la même, la
+numéro 1. Si deux couches y règlent l'écho différemment, elles se disputent le
+même effet, et le résultat devient imprévisible.
+
+La solution tient en une fonction : **`.orbit()`** donne à chaque couche son
+propre circuit d'effets. Le morceau en utilise une par couche de synthé : le
+sub sur la 2, le pluck sur la 3, le pad sur la 4. La batterie reste sur la 1.
+
+```js
+// pluck : son écho à lui
+.delay(0.25).delaytime(60 / 128 / 2).delayfeedback(0.25).orbit(3)
+// pad : sa reverb à lui
+.room(0.35).orbit(4)
+```
+
+## Doser sans noyer
+
+Un effet d'espace se règle en l'**enlevant** : coupez-le, remettez-le. Si le
+morceau semble vide sans lui, et pas brouillé avec lui, le dosage est bon.
+
+Trop de reverb noie les attaques : le pad perd ses contours et recouvre le
+pluck. Trop d'écho brouille le rythme : on ne sait plus quelles notes sont
+jouées et lesquelles sont répétées.
+
+La [documentation des effets de Strudel](https://strudel.cc/learn/effects/)
+en présente d'autres, comme le **phaser** (`.phaser()`), qui imite une pédale
+de guitare et fait tourner le son sur lui-même. La méthode ne change pas : un
+curseur, une couche à la fois, et une écoute avec puis sans l'effet.
+
+## À vous
+
+> Le bloc ci-dessous réunit le pluck et le pad, chacun sur son orbite.
+>
+> 1. **Ajoutez de la reverb sur le pad** : montez le curseur de `room`
+>    jusqu'à ce que le pad recule, sans recouvrir le pluck.
+> 2. **Ajoutez un delay rythmique sur le pluck** : montez le curseur de
+>    `delay` jusqu'à entendre l'écho prolonger chaque note, sans perdre la
+>    mélodie.
+> 3. **Vérifiez le dosage** : ramenez chaque curseur à `0`, puis à votre
+>    réglage. Le morceau doit paraître vide sans eux, et pas brouillé avec eux.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nstack(\n  // pluck\n  note("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n    .s("sawtooth")\n    .attack(0.005).decay(0.282).sustain(0).release(0.12)\n    .delay(slider(0, 0, 0.8))\n    .delaytime(60 / 128 / 2).delayfeedback(0.25)\n    .gain(0.12).orbit(3),\n  // pad\n  note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n    .s("sawtooth")\n    .attack(0.35).decay(0.4).sustain(0.7).release(0.8)\n    .lpf(1000).lpq(4)\n    .room(slider(0, 0, 0.8))\n    .gain(0.1).orbit(4)\n)'}
+	label="Votre pluck et votre pad"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+**Étape 1.** **Entre `0.2` et `0.45`**, le pad prend un halo qui l'éloigne,
+et le pluck passe devant. Au-delà de `0.6`, il devient flou et commence à
+couvrir le pluck. Pour le morceau de la séquence, nous avons retenu `0.35`.
+
+**Étape 2.** **Entre `0.15` et `0.35`**, l'écho reste plus faible que la
+note : il prolonge chaque note sans être confondu avec la mélodie. Au-delà de
+`0.5`, chaque écho couvre la note qu'il rejoint, et la mélodie se brouille.
+Pour le morceau, nous avons retenu `0.25`.
+
+**Étape 3.** C'est le test qui compte. Les chiffres exacts dépendent de vos
+haut-parleurs ; l'écoute avec et sans l'effet, elle, vaut partout.
+
+</details>

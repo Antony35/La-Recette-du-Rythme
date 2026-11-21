@@ -1,0 +1,211 @@
+---
+title: "Sustain et release — la fin de l'enveloppe"
+sequence: "sound-design"
+order: 2
+durationMinutes: 20
+---
+
+import AdsrEnvelope from "@/components/AdsrEnvelope.astro";
+import CourseTerm from "@/components/CourseTerm.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder
+	title="Sustain et release"
+	duration="4 min"
+	format="capture d'écran et voix off : on reprend le son de la 4.1 et on en fait une nappe, puis le sub"
+/>
+
+Un coup de caisse claire s'éteint aussitôt frappé. Une note d'orgue tient tant
+qu'on garde la touche enfoncée, puis résonne encore un instant. Ce sont les
+deux dernières étapes de l'enveloppe qui font cette différence.
+
+À la fin de ces **20 minutes**, vous saurez faire **tenir** votre pad d'un
+accord à l'autre, rendre un son bref, et lire les quatre réglages de
+l'enveloppe sur un même son.
+
+## Pourquoi tenir ou couper
+
+Un son percussif et une nappe peuvent jouer les mêmes notes. Ce qui les
+distingue, c'est ce qui se passe **pendant** la note et **après** elle. La
+batterie et le pluck frappent puis s'éteignent ; le pad doit au contraire
+remplir l'espace entre les coups.
+
+<figure>
+	<AdsrEnvelope highlight="sustain-release" />
+	<figcaption>
+		Le sustain est un niveau, tenu jusqu'à la fin de la note. Le release
+		commence quand la note s'arrête.
+	</figcaption>
+</figure>
+
+## Sustain et release
+
+- **`sustain`** est un **niveau**, pas une durée : de `0` (silence) à `1`
+  (volume maximal). Le son y reste tant que la note dure. C'est le seul des
+  quatre réglages qui ne s'exprime pas en secondes.
+- **`release`** est le temps, en secondes, que met le son pour s'éteindre
+  **après** la fin de la note. Un `release` long laisse traîner chaque note
+  par-dessus la suivante.
+
+Le pad du morceau de la séquence 4 enchaîne trois accords :
+
+```js
+note("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)
+```
+
+Chaque accord s'écrit entre crochets, ses notes séparées par des virgules,
+comme en 3.5. Le **`@`** qui suit donne sa **durée relative** : `@4` dure
+quatre fois plus longtemps que `@1`.
+
+**`.slow(2)`** joue l'ensemble deux fois plus lentement, donc sur deux cycles,
+soit **huit temps**. Les huit parts tombent ainsi pile sur les huit temps : le
+premier accord dure **4 temps**, le deuxième **3 temps**, le dernier **1
+temps**.
+
+Deux réglages opposés, sur ce pad :
+
+| Réglage | `sustain` | `release` | Ce qu'on entend |
+|---|---|---|---|
+| percussion | `0` | court, `0.1` | un coup bref, puis le silence |
+| nappe | élevé, `0.7` | long, `0.8` | l'accord tient, puis se fond dans le suivant |
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sine")\n  .attack(0.35).decay(0.4)\n  .sustain(slider(0.7, 0, 1))\n  .release(slider(0.8, 0, 3))\n  .gain(0.3)'}
+	label="Le pad, de percussion à nappe"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Descendez le sustain à 0 et le release vers 0.1 : le pad devient
+		percussif. Remontez-les : il redevient une nappe. Le pad joue ici plus
+		fort que dans le morceau, pour qu'on l'entende seul.
+	</p>
+</StrudelRepl>
+
+## Ce que fait Strudel quand on ne règle rien
+
+Sans enveloppe écrite, un synthé de Strudel attaque presque instantanément,
+redescend en 0,05 seconde jusqu'à un sustain de `0.6`, et s'éteint en
+0,01 seconde. C'est ce que vous entendiez en séquence 3.
+
+Un détail surprend : si vous réglez **`decay` sans `sustain`**, Strudel met le
+sustain à zéro. Le son s'éteint alors à la fin de son decay, même si la note
+dure plus longtemps. Écrivez le `sustain` dès que vous écrivez un `decay`.
+
+## Les quatre réglages sur un même son : le sub
+
+Le morceau gagne une couche en séquence 4 : une **basse**, qu'on appelle le
+<CourseTerm term="sub" />. C'est un `sine` très grave qui joue les mêmes
+notes que le pluck, sol dièse, do et la, trois octaves plus bas.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("g#1 ~ ~ c2 ~ ~ a1 ~").fast(2)\n  .s("sine")\n  .attack(0.005).decay(0.35)\n  .sustain(0.2).release(0.1)\n  .gain(0.5)'}
+	label="Le sub"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Écoutez-le au casque : sur les haut-parleurs d'un portable, une note
+		aussi grave s'entend à peine.
+	</p>
+</StrudelRepl>
+
+Son enveloppe se lit étape par étape :
+
+1. **`attack(0.005)`** : la note claque, comme un coup de batterie.
+2. **`decay(0.35)`** : elle retombe en un peu plus d'un tiers de seconde…
+3. **`sustain(0.2)`** : … jusqu'à un niveau faible, tenu jusqu'à la fin de la
+   note ;
+4. **`release(0.1)`** : puis elle s'éteint vite, pour ne pas déborder sur la
+   note suivante.
+
+Le rythme est celui du pluck, vu en 4.1 : `.fast(2)` joue le motif deux fois
+par cycle, et les notes tombent sur la 1<sup>re</sup>, la 4<sup>e</sup> et la
+7<sup>e</sup> des huit cases, en 3 + 3 + 2.
+
+## Et la grosse caisse ?
+
+Une enveloppe s'applique aussi aux sons enregistrés, comme `bd`. Mais elle ne
+peut que les **raccourcir** : elle ne rallonge pas un enregistrement qui
+s'arrête de lui-même.
+
+Or la grosse caisse du morceau est déjà très brève : elle s'éteint en six
+centièmes de seconde. Un `decay` n'aurait presque rien à
+couper. Pour entendre le geste, il faut une grosse caisse **longue**.
+
+Chaque son d'une banque existe en plusieurs enregistrements, numérotés **à
+partir de 0**. Un deux-points suivi d'un numéro choisit l'enregistrement :
+`bd` joue le n° 0, `bd:1` le n° 1.
+
+```js
+s("bd:1*4").bank("RolandTR808")   // la grosse caisse longue de la 808
+```
+
+`bd:1` est le « boum » célèbre de la TR-808 : une note grave qui résonne
+pendant plus d'une seconde. À 128 BPM, un coup tombe toutes les 0,47 seconde :
+chaque boum déborde sur le suivant, et le grave devient une bouillie. C'est
+exactement le cas où l'on raccourcit une grosse caisse pour qu'elle
+**claque**.
+
+| `decay` | Durée de `bd:1`, à 128 BPM | Ce qu'on entend |
+|---|---|---|
+| `1.2` (départ du curseur) | environ 1 s | les boums se mélangent |
+| `0.4` | 0,34 s | chaque coup se détache |
+| `0.15` | 0,14 s | sec, il claque |
+| `0.05` | 0,05 s | il ne reste que l'impact, sans le grave |
+
+Le curseur s'arrête à `0.05` : plus court, la grosse caisse ne serait plus
+qu'un clic.
+
+## À vous
+
+> Les deux blocs ci-dessous reprennent le pad et la grosse caisse.
+>
+> 1. **Réglez l'enveloppe du pad pour qu'il tienne** : aucun trou entre deux
+>    accords, et chaque accord se fond dans le suivant. Ne touchez qu'au
+>    `sustain` et au `release`.
+> 2. **Réglez celle de la grosse caisse pour qu'elle claque** : déplacez le
+>    curseur de `decay` depuis le boum de départ jusqu'à un son sec, qui
+>    garde son grave.
+> 3. **Bonus : rendez le pad percussif**, avec un `sustain` à `0` et un
+>    `release` court. Écoutez ce qu'il reste de la nappe.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("[g#3,c4,d#4]@4 [c4,e4,g4]@3 [a3,c4,e4]@1").slow(2)\n  .s("sine")\n  .attack(0.35).decay(0.4)\n  .sustain(slider(0.2, 0, 1))\n  .release(slider(0.05, 0, 3))\n  .gain(0.3)'}
+	label="Votre pad"
+/>
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\ns("bd:1*4").bank("RolandTR808")\n  .decay(slider(1.2, 0.05, 1.2))'}
+	label="Votre grosse caisse"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+**Étape 1.** Le pad tient dès que le **sustain** dépasse `0.5` environ, et
+il se fond dans l'accord suivant avec un **release** entre `0.5` et `1.5`. Plus
+bas, on entend un trou entre deux accords ; plus haut, les accords se
+mélangent en une bouillie.
+
+Un sustain élevé fait tenir l'accord jusqu'au bout du cycle, et le release le
+prolonge pendant que l'accord suivant monte : les deux se chevauchent, et
+l'oreille n'entend plus de coupure. Pour le morceau de la séquence, nous avons
+retenu `.sustain(0.7).release(0.8)`, une valeur parmi d'autres dans ces
+fourchettes.
+
+**Étape 2.** Entre `0.15` et `0.25`, chaque coup se détache et claque, tout en
+gardant son grave. Au-dessus de `0.4`, les boums recommencent à se toucher.
+Vers `0.05`, il ne reste que l'impact : le grave a disparu.
+
+Le morceau, lui, garde la grosse caisse `bd`, déjà courte, **sans
+enveloppe** : c'est le sub qui apporte la tenue dans le grave. L'exercice sert
+à apprendre le geste sur un son où il s'entend vraiment.
+
+**Étape 3.** Avec `.sustain(0).release(0.1)`, chaque accord monte, puis
+retombe au silence en moins d'une seconde : un accord qui dure un cycle entier
+laisse un long vide derrière lui. La nappe a disparu, alors que les notes n'ont
+pas changé.
+
+</details>

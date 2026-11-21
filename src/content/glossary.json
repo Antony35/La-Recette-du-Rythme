@@ -34,5 +34,29 @@
 	"pluck": {
 		"label": "pluck",
 		"definition": "De l’anglais to pluck, pincer : une ligne de notes courtes et détachées, comme une corde pincée, qui rebondit par-dessus la batterie."
+	},
+	"enveloppe": {
+		"label": "enveloppe",
+		"definition": "Évolution du volume d’une note dans le temps, de son début à son extinction. Elle se décrit en quatre réglages, ADSR : attack, decay, sustain, release."
+	},
+	"sub": {
+		"label": "sub",
+		"definition": "Abréviation de sub-bass : une ligne de basse très grave, souvent un simple sine, qu’on sent autant qu’on l’entend. Elle s’écoute mieux au casque."
+	},
+	"frequence-de-coupure": {
+		"label": "fréquence de coupure",
+		"definition": "Fréquence, en hertz, à partir de laquelle un filtre commence à agir. Un passe-bas atténue ce qui est au-dessus, un passe-haut ce qui est en dessous."
+	},
+	"orbite": {
+		"label": "orbite",
+		"definition": "Circuit d’effets de Strudel. Chaque orbite a une seule reverb et un seul delay ; .orbit() envoie une couche sur la sienne."
+	},
+	"percussif": {
+		"label": "percussif",
+		"definition": "Se dit d’un son qui atteint son volume maximal d’un coup, puis retombe vite, comme un coup de tambour. Dans Strudel : une attack très courte."
+	},
+	"progressif": {
+		"label": "progressif",
+		"definition": "Se dit d’un son qui monte doucement jusqu’à son volume maximal, comme un violon joué à l’archet. Dans Strudel : une attack longue."
 	}
 }

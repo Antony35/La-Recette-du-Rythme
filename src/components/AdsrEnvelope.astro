@@ -1,0 +1,70 @@
+---
+// Schéma de l'enveloppe ADSR, partagé par les parties 4.1 et 4.2.
+//
+// Dessiné à la main plutôt qu'emprunté à Wikimedia : rien à créditer, et les
+// libellés restent en français. Aplat `snow` et traits `night`, deux jetons
+// fixes : le schéma reste lisible en thème sombre (même règle que les SVG de
+// src/assets/). La légende, elle, reste hors de l'aplat.
+type Phase = "attack" | "decay" | "sustain" | "release";
+
+interface Props {
+	/** Phases mises en avant (trait plein et épais), les autres en pointillés. */
+	highlight?: "attack-decay" | "sustain-release";
+}
+
+const { highlight } = Astro.props;
+
+const highlighted: Record<NonNullable<Props["highlight"]>, Phase[]> = {
+	"attack-decay": ["attack", "decay"],
+	"sustain-release": ["sustain", "release"],
+};
+
+const isStrong = (phase: Phase) =>
+	highlight === undefined || highlighted[highlight].includes(phase);
+
+const stroke = (phase: Phase) =>
+	isStrong(phase)
+		? { "stroke-width": 4 }
+		: { "stroke-width": 2, "stroke-dasharray": "6 5" };
+---
+
+<div class="rounded-xl bg-snow p-4">
+	<svg
+		viewBox="0 0 420 190"
+		role="img"
+		aria-labelledby="adsr-title adsr-desc"
+		class="mx-auto w-full max-w-xl text-night"
+	>
+		<title id="adsr-title">L'enveloppe ADSR</title>
+		<desc id="adsr-desc">
+			Le volume d'une note au fil du temps. Attack : il monte jusqu'au
+			maximum. Decay : il redescend jusqu'au niveau de tenue. Sustain : il
+			reste à ce niveau tant que la note dure. Release : après la fin de la
+			note, il retombe jusqu'au silence.
+		</desc>
+
+		<g fill="none" stroke="currentColor" stroke-linecap="round" stroke-linejoin="round">
+			<path d="M40 150 H400" stroke-width="1.5" />
+			<path d="M40 150 V20" stroke-width="1.5" />
+			<path d="M40 150 L100 30" {...stroke("attack")} />
+			<path d="M100 30 L150 75" {...stroke("decay")} />
+			<path d="M150 75 L290 75" {...stroke("sustain")} />
+			<path d="M290 75 L370 150" {...stroke("release")} />
+			<path d="M290 40 V150" stroke-width="1" stroke-dasharray="3 4" />
+		</g>
+
+		<g fill="currentColor" font-size="13" font-weight="700" text-anchor="middle">
+			<text x="74" y="110" text-anchor="start">attack</text>
+			<text x="140" y="45">decay</text>
+			<text x="220" y="66">sustain</text>
+			<text x="350" y="100">release</text>
+		</g>
+
+		<g fill="currentColor" font-size="11">
+			<text x="34" y="26" text-anchor="end">max</text>
+			<text x="40" y="168">début de la note</text>
+			<text x="290" y="168" text-anchor="middle">fin de la note</text>
+			<text x="400" y="184" text-anchor="end">temps →</text>
+		</g>
+	</svg>
+</div>

@@ -1,0 +1,250 @@
+---
+title: "Attack et decay — le début de l'enveloppe"
+sequence: "sound-design"
+order: 1
+durationMinutes: 20
+---
+
+import AdsrEnvelope from "@/components/AdsrEnvelope.astro";
+import CourseTerm from "@/components/CourseTerm.astro";
+import StrudelRepl from "@/components/StrudelRepl.vue";
+import VideoPlaceholder from "@/components/VideoPlaceholder.astro";
+
+<VideoPlaceholder
+	title="Attack et decay"
+	duration="4 min"
+	format="capture d'écran et voix off : le pluck adouci par l'attaque, puis une note longue pour entendre le decay"
+/>
+
+En séquence 3, tous les sons du morceau démarraient et s'arrêtaient de la même
+façon : d'un coup. La séquence 4 travaille la **forme** de chaque son, sur son
+propre morceau : les mêmes couches que le vôtre, avec d'autres notes.
+
+À la fin de ces **20 minutes**, vous saurez rendre un son
+<CourseTerm term="percussif" /> ou <CourseTerm term="progressif" /> en réglant
+son **attaque**. Vous saurez aussi écrire un **curseur**, un petit réglage
+qu'on fait glisser dans le code pour entendre le son changer pendant la
+lecture : il est présenté plus bas, avant le premier bloc qui en contient.
+
+## Pourquoi l'attaque compte
+
+Une note de piano atteint son volume maximal tout de suite. La même note
+jouée au violon, à l'archet, y arrive progressivement. Même hauteur :
+l'oreille entend pourtant deux instruments différents.
+
+Cette forme du volume dans le temps s'appelle l'<CourseTerm term="enveloppe" />.
+Les synthés la décrivent en quatre étapes, **ADSR** : *attack*, *decay*,
+*sustain*, *release*. Cette partie traite les deux premières, la 4.2 les deux
+dernières.
+
+<figure>
+	<AdsrEnvelope highlight="attack-decay" />
+	<figcaption>
+		L'enveloppe ADSR. Cette partie règle les deux premières étapes, en trait
+		plein.
+	</figcaption>
+</figure>
+
+## L'attaque : la montée du son
+
+**`attack`** est le temps, en secondes, que met le son pour passer du silence
+à son volume maximal. Plus le nombre est **petit**, plus la montée est
+rapide : le son claque. Plus il est **grand**, plus il arrive doucement.
+
+| `attack` | Ce qu'on entend |
+|---|---|
+| `0.005` | le son claque, comme une touche de piano |
+| `0.05` | le choc disparaît, la note arrive en douceur |
+| `0.2` | la note « souffle » avant d'arriver |
+| `0.5` à `1` | la note gonfle lentement, comme une nappe |
+
+Strudel n'impose **pas de maximum** : `.attack(2)` met deux secondes à monter.
+La seule limite est la durée de la note : si elle s'arrête avant la fin de la
+montée, elle n'atteint jamais son volume maximal.
+
+Il n'y a pas non plus de vrai minimum : Strudel accepte `0`. Mais en dessous
+de `0.005`, cinq millièmes de seconde, chaque note démarre par un **clic** sec,
+très désagréable au casque. C'est le minimum qu'utilise le cours.
+
+## Un curseur pour régler pendant la lecture
+
+Changer un nombre puis réévaluer fonctionne, mais on compare alors deux sons
+de mémoire. La fonction **`slider()`** place un curseur directement dans le
+code :
+
+```js
+.attack(slider(0.005, 0.005, 1))
+```
+
+Elle prend trois arguments : la **valeur de départ**, le **minimum** et le
+**maximum**. Le curseur apparaît dans l'éditeur dès que le code est évalué.
+
+Quand vous le déplacez, deux choses se passent :
+
+- le premier nombre de `slider()` **change dans le code**, sous vos yeux ;
+- la nouvelle valeur s'applique **à la note suivante**, sans réévaluer.
+
+Le curseur ne fait donc rien d'autre que réécrire ce nombre. Le taper au
+clavier, puis réévaluer avec `Ctrl + Entrée`, donne exactement le même
+résultat.
+
+Pour bien entendre l'attaque, le bloc ci-dessous joue **une seule note longue**
+par cycle, presque deux secondes. Le `triangle` y remplace le `sawtooth` : plus
+doux, il laisse entendre la forme du son plutôt que son grain.
+`.sustain(1)` garde la note au maximum une fois montée, pour qu'on n'entende
+que la montée ; le `sustain` est le sujet de la 4.2.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("d4")\n  .s("triangle")\n  .attack(slider(0.005, 0.005, 1))\n  .sustain(1)\n  .gain(0.12)'}
+	label="Une note longue : l'attaque"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Lancez la lecture, puis montez le curseur par étapes : 0.05, puis 0.2,
+		0.5 et 1. Laissez passer une note entière à chaque fois.
+	</p>
+</StrudelRepl>
+
+## Le decay : la redescente
+
+**`decay`** est le temps que met le son, une fois au maximum, pour
+**redescendre** jusqu'au niveau de tenue, le `sustain`. Dans cette partie, le
+sustain est à `0` : le son redescend jusqu'au silence. Le `decay` fixe alors
+**la durée du son**, du maximum au silence.
+
+| `decay` (avec `.sustain(0)`) | Ce qu'on entend |
+|---|---|
+| `0.1` | un « toc » bref, comme un xylophone |
+| `0.3` | une note courte, pincée |
+| `1` et plus | la note résonne, puis s'éteint lentement, comme une cloche |
+
+Même note longue qu'au-dessus, mais l'attaque reste instantanée et c'est le
+`decay` qui se règle. La note dure presque deux secondes : toute la course du
+curseur s'entend.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("d4")\n  .s("triangle")\n  .attack(0.005)\n  .decay(slider(0.1, 0.1, 1.8))\n  .sustain(0)\n  .gain(0.12)'}
+	label="Une note longue : le decay"
+/>
+
+Le minimum de `0.1` a la même raison que celui de l'attaque : plus court, la
+note n'est plus qu'un clic.
+
+## Retour au pluck : des notes trop courtes
+
+Voici le pluck du morceau de la séquence 4 :
+
+```js
+note("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)
+```
+
+Les notes sont écrites en lettres, comme en 3.2 : sol dièse, do, la. Le motif
+tient en huit cases, et **`.fast(2)`** le joue **deux fois plus vite**, donc
+deux fois par cycle. Le cycle compte ainsi seize cases, et les notes tombent
+sur la 1<sup>re</sup>, la 4<sup>e</sup> et la 7<sup>e</sup> de chaque
+moitié : un rythme en 3 + 3 + 2, très courant en musique électronique.
+
+Sur ce pluck, tout s'entend moins bien, et ce n'est pas un défaut de
+l'enveloppe. À 128 BPM, chaque note dure environ **0,12 seconde** : une case
+sur les seize du cycle. L'enveloppe ne peut agir que pendant ce temps-là.
+
+**Le decay.** Il fixe le temps que met la note pour redescendre jusqu'au
+silence. Si ce temps est plus court que la note, on entend toute la descente.
+S'il est plus long, la note s'arrête **avant** d'avoir fini de redescendre :
+elle est coupée alors qu'elle sonne encore.
+
+| `decay` | Volume qui reste quand la note s'arrête | Ce qu'on entend |
+|---|---|---|
+| `0.1` | 0 % : la note s'est déjà éteinte | un « tic » sec |
+| `0.282` (réglage du morceau) | environ 60 % | la note est coupée en pleine descente |
+| `0.5` | environ 75 % | la note est coupée presque à plein volume |
+| `1.2` | environ 90 % | presque pareil qu'à `0.5` |
+
+Au-dessus de `0.5`, la note est donc toujours coupée presque à plein volume :
+c'est pour cela que le haut du curseur semble ne plus rien changer.
+
+**L'attaque.** Au-delà de `0.12`, la note se termine en pleine montée. Avec
+`.attack(0.5)`, elle n'atteint même pas le quart de son volume maximal : les
+notes semblent disparaître.
+
+Retenez la règle : **une enveloppe se règle par rapport à la durée de la
+note**. Un son court laisse peu de place à l'attaque et au decay ; un son long
+leur laisse toute la place.
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n  .s("sawtooth")\n  .attack(slider(0.005, 0.005, 0.5))\n  .decay(slider(0.282, 0.1, 1.2))\n  .sustain(0)\n  .gain(0.12)'}
+	label="Deux curseurs sur le pluck"
+>
+	<p class="mt-5 max-w-xl text-sm leading-relaxed text-muted">
+		Déplacez un seul curseur à la fois, et comparez avec la note longue :
+		la même valeur s'entend beaucoup moins.
+	</p>
+</StrudelRepl>
+
+<aside class="course-fun-fact not-prose" aria-label="Le saviez-vous ?">
+  <p class="course-fun-fact-label"><span aria-hidden="true">✦</span> Le saviez-vous ?</p>
+  <p>L'enveloppe est née avec les premiers synthés analogiques, dans les années 1960. Pour que ses notes ne s'allument et ne s'éteignent plus d'un coup, <strong>Robert Moog</strong> a d'abord câblé un bouton de sonnette à son synthétiseur. En <strong>1965</strong>, à la demande du compositeur Vladimir Ussachevsky, il en a tiré un module à quatre réglages. La marque <strong>ARP</strong> les a ensuite simplifiés pour donner les quatre lettres ADSR, devenues le standard de tous les synthés.</p>
+  <a href="https://en.wikipedia.org/wiki/Envelope_(music)">L'enveloppe sonore sur Wikipédia ↗</a>
+</aside>
+
+## À vous
+
+> Deux blocs ci-dessous : la note longue, réglée en son percussif, puis le
+> pluck du morceau.
+>
+> 1. **Sur la note longue, transformez le son percussif en son doux, en ne
+>    modifiant que l'attaque.** Pendant la lecture, montez lentement le
+>    curseur. Notez la valeur où la note cesse de claquer, puis celle où elle
+>    devient vraiment douce.
+> 2. **Sur le pluck, essayez la même valeur d'attaque.** Que deviennent les
+>    notes ?
+> 3. **Toujours sur le pluck, revenez à `0.005`, puis montez `decay` jusqu'au
+>    bout.** À partir de quelle valeur le curseur semble-t-il ne plus rien
+>    changer ?
+> 4. **Remettez les réglages du morceau** (`0.005` et `0.282`).
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("d4")\n  .s("triangle")\n  .attack(slider(0.005, 0.005, 1))\n  .decay(0.8)\n  .sustain(0)\n  .gain(0.12)'}
+	label="Votre son percussif"
+/>
+
+<StrudelRepl
+	client:visible
+	code={'setcpm(128 / 4)\n\nnote("g#4 ~ ~ c5 ~ ~ a4 ~").fast(2)\n  .s("sawtooth")\n  .attack(slider(0.005, 0.005, 0.5))\n  .decay(slider(0.282, 0.1, 1.2))\n  .sustain(0)\n  .gain(0.12)'}
+	label="Votre pluck"
+/>
+
+<details>
+  <summary>Voir le corrigé</summary>
+
+**Étape 1.** Au départ, la note frappe puis s'éteint en un peu moins d'une
+seconde : c'est un son percussif. Vers `0.05`, le choc disparaît. Entre `0.3`
+et `0.5`, la note gonfle avant de retomber : le son est devenu doux, alors que
+seule l'attaque a changé. Plus haut, la montée occupe presque toute la note.
+
+**Étape 2.** Sur le pluck, la même valeur fait presque disparaître les notes :
+elles ne durent que 0,12 seconde et s'arrêtent en pleine montée. Sur des notes
+aussi courtes, l'attaque utile s'arrête vers `0.05` : assez pour retirer le
+choc, pas plus.
+
+**Étape 3.** À `0.1`, chaque note s'éteint d'elle-même juste avant sa fin :
+un « tic » sec. En montant, la note s'arrête de plus en plus tôt dans sa
+chute, donc de plus en plus fort. Vers `0.5`, elle s'arrête presque à pleine
+puissance, et le curseur ne change presque plus rien. Ce qui se passe *après*
+la fin de la note, c'est le rôle du `release`, en 4.2.
+
+**Étape 4.** Pour le morceau de la séquence, nous avons retenu :
+
+```js
+.attack(0.005).decay(0.282).sustain(0)
+```
+
+Une attaque instantanée pour que le pluck claque, et une chute plus de deux
+fois plus longue que la note : elle s'arrête à environ 60 % de son volume, ce
+qui donne du corps au pluck. Le `release` de la 4.2 éteindra ce reste en
+douceur.
+
+</details>

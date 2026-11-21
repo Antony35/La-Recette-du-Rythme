@@ -95,7 +95,24 @@
   title: "Audio effects"
   url: "https://strudel.cc/learn/effects/"
   category: documentation
-  checkedAt: 2026-09-15
+  note: "Séquence 4 : enveloppe ADSR (aussi sur les samples), lpf/hpf de 0 à 20 000 Hz, lpq/hpq jusqu'à 50, room et roomsize, delay, delaytime, delayfeedback (jamais ≥ 1), une reverb et un delay par orbite (orbite 1 par défaut), phaser."
+  checkedAt: 2026-11-18
+
+- id: wikipedia-q-factor
+  title: "Q factor"
+  url: "https://en.wikipedia.org/wiki/Q_factor"
+  category: articles
+  author: "Wikipédia (en anglais)"
+  note: "Anecdote de la 4.4 : le q de lpq et hpq vient du facteur de qualité (quality factor) ; un pendule dans l'air a un Q élevé, le même pendule dans l'huile un Q faible."
+  checkedAt: 2026-11-20
+
+- id: wikipedia-envelope
+  title: "Envelope (music)"
+  url: "https://en.wikipedia.org/wiki/Envelope_(music)"
+  category: articles
+  author: "Wikipédia (en anglais)"
+  note: "Anecdote de la 4.1 : Robert Moog, le bouton de sonnette, le module à quatre réglages de 1965 avec Vladimir Ussachevsky, simplifié en ADSR par ARP."
+  checkedAt: 2026-11-18
 
 - id: strudel-time-modifiers
   title: "Time modifiers"
