@@ -78,13 +78,18 @@ Scripts prêts : `S3-harmonie-de-base.md`.
 
 ### S4 — Sound design
 
+Pages rédigées, avec leurs emplacements vidéo. Scripts prêts :
+`S4-sound-design.md`. Le morceau
+montré est celui de la page 4.6 (notes en lettres : pluck, sub et pad du code S4 de l'équipe).
+
 | Sous-séance | Ce que la vidéo montre | Durée |
 |---|---|---|
-| **4.1 et 4.2 L'enveloppe ADSR** | **sujet complexe 1** : un même son, de percussif à nappe, paramètre par paramètre (vidéo placée en 4.1, rappelée en 4.2) | 8 min |
+| 4.1 Attack et decay | le pluck brut adouci par l'attaque, puis une note longue pour entendre le decay en entier ; finit sur un son court et doux | 4 min |
+| 4.2 Sustain et release | reprend le son de la 4.1 : le sustain le fait tenir, le release le prolonge jusqu'à la nappe ; puis le sub, les quatre réglages ensemble | 4 min |
 | 4.3 Filtres passe-bas et passe-haut | balayer la fréquence de coupure pendant la lecture | 3 min |
 | 4.4 Résonance | pousser la résonance, puis revenir à un réglage musical | 2 min |
 | 4.5 Reverb et delay | doser l'espace sans noyer le mix | 3 min |
-| 4.6 Sculpter sa musique | la musique de la S3, couche par couche | 3 min |
+| 4.6 Sculpter sa musique | le morceau de la séquence, couche par couche | 3 min |
 
 ### S5 — Studio personnel
 
@@ -102,7 +107,7 @@ Scripts prêts : `S3-harmonie-de-base.md`.
 |---|---|---|
 | 6.1 Rappel JavaScript | une fonction, ses paramètres, sa valeur de retour | 2 min |
 | 6.2 Une fonction utilitaire | une suite de réglages en un seul appel | 2 min |
-| **6.3 Importer sa fonction dans Strudel** | **sujet complexe 2** : du JavaScript pur à un effet appelé sur un motif qui joue | 8 min |
+| **6.3 Importer sa fonction dans Strudel** | **sujet complexe** : du JavaScript pur à un effet appelé sur un motif qui joue (**à discuter avec Théo** : une vidéo de 8 min ou deux plus courtes, comme l'ADSR) | 8 min |
 | 6.4 Un filtre personnalisé | un filtre paramétrable sur deux pistes | 3 min |
 | 6.5 Un effet ou un outil personnel | un geste musical automatisé | 3 min |
 | 6.6 Sa petite bibliothèque | regrouper et commenter trois fonctions | 2 min |
@@ -136,7 +141,7 @@ Pas de vidéo dans 8.2 à 8.4 : elles donneraient la solution du cas pratique.
 | Présentation de l'équipe | accueil ✅ |
 | Présentation du cours | accueil ✅ |
 | Présentation des prérequis | 1.1 ✅ |
-| 2 sujets complexes | 4.1 (ADSR) et 6.3 (fonction vers Strudel) |
+| Sujets complexes | 6.3 (fonction vers Strudel). L'ADSR est passée en deux vidéos de 4 min, 4.1 et 4.2 (décision du 2026-11-20 : une vidéo par sous-séance). Cette exigence ne figure ni dans le cahier des charges (qui fixe 8 min **au maximum**) ni dans la scénarisation : à confirmer avec le mentor |
 | Correction du cas pratique | 8.5, en deux parties |
 | Conclusion « Pour aller plus loin » | 8.6 |
 
@@ -146,9 +151,9 @@ Pas de vidéo dans 8.2 à 8.4 : elles donneraient la solution du cas pratique.
 |---|---|---|
 | Déjà tournées | 7 | ~12 min 30 |
 | S1 et S2 (à tourner) | 4 | ~9 min |
-| S3 à S5 | 15 | ~47 min |
+| S3 à S5 | 16 | ~47 min |
 | S6 à S8 | 16 | ~60 min |
-| **Total** | **42** | **~2 h 10** |
+| **Total** | **43** | **~2 h 10** |
 
 Si toutes les vidéos sortent 25 % plus courtes que prévu, il reste environ
 1 h 40 : le minimum est tenu.
